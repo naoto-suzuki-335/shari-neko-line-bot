@@ -120,6 +120,7 @@ function replyTextMessage_(replyToken, text, channelAccessToken) {
             items: [
               {
                 type: 'action',
+                imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/morning.png',
                 action: {
                   type: 'message',
                   label: 'おはよう',
@@ -128,6 +129,7 @@ function replyTextMessage_(replyToken, text, channelAccessToken) {
               },
               {
                 type: 'action',
+                imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/guide.png',
                 action: {
                   type: 'message',
                   label: '使い方',
@@ -136,6 +138,7 @@ function replyTextMessage_(replyToken, text, channelAccessToken) {
               },
               {
                 type: 'action',
+                imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/notice.png',
                 action: {
                   type: 'message',
                   label: 'お知らせ',
