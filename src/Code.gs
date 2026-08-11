@@ -156,10 +156,26 @@ function handleLineEvent_(event) {
     ];
     const randomIndex = Math.floor(Math.random() * fortuneMessages.length);
     const fortuneMessage = fortuneMessages[randomIndex];
+    const luckySushiCandidates = [
+      'まぐろ',
+      'サーモン',
+      'たまご',
+      'いか',
+      'たこ',
+      'えび',
+      'いくら',
+      'なっとう',
+    ];
+    const luckySushiIndex = Math.floor(
+      Math.random() * luckySushiCandidates.length
+    );
+    const luckySushi = luckySushiCandidates[luckySushiIndex];
+    const fortuneMessageWithLuckySushi =
+      fortuneMessage + '\n\n今日のラッキー寿司：' + luckySushi + '✨';
 
     replyTextMessage_(
       event.replyToken,
-      fortuneMessage,
+      fortuneMessageWithLuckySushi,
       channelAccessToken,
       false
     );
