@@ -77,11 +77,31 @@ function handleLineEvent_(event) {
 
   // 次の5語に完全一致した場合は、それぞれ専用の短文を返信します。
   const reactionMessages = {
-    'つかれた': 'おつかれさまです🍵 むりせず、ひと休みしてくださいね。',
-    'ただいま': 'おかえりなさい🐱 待っていました。',
-    'おやすみ': 'おやすみなさい🌙 よい夢を。',
-    'ありがとう': 'こちらこそ、ありがとう🐾',
-    'おなかすいた': 'しゃりねこも、おなかがすきました🍣',
+    'つかれた': [
+      'おつかれさまです🍵 むりせず、ひと休みしてくださいね。',
+      '今日もよくがんばりました🐱',
+      'しゃりねこと、少し休みましょう🍣',
+    ],
+    'ただいま': [
+      'おかえりなさい🐱 待っていました。',
+      'おかえりなさい。今日もおつかれさまです🍵',
+      'おかえりなさい🐾 ゆっくりしてくださいね。',
+    ],
+    'おやすみ': [
+      'おやすみなさい🌙 よい夢を。',
+      '今日も一日、おつかれさまでした🐱',
+      'しゃりねこも、そろそろ眠ります💤',
+    ],
+    'ありがとう': [
+      'こちらこそ、ありがとう🐾',
+      'どういたしまして🐱',
+      'そう言ってもらえて、うれしいです🍣',
+    ],
+    'おなかすいた': [
+      'しゃりねこも、おなかがすきました🍣',
+      'そろそろ、ごはんの時間でしょうか🐱',
+      'おすしの気配がします……🍣',
+    ],
   };
   const hasReaction = Object.prototype.hasOwnProperty.call(
     reactionMessages,
@@ -98,9 +118,13 @@ function handleLineEvent_(event) {
   }
 
   if (hasReaction) {
+    const replyCandidates = reactionMessages[receivedText];
+    const randomIndex = Math.floor(Math.random() * replyCandidates.length);
+    const reactionMessage = replyCandidates[randomIndex];
+
     replyTextMessage_(
       event.replyToken,
-      reactionMessages[receivedText],
+      reactionMessage,
       channelAccessToken,
       false
     );
