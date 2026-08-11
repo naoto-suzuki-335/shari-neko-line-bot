@@ -117,6 +117,125 @@ function handleLineEvent_(event) {
     return;
   }
 
+  if (receivedText === 'メニュー') {
+    const menuQuickReplyItems = [
+      {
+        type: 'action',
+        imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/guide.png',
+        action: {
+          type: 'message',
+          label: '使い方',
+          text: '使い方',
+        },
+      },
+      {
+        type: 'action',
+        imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/notice.png',
+        action: {
+          type: 'message',
+          label: 'お知らせ',
+          text: 'お知らせ',
+        },
+      },
+    ];
+
+    replyTextMessage_(
+      event.replyToken,
+      'メニューを選んでください🐱',
+      channelAccessToken,
+      true,
+      menuQuickReplyItems
+    );
+    return;
+  }
+
+  if (receivedText === '今の気分') {
+    const moodQuickReplyItems = [
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '元気',
+          text: '元気',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'ふつう',
+          text: 'ふつう',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'つかれた',
+          text: 'つかれた',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '応援して',
+          text: '応援して',
+        },
+      },
+    ];
+
+    replyTextMessage_(
+      event.replyToken,
+      '今日はどんな気分ですか？🐱',
+      channelAccessToken,
+      true,
+      moodQuickReplyItems
+    );
+    return;
+  }
+
+  const moodMessages = {
+    '元気': [
+      '元気でなによりです🐱\n今日もいいことがありそうです。',
+      'その元気、しゃりねこにも分けてもらいました🐱\n今日も楽しくいきましょう✨',
+      '今日は調子がよさそうですね🐱\nしゃりねこもうれしいです🍣',
+    ],
+    'ふつう': [
+      'ふつうの日も、いい日です🐱\nのんびりいきましょう。',
+      '穏やかに過ごせていますね。\n今日も自分のペースで🍵',
+      '何でもない一日も大切です。\nゆるりといきましょう🐱',
+    ],
+    'つかれた': [
+      '今日もよくがんばりました。\n少しだけ、ひとやすみしませんか？🍵',
+      'おつかれさまです🐱\n今はゆっくりして大丈夫ですよ。',
+      '無理せずにね。\nしゃりねこと一緒に、ひと休みしましょう🍣',
+    ],
+    '応援して': [
+      'だいじょうぶです🐱\nしゃりねこが応援しています。',
+      '一歩ずつで大丈夫。\nあなたのペースでいきましょう✨',
+      'うまくいきますように🍣\nしゃりねこが、そっと背中を押します。',
+    ],
+  };
+  const hasMood = Object.prototype.hasOwnProperty.call(
+    moodMessages,
+    receivedText
+  );
+
+  if (hasMood) {
+    const replyCandidates = moodMessages[receivedText];
+    const randomIndex = Math.floor(Math.random() * replyCandidates.length);
+    const moodMessage = replyCandidates[randomIndex];
+
+    replyTextMessage_(
+      event.replyToken,
+      moodMessage,
+      channelAccessToken,
+      false
+    );
+    return;
+  }
+
   if (hasReaction) {
     const replyCandidates = reactionMessages[receivedText];
     const randomIndex = Math.floor(Math.random() * replyCandidates.length);
@@ -201,8 +320,15 @@ function handleLineEvent_(event) {
  * @param {string} text 返信するテキスト
  * @param {string} channelAccessToken チャネルアクセストークン
  * @param {boolean} showQuickReply クイックリプライを表示するか
+ * @param {Object[]} [quickReplyItems] 表示するクイックリプライ項目
  */
-function replyTextMessage_(replyToken, text, channelAccessToken, showQuickReply) {
+function replyTextMessage_(
+  replyToken,
+  text,
+  channelAccessToken,
+  showQuickReply,
+  quickReplyItems
+) {
   if (!replyToken) {
     console.error('返信に必要なreplyTokenがありません。');
     return;
@@ -215,7 +341,7 @@ function replyTextMessage_(replyToken, text, channelAccessToken, showQuickReply)
 
   if (showQuickReply) {
     message.quickReply = {
-      items: [
+      items: quickReplyItems || [
         {
           type: 'action',
           imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/morning.png',
@@ -235,20 +361,18 @@ function replyTextMessage_(replyToken, text, channelAccessToken, showQuickReply)
         },
         {
           type: 'action',
-          imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/guide.png',
           action: {
             type: 'message',
-            label: '使い方',
-            text: '使い方',
+            label: '今の気分',
+            text: '今の気分',
           },
         },
         {
           type: 'action',
-          imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/notice.png',
           action: {
             type: 'message',
-            label: 'お知らせ',
-            text: 'お知らせ',
+            label: 'メニュー',
+            text: 'メニュー',
           },
         },
       ],
