@@ -211,6 +211,14 @@ function replyTextMessage_(replyToken, text, channelAccessToken, showQuickReply)
         },
         {
           type: 'action',
+          action: {
+            type: 'message',
+            label: '今日の運勢',
+            text: '今日の運勢',
+          },
+        },
+        {
+          type: 'action',
           imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/guide.png',
           action: {
             type: 'message',
