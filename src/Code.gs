@@ -137,6 +137,14 @@ function handleLineEvent_(event) {
           text: 'お知らせ',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'しゃりねこ観察',
+          text: 'しゃりねこ観察',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -145,6 +153,27 @@ function handleLineEvent_(event) {
       channelAccessToken,
       true,
       menuQuickReplyItems
+    );
+    return;
+  }
+
+  if (receivedText === 'しゃりねこ観察') {
+    const observationMessages = [
+      'しゃりねこは、のんびりしています🍵',
+      'しゃりねこは、少し眠そうです💤',
+      'しゃりねこは、遠くを見ています',
+      'しゃりねこは、今日も平常運転です🍣',
+      'しゃりねこは、特に何もしていません',
+      'しゃりねこは、しっぽを揺らしています',
+    ];
+    const randomIndex = Math.floor(Math.random() * observationMessages.length);
+    const observationMessage = observationMessages[randomIndex];
+
+    replyTextMessage_(
+      event.replyToken,
+      observationMessage,
+      channelAccessToken,
+      false
     );
     return;
   }
