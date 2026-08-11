@@ -75,6 +75,19 @@ function handleLineEvent_(event) {
     return;
   }
 
+  // 次の5語に完全一致した場合は、それぞれ専用の短文を返信します。
+  const reactionMessages = {
+    'つかれた': 'おつかれさまです🍵 むりせず、ひと休みしてくださいね。',
+    'ただいま': 'おかえりなさい🐱 待っていました。',
+    'おやすみ': 'おやすみなさい🌙 よい夢を。',
+    'ありがとう': 'こちらこそ、ありがとう🐾',
+    'おなかすいた': 'しゃりねこも、おなかがすきました🍣',
+  };
+  const hasReaction = Object.prototype.hasOwnProperty.call(
+    reactionMessages,
+    receivedText
+  );
+
   // スクリプトプロパティからアクセストークンを安全に取得します。
   const channelAccessToken = PropertiesService.getScriptProperties()
     .getProperty('LINE_CHANNEL_ACCESS_TOKEN');
@@ -84,11 +97,26 @@ function handleLineEvent_(event) {
     return;
   }
 
+  if (hasReaction) {
+    replyTextMessage_(
+      event.replyToken,
+      reactionMessages[receivedText],
+      channelAccessToken,
+      false
+    );
+    return;
+  }
+
   const guideMessage =
     'メッセージありがとうございます🐱\n' +
     '下のメニューから「使い方」や「お知らせ」を選んでください。';
 
-  replyTextMessage_(event.replyToken, guideMessage, channelAccessToken);
+  replyTextMessage_(
+    event.replyToken,
+    guideMessage,
+    channelAccessToken,
+    true
+  );
 }
 
 /**
@@ -97,11 +125,51 @@ function handleLineEvent_(event) {
  * @param {string} replyToken LINEから届いた返信用トークン
  * @param {string} text 返信するテキスト
  * @param {string} channelAccessToken チャネルアクセストークン
+ * @param {boolean} showQuickReply クイックリプライを表示するか
  */
-function replyTextMessage_(replyToken, text, channelAccessToken) {
+function replyTextMessage_(replyToken, text, channelAccessToken, showQuickReply) {
   if (!replyToken) {
     console.error('返信に必要なreplyTokenがありません。');
     return;
+  }
+
+  const message = {
+    type: 'text',
+    text: text,
+  };
+
+  if (showQuickReply) {
+    message.quickReply = {
+      items: [
+        {
+          type: 'action',
+          imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/morning.png',
+          action: {
+            type: 'message',
+            label: 'おはよう',
+            text: 'おはよう',
+          },
+        },
+        {
+          type: 'action',
+          imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/guide.png',
+          action: {
+            type: 'message',
+            label: '使い方',
+            text: '使い方',
+          },
+        },
+        {
+          type: 'action',
+          imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/notice.png',
+          action: {
+            type: 'message',
+            label: 'お知らせ',
+            text: 'お知らせ',
+          },
+        },
+      ],
+    };
   }
 
   const response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/reply', {
@@ -112,43 +180,7 @@ function replyTextMessage_(replyToken, text, channelAccessToken) {
     },
     payload: JSON.stringify({
       replyToken: replyToken,
-      messages: [
-        {
-          type: 'text',
-          text: text,
-          quickReply: {
-            items: [
-              {
-                type: 'action',
-                imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/morning.png',
-                action: {
-                  type: 'message',
-                  label: 'おはよう',
-                  text: 'おはよう',
-                },
-              },
-              {
-                type: 'action',
-                imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/guide.png',
-                action: {
-                  type: 'message',
-                  label: '使い方',
-                  text: '使い方',
-                },
-              },
-              {
-                type: 'action',
-                imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/notice.png',
-                action: {
-                  type: 'message',
-                  label: 'お知らせ',
-                  text: 'お知らせ',
-                },
-              },
-            ],
-          },
-        },
-      ],
+      messages: [message],
     }),
     muteHttpExceptions: true,
   });
