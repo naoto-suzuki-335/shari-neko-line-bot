@@ -131,6 +131,41 @@ function handleLineEvent_(event) {
     return;
   }
 
+  if (receivedText === '今日の運勢') {
+    const fortuneMessages = [
+      '今日のしゃりねこ運勢🍣\n\n' +
+        '【まぐろ運】\n' +
+        '今日は迷わず進めそう。\n' +
+        '小さな一歩がいい流れを連れてきます🐟',
+      '今日のしゃりねこ運勢🍣\n\n' +
+        '【サーモン運】\n' +
+        'やさしい気持ちが広がる日。\n' +
+        '自分にも少し甘くしてあげましょう🌸',
+      '今日のしゃりねこ運勢🍣\n\n' +
+        '【えび運】\n' +
+        'うれしい知らせが届くかも。\n' +
+        'いつもより少しだけ周りを見てみて🦐',
+      '今日のしゃりねこ運勢🍣\n\n' +
+        '【たまご運】\n' +
+        'ほっとできる時間が見つかる日。\n' +
+        'ゆっくり味わってください🍵',
+      '今日のしゃりねこ運勢🍣\n\n' +
+        '【いくら運】\n' +
+        '小さな楽しみが重なりそう。\n' +
+        '今日の「うれしい」を見逃さずに✨',
+    ];
+    const randomIndex = Math.floor(Math.random() * fortuneMessages.length);
+    const fortuneMessage = fortuneMessages[randomIndex];
+
+    replyTextMessage_(
+      event.replyToken,
+      fortuneMessage,
+      channelAccessToken,
+      false
+    );
+    return;
+  }
+
   const guideMessage =
     'メッセージありがとうございます🐱\n' +
     '下のメニューから「使い方」や「お知らせ」を選んでください。';
