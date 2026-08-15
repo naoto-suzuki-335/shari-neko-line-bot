@@ -145,6 +145,14 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ観察',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'しゃりねこと遊ぶ',
+          text: 'しゃりねこと遊ぶ',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -172,6 +180,80 @@ function handleLineEvent_(event) {
     replyTextMessage_(
       event.replyToken,
       observationMessage,
+      channelAccessToken,
+      false
+    );
+    return;
+  }
+
+  if (receivedText === 'しゃりねこと遊ぶ') {
+    const playQuickReplyItems = [
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'なでる',
+          text: 'なでる',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'おやつを置く',
+          text: 'おやつを置く',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '呼んでみる',
+          text: '呼んでみる',
+        },
+      },
+    ];
+
+    replyTextMessage_(
+      event.replyToken,
+      '何をしてみますか？🐱',
+      channelAccessToken,
+      true,
+      playQuickReplyItems
+    );
+    return;
+  }
+
+  const playMessages = {
+    'なでる': [
+      'しゃりねこは、少し目を細めました',
+      'しゃりねこは、そのままじっとしています',
+      'しゃりねこは、なでられたところを整えています',
+    ],
+    'おやつを置く': [
+      'しゃりねこは、おやつにゆっくり近づきました',
+      'しゃりねこは、においを確かめています',
+      'しゃりねこは、おやつを見ていますが動きません',
+    ],
+    '呼んでみる': [
+      'しゃりねこは、声のした方を見ました',
+      'しゃりねこは、耳だけ動かしました',
+      'しゃりねこは、特に反応していません',
+    ],
+  };
+  const hasPlayMessage = Object.prototype.hasOwnProperty.call(
+    playMessages,
+    receivedText
+  );
+
+  if (hasPlayMessage) {
+    const replyCandidates = playMessages[receivedText];
+    const randomIndex = Math.floor(Math.random() * replyCandidates.length);
+    const playMessage = replyCandidates[randomIndex];
+
+    replyTextMessage_(
+      event.replyToken,
+      playMessage,
       channelAccessToken,
       false
     );
