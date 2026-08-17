@@ -232,6 +232,14 @@ function handleLineEvent_(event) {
           text: '呼んでみる',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'そっと見る',
+          text: 'そっと見る',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -259,6 +267,11 @@ function handleLineEvent_(event) {
       'しゃりねこは、声のした方を見ました',
       'しゃりねこは、耳だけ動かしました',
       'しゃりねこは、特に反応していません',
+    ],
+    'そっと見る': [
+      'しゃりねこは、しばらく同じ場所にいます',
+      'しゃりねこと目が合いました',
+      'しゃりねこは、少しだけ向きを変えました',
     ],
   };
   const hasPlayMessage = Object.prototype.hasOwnProperty.call(
