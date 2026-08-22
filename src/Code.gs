@@ -224,7 +224,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'おやつを置く',
+          label: 'おやつ',
           text: 'おやつを置く',
         },
       },
@@ -232,7 +232,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: '呼んでみる',
+          label: 'よぶ',
           text: '呼んでみる',
         },
       },
@@ -240,7 +240,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'そっと見る',
+          label: 'みる',
           text: 'そっと見る',
         },
       },
