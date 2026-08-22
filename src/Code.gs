@@ -152,7 +152,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'しゃりねこ動画',
+          label: 'どうが',
           text: 'しゃりねこ動画',
         },
       },
@@ -160,7 +160,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'しゃりねこ観察',
+          label: 'かんさつ',
           text: 'しゃりねこ観察',
         },
       },
@@ -168,7 +168,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'しゃりねこと遊ぶ',
+          label: 'あそぶ',
           text: 'しゃりねこと遊ぶ',
         },
       },
@@ -244,6 +244,14 @@ function handleLineEvent_(event) {
           text: 'そっと見る',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'チェック',
+          text: 'しゃりねこチェック',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -252,6 +260,47 @@ function handleLineEvent_(event) {
       channelAccessToken,
       true,
       playQuickReplyItems
+    );
+    return;
+  }
+
+  if (receivedText === 'しゃりねこチェック') {
+    const moodCandidates = [
+      'ふつう',
+      'のんびり',
+      'すこし上向き',
+    ];
+    const sleepinessCandidates = [
+      'なし',
+      '少し',
+      'かなり',
+    ];
+    const motivationCandidates = [
+      '気分しだい',
+      'ぼちぼち',
+      '今日はお休み',
+    ];
+    const selectedMood =
+      moodCandidates[Math.floor(Math.random() * moodCandidates.length)];
+    const selectedSleepiness =
+      sleepinessCandidates[
+        Math.floor(Math.random() * sleepinessCandidates.length)
+      ];
+    const selectedMotivation =
+      motivationCandidates[
+        Math.floor(Math.random() * motivationCandidates.length)
+      ];
+    const checkMessage =
+      'しゃりねこチェック🐱\n\n' +
+      'きげん：' + selectedMood + '\n' +
+      'ねむけ：' + selectedSleepiness + '\n' +
+      'やる気：' + selectedMotivation;
+
+    replyTextMessage_(
+      event.replyToken,
+      checkMessage,
+      channelAccessToken,
+      false
     );
     return;
   }
