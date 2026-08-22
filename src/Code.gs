@@ -150,11 +150,10 @@ function handleLineEvent_(event) {
       },
       {
         type: 'action',
-        imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/notice.png',
         action: {
           type: 'message',
-          label: 'お知らせ',
-          text: 'お知らせ',
+          label: 'しゃりねこ動画',
+          text: 'しゃりねこ動画',
         },
       },
       {
@@ -182,6 +181,11 @@ function handleLineEvent_(event) {
       true,
       menuQuickReplyItems
     );
+    return;
+  }
+
+  if (receivedText === 'しゃりねこ動画') {
+    replyVideoTemplate_(event.replyToken, channelAccessToken);
     return;
   }
 
@@ -447,7 +451,7 @@ function handleLineEvent_(event) {
 
   const guideMessage =
     'メッセージありがとうございます🐱\n' +
-    '下のメニューから「使い方」や「お知らせ」を選んでください。';
+    '下のメニューから気になる項目を選んでください。';
 
   replyTextMessage_(
     event.replyToken,
@@ -522,6 +526,67 @@ function replyTextMessage_(
       ],
     };
   }
+
+  const response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/reply', {
+    method: 'post',
+    contentType: 'application/json',
+    headers: {
+      Authorization: 'Bearer ' + channelAccessToken,
+    },
+    payload: JSON.stringify({
+      replyToken: replyToken,
+      messages: [message],
+    }),
+    muteHttpExceptions: true,
+  });
+
+  const statusCode = response.getResponseCode();
+
+  if (statusCode < 200 || statusCode >= 300) {
+    console.error(
+      'LINEへの返信に失敗しました。ステータス: %s、内容: %s',
+      statusCode,
+      response.getContentText()
+    );
+  }
+}
+
+/**
+ * LINEのReply APIを使い、動画閲覧ページへ案内するButtonsテンプレートを返信します。
+ *
+ * @param {string} replyToken LINEから届いた返信用トークン
+ * @param {string} channelAccessToken チャネルアクセストークン
+ */
+function replyVideoTemplate_(replyToken, channelAccessToken) {
+  if (!replyToken) {
+    console.error('返信に必要なreplyTokenがありません。');
+    return;
+  }
+
+  const videoPageUrl =
+    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/umibe-no-sanrinsha-neko/';
+  const message = {
+    type: 'template',
+    altText: 'しゃりねこ動画のご案内',
+    template: {
+      type: 'buttons',
+      thumbnailImageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/umibe-no-sanrinsha-neko-thumbnail.jpg',
+      text: '海辺のしゃりねこを、そっとのぞいてみますか？🐱',
+      defaultAction: {
+        type: 'uri',
+        label: '動画を見る',
+        uri: videoPageUrl,
+      },
+      actions: [
+        {
+          type: 'uri',
+          label: '動画を見る',
+          uri: videoPageUrl,
+        },
+      ],
+    },
+  };
 
   const response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/reply', {
     method: 'post',
