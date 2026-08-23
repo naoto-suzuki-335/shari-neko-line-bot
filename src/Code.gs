@@ -189,7 +189,26 @@ function handleLineEvent_(event) {
     return;
   }
 
+  const meowMessages = [
+    'にゃ。',
+    'にゃー。',
+    '……にゃ。',
+  ];
+
   if (receivedText === 'しゃりねこ観察') {
+    if (Math.random() < 0.2) {
+      const randomIndex = Math.floor(Math.random() * meowMessages.length);
+      const meowMessage = meowMessages[randomIndex];
+
+      replyTextMessage_(
+        event.replyToken,
+        meowMessage,
+        channelAccessToken,
+        false
+      );
+      return;
+    }
+
     const observationMessages = [
       'しゃりねこは、のんびりしています🍵',
       'しゃりねこは、少し眠そうです💤',
@@ -333,6 +352,25 @@ function handleLineEvent_(event) {
   );
 
   if (hasPlayMessage) {
+    const canMeow = [
+      'なでる',
+      '呼んでみる',
+      'そっと見る',
+    ].includes(receivedText);
+
+    if (canMeow && Math.random() < 0.2) {
+      const randomIndex = Math.floor(Math.random() * meowMessages.length);
+      const meowMessage = meowMessages[randomIndex];
+
+      replyTextMessage_(
+        event.replyToken,
+        meowMessage,
+        channelAccessToken,
+        false
+      );
+      return;
+    }
+
     const replyCandidates = playMessages[receivedText];
     const randomIndex = Math.floor(Math.random() * replyCandidates.length);
     const playMessage = replyCandidates[randomIndex];
