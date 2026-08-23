@@ -244,7 +244,7 @@ function handleLineEvent_(event) {
   ];
 
   if (receivedText === 'しゃりねこ観察') {
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.35) {
       const randomIndex = Math.floor(Math.random() * meowMessages.length);
       const meowMessage = meowMessages[randomIndex];
 
@@ -406,7 +406,7 @@ function handleLineEvent_(event) {
       'そっと見る',
     ].includes(receivedText);
 
-    if (canMeow && Math.random() < 0.2) {
+    if (canMeow && Math.random() < 0.35) {
       const randomIndex = Math.floor(Math.random() * meowMessages.length);
       const meowMessage = meowMessages[randomIndex];
 
