@@ -184,8 +184,56 @@ function handleLineEvent_(event) {
     return;
   }
 
+  const videoWorks = {
+    'しゃりねこ動画：海辺': {
+      guideText: '海辺のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/umibe-no-sanrinsha-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/umibe-no-sanrinsha-neko-thumbnail.jpg',
+    },
+    'しゃりねこ動画：バリスタ': {
+      guideText: 'カフェのしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/barista-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/barista-neko-thumbnail.jpg',
+    },
+  };
+
   if (receivedText === 'しゃりねこ動画') {
-    replyVideoTemplate_(event.replyToken, channelAccessToken);
+    const videoQuickReplyItems = [
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '海辺',
+          text: 'しゃりねこ動画：海辺',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'バリスタ',
+          text: 'しゃりねこ動画：バリスタ',
+        },
+      },
+    ];
+
+    replyTextMessage_(
+      event.replyToken,
+      'どのしゃりねこをのぞいてみますか？🐱',
+      channelAccessToken,
+      true,
+      videoQuickReplyItems
+    );
+    return;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(videoWorks, receivedText)) {
+    const selectedVideo = videoWorks[receivedText];
+    replyVideoTemplate_(event.replyToken, channelAccessToken, selectedVideo);
     return;
   }
 
@@ -643,33 +691,31 @@ function replyTextMessage_(
  *
  * @param {string} replyToken LINEから届いた返信用トークン
  * @param {string} channelAccessToken チャネルアクセストークン
+ * @param {Object} videoWork 動画作品の案内文、閲覧ページURL、サムネイルURL
  */
-function replyVideoTemplate_(replyToken, channelAccessToken) {
+function replyVideoTemplate_(replyToken, channelAccessToken, videoWork) {
   if (!replyToken) {
     console.error('返信に必要なreplyTokenがありません。');
     return;
   }
 
-  const videoPageUrl =
-    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/umibe-no-sanrinsha-neko/';
   const message = {
     type: 'template',
     altText: 'しゃりねこ動画のご案内',
     template: {
       type: 'buttons',
-      thumbnailImageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/umibe-no-sanrinsha-neko-thumbnail.jpg',
-      text: '海辺のしゃりねこを、そっとのぞいてみますか？🐱',
+      thumbnailImageUrl: videoWork.thumbnailUrl,
+      text: videoWork.guideText,
       defaultAction: {
         type: 'uri',
         label: '動画を見る',
-        uri: videoPageUrl,
+        uri: videoWork.pageUrl,
       },
       actions: [
         {
           type: 'uri',
           label: '動画を見る',
-          uri: videoPageUrl,
+          uri: videoWork.pageUrl,
         },
       ],
     },
