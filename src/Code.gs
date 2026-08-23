@@ -599,6 +599,134 @@ function handleLineEvent_(event) {
     return;
   }
 
+  const conversationMessages = {
+    'かんぱい': [
+      'しゃりねこは、グラスの向こうを見ています',
+      'しゃりねこは、乾杯の様子を眺めています',
+      'しゃりねこは、特に飲む予定はなさそうです',
+    ],
+    '酔いました': [
+      'しゃりねこは、水を置いていきました',
+      'しゃりねこは、少し距離をとりました',
+      'しゃりねこは、静かに様子を見ています',
+    ],
+    'いる？': [
+      'しゃりねこは、一応いるようです',
+      'しゃりねこは、すぐ近くにいます',
+      'しゃりねこは、返事をするか考えています',
+    ],
+    'なにしてる': [
+      'しゃりねこは、特に何もしていません',
+      'しゃりねこは、少しだけ忙しそうです',
+      'しゃりねこは、さっきから同じ場所にいます',
+    ],
+  };
+  const hasConversation = Object.prototype.hasOwnProperty.call(
+    conversationMessages,
+    receivedText
+  );
+
+  if (hasConversation) {
+    const conversationRoll = Math.random();
+
+    if (conversationRoll < 0.5) {
+      const replyCandidates = conversationMessages[receivedText];
+      const randomIndex = Math.floor(Math.random() * replyCandidates.length);
+
+      replyTextMessage_(
+        event.replyToken,
+        replyCandidates[randomIndex],
+        channelAccessToken,
+        false
+      );
+      return;
+    }
+
+    if (conversationRoll < 0.85) {
+      const randomIndex = Math.floor(Math.random() * meowMessages.length);
+
+      replyTextMessage_(
+        event.replyToken,
+        meowMessages[randomIndex],
+        channelAccessToken,
+        false
+      );
+      return;
+    }
+
+    const conversationVideoKeywords = {
+      'かんぱい': 'しゃりねこ動画：ソムリエ',
+      '酔いました': 'しゃりねこ動画：ソムリエ',
+      'いる？': 'しゃりねこ動画：海辺',
+      'なにしてる': 'しゃりねこ動画：バリスタ',
+    };
+    const videoKeyword = conversationVideoKeywords[receivedText];
+    const selectedVideo = videoWorks[videoKeyword];
+
+    replyVideoTemplate_(
+      event.replyToken,
+      channelAccessToken,
+      selectedVideo
+    );
+    return;
+  }
+
+  if (Math.random() < 0.4) {
+    const remainingConversationItems = [
+      { label: 'かんぱい', text: 'かんぱい', weight: 2 },
+      { label: 'よった', text: '酔いました', weight: 2 },
+      { label: 'いる？', text: 'いる？', weight: 1 },
+      { label: 'なにしてる', text: 'なにしてる', weight: 1 },
+      { label: 'ひま', text: 'ひま', weight: 1 },
+      { label: 'ねむい', text: 'ねむい', weight: 1 },
+      { label: 'ありがとう', text: 'ありがとう', weight: 1 },
+      { label: 'またね', text: 'またね', weight: 1 },
+    ];
+    const conversationQuickReplyItems = [];
+
+    while (conversationQuickReplyItems.length < 3) {
+      const totalWeight = remainingConversationItems.reduce(
+        function (sum, item) {
+          return sum + item.weight;
+        },
+        0
+      );
+      let selectionRoll = Math.random() * totalWeight;
+      let selectedIndex = 0;
+
+      for (let index = 0; index < remainingConversationItems.length; index++) {
+        selectionRoll -= remainingConversationItems[index].weight;
+
+        if (selectionRoll < 0) {
+          selectedIndex = index;
+          break;
+        }
+      }
+
+      const selectedItem = remainingConversationItems.splice(
+        selectedIndex,
+        1
+      )[0];
+      conversationQuickReplyItems.push({
+        type: 'action',
+        action: {
+          type: 'message',
+          label: selectedItem.label,
+          text: selectedItem.text,
+        },
+      });
+    }
+
+    replyTextMessage_(
+      event.replyToken,
+      'しゃりねこが、こちらを見ています',
+      channelAccessToken,
+      true,
+      conversationQuickReplyItems
+    );
+    return;
+  }
+
   const guideMessage =
     'メッセージありがとうございます🐱\n' +
     '下のメニューから気になる項目を選んでください。';
