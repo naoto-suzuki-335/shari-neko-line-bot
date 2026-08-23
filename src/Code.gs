@@ -199,6 +199,13 @@ function handleLineEvent_(event) {
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/barista-neko-thumbnail.jpg',
     },
+    'しゃりねこ動画：ソムリエ': {
+      guideText: 'ソムリエのしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sommelier-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sommelier-neko-thumbnail.jpg',
+    },
   };
 
   if (receivedText === 'しゃりねこ動画') {
@@ -217,6 +224,14 @@ function handleLineEvent_(event) {
           type: 'message',
           label: 'バリスタ',
           text: 'しゃりねこ動画：バリスタ',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'ソムリエ',
+          text: 'しゃりねこ動画：ソムリエ',
         },
       },
     ];
