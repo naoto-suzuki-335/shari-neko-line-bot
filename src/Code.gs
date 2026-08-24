@@ -259,7 +259,7 @@ function handleLineEvent_(event) {
   ];
 
   if (receivedText === 'しゃりねこ観察') {
-    if (Math.random() < 0.35) {
+    if (Math.random() < 0.45) {
       const randomIndex = Math.floor(Math.random() * meowMessages.length);
       const meowMessage = meowMessages[randomIndex];
 
@@ -421,7 +421,7 @@ function handleLineEvent_(event) {
       'そっと見る',
     ].includes(receivedText);
 
-    if (canMeow && Math.random() < 0.35) {
+    if (canMeow && Math.random() < 0.45) {
       const randomIndex = Math.floor(Math.random() * meowMessages.length);
       const meowMessage = meowMessages[randomIndex];
 
@@ -629,7 +629,7 @@ function handleLineEvent_(event) {
   if (hasConversation) {
     const conversationRoll = Math.random();
 
-    if (conversationRoll < 0.5) {
+    if (conversationRoll < 0.4) {
       const replyCandidates = conversationMessages[receivedText];
       const randomIndex = Math.floor(Math.random() * replyCandidates.length);
 
@@ -671,7 +671,7 @@ function handleLineEvent_(event) {
     return;
   }
 
-  if (Math.random() < 0.4) {
+  if (Math.random() < 0.6) {
     const remainingConversationItems = [
       { label: 'かんぱい', text: 'かんぱい', weight: 2 },
       { label: 'よった', text: '酔いました', weight: 2 },
