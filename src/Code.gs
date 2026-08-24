@@ -206,6 +206,20 @@ function handleLineEvent_(event) {
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sommelier-neko-thumbnail.jpg',
     },
+    'しゃりねこ動画：たい焼き': {
+      guideText: 'たい焼きのしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/taiyaki-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/taiyaki-neko-thumbnail.jpg',
+    },
+    'しゃりねこ動画：たい焼き屋': {
+      guideText: 'たい焼き屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/taiyakiya-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/taiyakiya-neko-thumbnail.jpg',
+    },
   };
 
   if (receivedText === 'しゃりねこ動画') {
@@ -232,6 +246,22 @@ function handleLineEvent_(event) {
           type: 'message',
           label: 'ソムリエ',
           text: 'しゃりねこ動画：ソムリエ',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'たい焼き',
+          text: 'しゃりねこ動画：たい焼き',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'たい焼き屋',
+          text: 'しゃりねこ動画：たい焼き屋',
         },
       },
     ];
