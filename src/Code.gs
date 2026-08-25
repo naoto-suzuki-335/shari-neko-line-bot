@@ -220,6 +220,27 @@ function handleLineEvent_(event) {
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/taiyakiya-neko-thumbnail.jpg',
     },
+    'しゃりねこ動画：パン職人': {
+      guideText: 'パン屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pan-shokunin-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pan-shokunin-neko-thumbnail.jpg',
+    },
+    'しゃりねこ動画：八百屋': {
+      guideText: '八百屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pan-shokunin-yaoya-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pan-shokunin-yaoya-neko-thumbnail.jpg',
+    },
+    'しゃりねこ動画：花屋': {
+      guideText: '花屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/hanaya-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/hanaya-neko-thumbnail.jpg',
+    },
   };
 
   if (receivedText === 'しゃりねこ動画') {
@@ -262,6 +283,30 @@ function handleLineEvent_(event) {
           type: 'message',
           label: 'たい焼き屋',
           text: 'しゃりねこ動画：たい焼き屋',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'パン',
+          text: 'しゃりねこ動画：パン職人',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '八百屋',
+          text: 'しゃりねこ動画：八百屋',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '花屋',
+          text: 'しゃりねこ動画：花屋',
         },
       },
     ];
