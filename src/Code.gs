@@ -172,6 +172,14 @@ function handleLineEvent_(event) {
           text: 'しゃりねこと遊ぶ',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '和菓子ねこ',
+          text: '和菓子ねこ',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -180,6 +188,146 @@ function handleLineEvent_(event) {
       channelAccessToken,
       true,
       menuQuickReplyItems
+    );
+    return;
+  }
+
+  const wagashiWorks = {
+    '和菓子ねこ：たい焼き': {
+      replyText: 'たい焼き、どうぞ。🐱',
+      imageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/wagashi/taiyaki-neko.png',
+    },
+    '和菓子ねこ：みたらし': {
+      replyText: 'みたらし団子、どうぞ。🐱',
+      imageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/wagashi/mitarashi-neko.png',
+    },
+    '和菓子ねこ：いちご大福': {
+      replyText: 'いちご大福、どうぞ。🐱',
+      imageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/wagashi/ichigo-daifuku-neko.png',
+    },
+    '和菓子ねこ：抹茶': {
+      replyText: '抹茶、どうぞ。🐱',
+      imageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/wagashi/matcha-neko.png',
+    },
+    '和菓子ねこ：どら焼き': {
+      replyText: 'どら焼き、どうぞ。🐱',
+      imageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/wagashi/dorayaki-neko.png',
+    },
+    '和菓子ねこ：桜餅': {
+      replyText: '桜餅、どうぞ。🐱',
+      imageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/wagashi/sakura-mochi-neko.png',
+    },
+    '和菓子ねこ：ねりきり': {
+      replyText: 'ねりきり、どうぞ。🐱',
+      imageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/wagashi/nerikiri-neko.png',
+    },
+    '和菓子ねこ：くず餅': {
+      replyText: 'くず餅、どうぞ。🐱',
+      imageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/wagashi/kuzu-mochi-neko.png',
+    },
+  };
+
+  if (receivedText === '和菓子ねこ') {
+    const wagashiQuickReplyItems = [
+      {
+        type: 'action',
+        imageUrl: wagashiWorks['和菓子ねこ：たい焼き'].imageUrl,
+        action: {
+          type: 'message',
+          label: 'たい焼き',
+          text: '和菓子ねこ：たい焼き',
+        },
+      },
+      {
+        type: 'action',
+        imageUrl: wagashiWorks['和菓子ねこ：みたらし'].imageUrl,
+        action: {
+          type: 'message',
+          label: 'みたらし',
+          text: '和菓子ねこ：みたらし',
+        },
+      },
+      {
+        type: 'action',
+        imageUrl: wagashiWorks['和菓子ねこ：いちご大福'].imageUrl,
+        action: {
+          type: 'message',
+          label: 'いちご大福',
+          text: '和菓子ねこ：いちご大福',
+        },
+      },
+      {
+        type: 'action',
+        imageUrl: wagashiWorks['和菓子ねこ：抹茶'].imageUrl,
+        action: {
+          type: 'message',
+          label: '抹茶',
+          text: '和菓子ねこ：抹茶',
+        },
+      },
+      {
+        type: 'action',
+        imageUrl: wagashiWorks['和菓子ねこ：どら焼き'].imageUrl,
+        action: {
+          type: 'message',
+          label: 'どら焼き',
+          text: '和菓子ねこ：どら焼き',
+        },
+      },
+      {
+        type: 'action',
+        imageUrl: wagashiWorks['和菓子ねこ：桜餅'].imageUrl,
+        action: {
+          type: 'message',
+          label: '桜餅',
+          text: '和菓子ねこ：桜餅',
+        },
+      },
+      {
+        type: 'action',
+        imageUrl: wagashiWorks['和菓子ねこ：ねりきり'].imageUrl,
+        action: {
+          type: 'message',
+          label: 'ねりきり',
+          text: '和菓子ねこ：ねりきり',
+        },
+      },
+      {
+        type: 'action',
+        imageUrl: wagashiWorks['和菓子ねこ：くず餅'].imageUrl,
+        action: {
+          type: 'message',
+          label: 'くず餅',
+          text: '和菓子ねこ：くず餅',
+        },
+      },
+    ];
+
+    replyTextMessage_(
+      event.replyToken,
+      'どの和菓子にしますか？🐱',
+      channelAccessToken,
+      true,
+      wagashiQuickReplyItems
+    );
+    return;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(wagashiWorks, receivedText)) {
+    const wagashiWork = wagashiWorks[receivedText];
+    replyTextAndImageMessage_(
+      event.replyToken,
+      channelAccessToken,
+      wagashiWork.replyText,
+      wagashiWork.imageUrl
     );
     return;
   }
@@ -1053,6 +1201,59 @@ function replyTextMessage_(
     payload: JSON.stringify({
       replyToken: replyToken,
       messages: [message],
+    }),
+    muteHttpExceptions: true,
+  });
+
+  const statusCode = response.getResponseCode();
+
+  if (statusCode < 200 || statusCode >= 300) {
+    console.error(
+      'LINEへの返信に失敗しました。ステータス: %s、内容: %s',
+      statusCode,
+      response.getContentText()
+    );
+  }
+}
+
+/**
+ * LINEのReply APIを使い、テキストと画像を1回のAPI呼び出しで返信します。
+ *
+ * @param {string} replyToken LINEから届いた返信用トークン
+ * @param {string} channelAccessToken チャネルアクセストークン
+ * @param {string} text 返信するテキスト
+ * @param {string} imageUrl 返信する画像のURL
+ */
+function replyTextAndImageMessage_(
+  replyToken,
+  channelAccessToken,
+  text,
+  imageUrl
+) {
+  if (!replyToken) {
+    console.error('返信に必要なreplyTokenがありません。');
+    return;
+  }
+
+  const response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/reply', {
+    method: 'post',
+    contentType: 'application/json',
+    headers: {
+      Authorization: 'Bearer ' + channelAccessToken,
+    },
+    payload: JSON.stringify({
+      replyToken: replyToken,
+      messages: [
+        {
+          type: 'text',
+          text: text,
+        },
+        {
+          type: 'image',
+          originalContentUrl: imageUrl,
+          previewImageUrl: imageUrl,
+        },
+      ],
     }),
     muteHttpExceptions: true,
   });
