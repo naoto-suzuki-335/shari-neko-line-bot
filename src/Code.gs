@@ -255,9 +255,81 @@ function handleLineEvent_(event) {
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/honya-neko-thumbnail.jpg',
     },
+    'しゃりねこ動画：一日｜朝': {
+      guideText: '朝のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/morning-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/morning-neko-thumbnail.jpg',
+    },
+    'しゃりねこ動画：一日｜海辺': {
+      guideText: '海辺のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/seaside-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/seaside-neko-thumbnail.jpg',
+    },
+    'しゃりねこ動画：一日｜月夜': {
+      guideText: '月夜のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/moonlit-night-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/moonlit-night-neko-thumbnail.jpg',
+    },
+    'しゃりねこ動画：一日｜花畑': {
+      guideText: '花畑のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/flower-field-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/flower-field-neko-thumbnail.jpg',
+    },
+    'しゃりねこ動画：一日｜森の小川': {
+      guideText: '森の小川のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/forest-stream-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/forest-stream-neko-thumbnail.jpg',
+    },
+    'しゃりねこ動画：一日｜風の丘': {
+      guideText: '風の丘のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/windy-hill-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/windy-hill-neko-thumbnail.jpg',
+    },
   };
 
   if (receivedText === 'しゃりねこ動画') {
+    const videoCategoryQuickReplyItems = [
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'おみせとおでかけ',
+          text: 'しゃりねこ動画：おみせとおでかけ',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'しゃりねこの一日',
+          text: 'しゃりねこ動画：しゃりねこの一日',
+        },
+      },
+    ];
+
+    replyTextMessage_(
+      event.replyToken,
+      'どのしゃりねこをのぞいてみますか？🐱',
+      channelAccessToken,
+      true,
+      videoCategoryQuickReplyItems
+    );
+    return;
+  }
+
+  if (receivedText === 'しゃりねこ動画：おみせとおでかけ') {
     const videoQuickReplyItems = [
       {
         type: 'action',
@@ -347,6 +419,68 @@ function handleLineEvent_(event) {
       channelAccessToken,
       true,
       videoQuickReplyItems
+    );
+    return;
+  }
+
+  if (receivedText === 'しゃりねこ動画：しゃりねこの一日') {
+    const dailyLifeVideoQuickReplyItems = [
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '朝',
+          text: 'しゃりねこ動画：一日｜朝',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '海辺',
+          text: 'しゃりねこ動画：一日｜海辺',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '月夜',
+          text: 'しゃりねこ動画：一日｜月夜',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '花畑',
+          text: 'しゃりねこ動画：一日｜花畑',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '森の小川',
+          text: 'しゃりねこ動画：一日｜森の小川',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '風の丘',
+          text: 'しゃりねこ動画：一日｜風の丘',
+        },
+      },
+    ];
+
+    replyTextMessage_(
+      event.replyToken,
+      'どの一日をのぞいてみますか？🐱',
+      channelAccessToken,
+      true,
+      dailyLifeVideoQuickReplyItems
     );
     return;
   }
