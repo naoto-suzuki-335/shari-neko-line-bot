@@ -236,80 +236,7 @@ function handleLineEvent_(event) {
   };
 
   if (receivedText === '和菓子ねこ') {
-    const wagashiQuickReplyItems = [
-      {
-        type: 'action',
-        imageUrl: wagashiWorks['和菓子ねこ：たい焼き'].imageUrl,
-        action: {
-          type: 'message',
-          label: 'たい焼き',
-          text: '和菓子ねこ：たい焼き',
-        },
-      },
-      {
-        type: 'action',
-        imageUrl: wagashiWorks['和菓子ねこ：みたらし'].imageUrl,
-        action: {
-          type: 'message',
-          label: 'みたらし',
-          text: '和菓子ねこ：みたらし',
-        },
-      },
-      {
-        type: 'action',
-        imageUrl: wagashiWorks['和菓子ねこ：いちご大福'].imageUrl,
-        action: {
-          type: 'message',
-          label: 'いちご大福',
-          text: '和菓子ねこ：いちご大福',
-        },
-      },
-      {
-        type: 'action',
-        imageUrl: wagashiWorks['和菓子ねこ：抹茶'].imageUrl,
-        action: {
-          type: 'message',
-          label: '抹茶',
-          text: '和菓子ねこ：抹茶',
-        },
-      },
-      {
-        type: 'action',
-        imageUrl: wagashiWorks['和菓子ねこ：どら焼き'].imageUrl,
-        action: {
-          type: 'message',
-          label: 'どら焼き',
-          text: '和菓子ねこ：どら焼き',
-        },
-      },
-      {
-        type: 'action',
-        imageUrl: wagashiWorks['和菓子ねこ：桜餅'].imageUrl,
-        action: {
-          type: 'message',
-          label: '桜餅',
-          text: '和菓子ねこ：桜餅',
-        },
-      },
-      {
-        type: 'action',
-        imageUrl: wagashiWorks['和菓子ねこ：ねりきり'].imageUrl,
-        action: {
-          type: 'message',
-          label: 'ねりきり',
-          text: '和菓子ねこ：ねりきり',
-        },
-      },
-      {
-        type: 'action',
-        imageUrl: wagashiWorks['和菓子ねこ：くず餅'].imageUrl,
-        action: {
-          type: 'message',
-          label: 'くず餅',
-          text: '和菓子ねこ：くず餅',
-        },
-      },
-    ];
+    const wagashiQuickReplyItems = createWagashiQuickReplyItems_(wagashiWorks);
 
     replyTextMessage_(
       event.replyToken,
@@ -327,7 +254,8 @@ function handleLineEvent_(event) {
       event.replyToken,
       channelAccessToken,
       wagashiWork.replyText,
-      wagashiWork.imageUrl
+      wagashiWork.imageUrl,
+      createWagashiQuickReplyItems_(wagashiWorks)
     );
     return;
   }
@@ -1217,18 +1145,52 @@ function replyTextMessage_(
 }
 
 /**
+ * 和菓子メニューで使用するクイックリプライ項目を生成します。
+ *
+ * @param {Object} wagashiWorks 和菓子ごとの返信設定
+ * @return {Object[]} 和菓子のクイックリプライ項目
+ */
+function createWagashiQuickReplyItems_(wagashiWorks) {
+  return [
+    ['たい焼き', '和菓子ねこ：たい焼き'],
+    ['みたらし', '和菓子ねこ：みたらし'],
+    ['いちご大福', '和菓子ねこ：いちご大福'],
+    ['抹茶', '和菓子ねこ：抹茶'],
+    ['どら焼き', '和菓子ねこ：どら焼き'],
+    ['桜餅', '和菓子ねこ：桜餅'],
+    ['ねりきり', '和菓子ねこ：ねりきり'],
+    ['くず餅', '和菓子ねこ：くず餅'],
+  ].map(function (wagashiItem) {
+    const label = wagashiItem[0];
+    const text = wagashiItem[1];
+
+    return {
+      type: 'action',
+      imageUrl: wagashiWorks[text].imageUrl,
+      action: {
+        type: 'message',
+        label: label,
+        text: text,
+      },
+    };
+  });
+}
+
+/**
  * LINEのReply APIを使い、テキストと画像を1回のAPI呼び出しで返信します。
  *
  * @param {string} replyToken LINEから届いた返信用トークン
  * @param {string} channelAccessToken チャネルアクセストークン
  * @param {string} text 返信するテキスト
  * @param {string} imageUrl 返信する画像のURL
+ * @param {Object[]} quickReplyItems 画像に表示するクイックリプライ項目
  */
 function replyTextAndImageMessage_(
   replyToken,
   channelAccessToken,
   text,
-  imageUrl
+  imageUrl,
+  quickReplyItems
 ) {
   if (!replyToken) {
     console.error('返信に必要なreplyTokenがありません。');
@@ -1252,6 +1214,9 @@ function replyTextAndImageMessage_(
           type: 'image',
           originalContentUrl: imageUrl,
           previewImageUrl: imageUrl,
+          quickReply: {
+            items: quickReplyItems,
+          },
         },
       ],
     }),
