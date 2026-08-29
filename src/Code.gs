@@ -389,6 +389,32 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/windy-hill-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
     },
+    'しゃりねこ動画：一日｜踏切': {
+      guideText: '踏切のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/train-crossing-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/train-crossing-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜カフェ': {
+      guideText:
+        'カフェでひとやすみするしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/coffee-break-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/coffee-break-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜落ち葉': {
+      guideText:
+        '落ち葉を見つめるしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/falling-leaf-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/falling-leaf-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
   };
 
   if (receivedText === 'しゃりねこ動画') {
@@ -563,6 +589,30 @@ function handleLineEvent_(event) {
           type: 'message',
           label: '風の丘',
           text: 'しゃりねこ動画：一日｜風の丘',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '踏切',
+          text: 'しゃりねこ動画：一日｜踏切',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'カフェ',
+          text: 'しゃりねこ動画：一日｜カフェ',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '落ち葉',
+          text: 'しゃりねこ動画：一日｜落ち葉',
         },
       },
     ];
