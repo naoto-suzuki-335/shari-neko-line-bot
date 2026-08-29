@@ -267,6 +267,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/umibe-no-sanrinsha-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/umibe-no-sanrinsha-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：バリスタ': {
       guideText: 'カフェのしゃりねこを、そっとのぞいてみますか？🐱',
@@ -274,6 +275,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/barista-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/barista-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：ソムリエ': {
       guideText: 'ソムリエのしゃりねこを、そっとのぞいてみますか？🐱',
@@ -281,6 +283,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sommelier-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sommelier-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：たい焼き': {
       guideText: 'たい焼きのしゃりねこを、そっとのぞいてみますか？🐱',
@@ -288,6 +291,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/taiyaki-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/taiyaki-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：たい焼き屋': {
       guideText: 'たい焼き屋のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -295,6 +299,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/taiyakiya-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/taiyakiya-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：パン職人': {
       guideText: 'パン屋のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -302,6 +307,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pan-shokunin-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pan-shokunin-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：八百屋': {
       guideText: '八百屋のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -309,6 +315,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pan-shokunin-yaoya-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pan-shokunin-yaoya-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：花屋': {
       guideText: '花屋のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -316,6 +323,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/hanaya-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/hanaya-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：レコード屋': {
       guideText: 'レコード屋のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -323,6 +331,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/record-shop-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/record-shop-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：本屋': {
       guideText: '本屋のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -330,6 +339,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/honya-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/honya-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
     'しゃりねこ動画：一日｜朝': {
       guideText: '朝のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -337,6 +347,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/morning-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/morning-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
     },
     'しゃりねこ動画：一日｜海辺': {
       guideText: '海辺のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -344,6 +355,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/seaside-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/seaside-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
     },
     'しゃりねこ動画：一日｜月夜': {
       guideText: '月夜のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -351,6 +363,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/moonlit-night-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/moonlit-night-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
     },
     'しゃりねこ動画：一日｜花畑': {
       guideText: '花畑のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -358,6 +371,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/flower-field-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/flower-field-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
     },
     'しゃりねこ動画：一日｜森の小川': {
       guideText: '森の小川のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -365,6 +379,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/forest-stream-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/forest-stream-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
     },
     'しゃりねこ動画：一日｜風の丘': {
       guideText: '風の丘のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -372,6 +387,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/windy-hill-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/windy-hill-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
     },
   };
 
@@ -1250,6 +1266,11 @@ function replyVideoTemplate_(replyToken, channelAccessToken, videoWork) {
           type: 'uri',
           label: '動画を見る',
           uri: videoWork.pageUrl,
+        },
+        {
+          type: 'message',
+          label: 'ほかの動画',
+          text: videoWork.categoryKeyword,
         },
       ],
     },
