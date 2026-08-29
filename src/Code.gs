@@ -608,48 +608,7 @@ function handleLineEvent_(event) {
   }
 
   if (receivedText === 'しゃりねこと遊ぶ') {
-    const playQuickReplyItems = [
-      {
-        type: 'action',
-        action: {
-          type: 'message',
-          label: 'なでる',
-          text: 'なでる',
-        },
-      },
-      {
-        type: 'action',
-        action: {
-          type: 'message',
-          label: 'おやつ',
-          text: 'おやつを置く',
-        },
-      },
-      {
-        type: 'action',
-        action: {
-          type: 'message',
-          label: 'よぶ',
-          text: '呼んでみる',
-        },
-      },
-      {
-        type: 'action',
-        action: {
-          type: 'message',
-          label: 'みる',
-          text: 'そっと見る',
-        },
-      },
-      {
-        type: 'action',
-        action: {
-          type: 'message',
-          label: 'チェック',
-          text: 'しゃりねこチェック',
-        },
-      },
-    ];
+    const playQuickReplyItems = createPlayQuickReplyItems_();
 
     replyTextMessage_(
       event.replyToken,
@@ -697,7 +656,8 @@ function handleLineEvent_(event) {
       event.replyToken,
       checkMessage,
       channelAccessToken,
-      false
+      true,
+      createPlayQuickReplyItems_()
     );
     return;
   }
@@ -744,7 +704,8 @@ function handleLineEvent_(event) {
         event.replyToken,
         meowMessage,
         channelAccessToken,
-        false
+        true,
+        createPlayQuickReplyItems_()
       );
       return;
     }
@@ -757,7 +718,8 @@ function handleLineEvent_(event) {
       event.replyToken,
       playMessage,
       channelAccessToken,
-      false
+      true,
+      createPlayQuickReplyItems_()
     );
     return;
   }
@@ -1142,6 +1104,30 @@ function replyTextMessage_(
       response.getContentText()
     );
   }
+}
+
+/**
+ * 遊びメニューで使用するクイックリプライ項目を生成します。
+ *
+ * @return {Object[]} 遊びのクイックリプライ項目
+ */
+function createPlayQuickReplyItems_() {
+  return [
+    ['なでる', 'なでる'],
+    ['おやつ', 'おやつを置く'],
+    ['よぶ', '呼んでみる'],
+    ['みる', 'そっと見る'],
+    ['チェック', 'しゃりねこチェック'],
+  ].map(function (playItem) {
+    return {
+      type: 'action',
+      action: {
+        type: 'message',
+        label: playItem[0],
+        text: playItem[1],
+      },
+    };
+  });
 }
 
 /**
