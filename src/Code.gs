@@ -1070,15 +1070,11 @@ function handleLineEvent_(event) {
     return;
   }
 
-  const guideMessage =
-    'メッセージありがとうございます🐱\n' +
-    '下のメニューから気になる項目を選んでください。';
-
   replyTextMessage_(
     event.replyToken,
-    guideMessage,
+    'へい、おまち。🍣',
     channelAccessToken,
-    true
+    false
   );
 }
 
