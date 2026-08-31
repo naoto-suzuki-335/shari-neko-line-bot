@@ -141,15 +141,6 @@ function handleLineEvent_(event) {
     const menuQuickReplyItems = [
       {
         type: 'action',
-        imageUrl: 'https://raw.githubusercontent.com/naoto-suzuki-335/shari-neko-line-bot/main/images/guide.png',
-        action: {
-          type: 'message',
-          label: '使い方',
-          text: '使い方',
-        },
-      },
-      {
-        type: 'action',
         action: {
           type: 'message',
           label: 'どうが',
@@ -1024,6 +1015,13 @@ function handleLineEvent_(event) {
       { label: 'ねむい', text: 'ねむい', weight: 1 },
       { label: 'ありがとう', text: 'ありがとう', weight: 1 },
       { label: 'またね', text: 'またね', weight: 1 },
+      { label: 'おはよう', text: 'おはよう', weight: 1 },
+      { label: 'こんにちは', text: 'こんにちは', weight: 1 },
+      { label: 'つかれた', text: 'つかれた', weight: 1 },
+      { label: 'ただいま', text: 'ただいま', weight: 1 },
+      { label: 'おやすみ', text: 'おやすみ', weight: 1 },
+      { label: 'おつかれさま', text: 'おつかれさま', weight: 1 },
+      { label: 'おなかすいた', text: 'おなかすいた', weight: 1 },
     ];
     const conversationQuickReplyItems = [];
 
