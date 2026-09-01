@@ -332,6 +332,30 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/honya-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
     },
+    'しゃりねこ動画：おみせ｜お茶': {
+      guideText: 'お茶を注ぐしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/tea-serving-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/tea-serving-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：おみせ｜おにぎり': {
+      guideText: 'おにぎりを作るしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/onigiri-maker-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/onigiri-maker-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：おみせ｜閉店後': {
+      guideText: '閉店後に一杯やるしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/after-hours-drink-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/after-hours-drink-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
     'しゃりねこ動画：一日｜朝': {
       guideText: '朝のしゃりねこを、そっとのぞいてみますか？🐱',
       pageUrl:
@@ -404,6 +428,41 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/falling-leaf-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/falling-leaf-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜残暑': {
+      guideText:
+        '縁側で残暑を過ごすしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/late-summer-relaxing-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/late-summer-relaxing-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜残暑見舞い': {
+      guideText: '残暑を見舞うしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/late-summer-greeting-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/late-summer-greeting-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜暑い': {
+      guideText:
+        '暑さに不満げなしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/late-summer-complaint-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/late-summer-complaint-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜どんぐり': {
+      guideText:
+        'どんぐりを見つめるしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/acorn-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/acorn-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
     },
   };
@@ -520,6 +579,30 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：本屋',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'お茶',
+          text: 'しゃりねこ動画：おみせ｜お茶',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'おにぎり',
+          text: 'しゃりねこ動画：おみせ｜おにぎり',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '閉店後',
+          text: 'しゃりねこ動画：おみせ｜閉店後',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -604,6 +687,38 @@ function handleLineEvent_(event) {
           type: 'message',
           label: '落ち葉',
           text: 'しゃりねこ動画：一日｜落ち葉',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '残暑',
+          text: 'しゃりねこ動画：一日｜残暑',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '残暑見舞い',
+          text: 'しゃりねこ動画：一日｜残暑見舞い',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '暑い',
+          text: 'しゃりねこ動画：一日｜暑い',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'どんぐり',
+          text: 'しゃりねこ動画：一日｜どんぐり',
         },
       },
     ];
