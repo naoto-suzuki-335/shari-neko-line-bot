@@ -1409,11 +1409,24 @@ function handleLineEvent_(event) {
     return;
   }
 
-  replyTextMessage_(
+  const sushiNekoImageUrls = [
+    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi/maguro-neko.png',
+    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi/salmon-neko.png',
+    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi/tamago-neko.png',
+    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi/ika-neko.png',
+    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi/tako-neko.png',
+    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi/ebi-neko.png',
+    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi/ikura-neko.png',
+    'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi/natto-neko.png',
+  ];
+  const sushiNekoImageUrl =
+    sushiNekoImageUrls[Math.floor(Math.random() * sushiNekoImageUrls.length)];
+
+  replyTextAndImageMessage_(
     event.replyToken,
-    'へい、おまち。🍣',
     channelAccessToken,
-    false
+    'へい、おまち。🍣',
+    sushiNekoImageUrl
   );
 }
 
@@ -1570,7 +1583,7 @@ function createWagashiQuickReplyItems_(wagashiWorks) {
  * @param {string} channelAccessToken チャネルアクセストークン
  * @param {string} text 返信するテキスト
  * @param {string} imageUrl 返信する画像のURL
- * @param {Object[]} quickReplyItems 画像に表示するクイックリプライ項目
+ * @param {Object[]} [quickReplyItems] 画像に表示するクイックリプライ項目
  */
 function replyTextAndImageMessage_(
   replyToken,
@@ -1582,6 +1595,18 @@ function replyTextAndImageMessage_(
   if (!replyToken) {
     console.error('返信に必要なreplyTokenがありません。');
     return;
+  }
+
+  const imageMessage = {
+    type: 'image',
+    originalContentUrl: imageUrl,
+    previewImageUrl: imageUrl,
+  };
+
+  if (quickReplyItems) {
+    imageMessage.quickReply = {
+      items: quickReplyItems,
+    };
   }
 
   const response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/reply', {
@@ -1597,14 +1622,7 @@ function replyTextAndImageMessage_(
           type: 'text',
           text: text,
         },
-        {
-          type: 'image',
-          originalContentUrl: imageUrl,
-          previewImageUrl: imageUrl,
-          quickReply: {
-            items: quickReplyItems,
-          },
-        },
+        imageMessage,
       ],
     }),
     muteHttpExceptions: true,
