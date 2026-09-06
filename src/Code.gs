@@ -362,7 +362,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/last-leaf-sweeping-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/last-leaf-sweeping-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
     },
     'しゃりねこ動画：一日｜朝': {
       guideText: '朝のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -481,6 +481,84 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/acorn-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
     },
+    'しゃりねこ動画：一日｜食パン': {
+      guideText:
+        '食パンが焼けるのを待つしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/shokupan-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/shokupan-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：仕事｜サラリーマン': {
+      guideText: 'カフェで作業するしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/office-worker-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/office-worker-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜一本見送り': {
+      guideText:
+        '駅で電車を一本見送るしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/train-platform-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/train-platform-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜うとうと': {
+      guideText:
+        '通勤電車でうとうとするしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sleepy-commuter-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sleepy-commuter-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜帰宅': {
+      guideText: '夕方の電車で帰るしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/going-home-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/going-home-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：おみせ｜ピザ職人': {
+      guideText:
+        'ピザを焼くしゃりねこ職人を、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pizza-maker-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pizza-maker-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：一日｜ふみふみ': {
+      guideText:
+        '座布団をふみふみするしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/fumifumi-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/fumifumi-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：季節｜お月見': {
+      guideText:
+        'お月見団子を待つしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/moon-viewing-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/moon-viewing-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：季節｜縁側': {
+      guideText: '縁側で音に気づくしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/engawa-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/engawa-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
   };
 
   if (receivedText === 'しゃりねこ動画') {
@@ -507,6 +585,14 @@ function handleLineEvent_(event) {
           type: 'message',
           label: '季節のしゃりねこ',
           text: 'しゃりねこ動画：季節のしゃりねこ',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'おしごとと通勤',
+          text: 'しゃりねこ動画：おしごとと通勤',
         },
       },
     ];
@@ -623,8 +709,8 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: '落ち葉掃除',
-          text: 'しゃりねこ動画：おみせ｜落ち葉掃除',
+          label: 'ピザ職人',
+          text: 'しゃりねこ動画：おみせ｜ピザ職人',
         },
       },
     ];
@@ -713,6 +799,22 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：一日｜秋の夜長',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '食パン',
+          text: 'しゃりねこ動画：一日｜食パン',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'ふみふみ',
+          text: 'しゃりねこ動画：一日｜ふみふみ',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -775,6 +877,30 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：一日｜どんぐり',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '落ち葉掃除',
+          text: 'しゃりねこ動画：おみせ｜落ち葉掃除',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'お月見',
+          text: 'しゃりねこ動画：季節｜お月見',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '縁側',
+          text: 'しゃりねこ動画：季節｜縁側',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -783,6 +909,52 @@ function handleLineEvent_(event) {
       channelAccessToken,
       true,
       seasonalVideoQuickReplyItems
+    );
+    return;
+  }
+
+  if (receivedText === 'しゃりねこ動画：おしごとと通勤') {
+    const workVideoQuickReplyItems = [
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'サラリーマン',
+          text: 'しゃりねこ動画：仕事｜サラリーマン',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '一本見送り',
+          text: 'しゃりねこ動画：仕事｜一本見送り',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'うとうと',
+          text: 'しゃりねこ動画：仕事｜うとうと',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '帰宅',
+          text: 'しゃりねこ動画：仕事｜帰宅',
+        },
+      },
+    ];
+
+    replyTextMessage_(
+      event.replyToken,
+      'どのおしごとをのぞいてみますか？🐱',
+      channelAccessToken,
+      true,
+      workVideoQuickReplyItems
     );
     return;
   }
