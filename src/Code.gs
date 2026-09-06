@@ -171,6 +171,14 @@ function handleLineEvent_(event) {
           text: '和菓子ねこ',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '今日のかぶりもの',
+          text: '今日のかぶりもの',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -179,6 +187,57 @@ function handleLineEvent_(event) {
       channelAccessToken,
       true,
       menuQuickReplyItems
+    );
+    return;
+  }
+
+  if (receivedText === '今日のかぶりもの') {
+    const kaburimonoImageBaseUrl =
+      'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/kaburimono/';
+    const kaburimonoCandidates = [
+      {
+        text: '今日は、強そうです。',
+        imageUrl: kaburimonoImageBaseUrl + 'shark-neko.png',
+      },
+      {
+        text: 'のんびりいきましょう。',
+        imageUrl: kaburimonoImageBaseUrl + 'straw-hat-neko.png',
+      },
+      {
+        text: '甘めの一日です。',
+        imageUrl: kaburimonoImageBaseUrl + 'dorayaki-neko.png',
+      },
+      {
+        text: '聞き耳を立てています。',
+        imageUrl: kaburimonoImageBaseUrl + 'rabbit-neko.png',
+      },
+      {
+        text: '今日は、グルーヴ重視です。',
+        imageUrl: kaburimonoImageBaseUrl + 'buffalo-hat-neko.png',
+      },
+      {
+        text: 'あんこは入っていません。たぶん。',
+        imageUrl: kaburimonoImageBaseUrl + 'taiyaki-neko.png',
+      },
+      {
+        text: 'きれいにむけました。',
+        imageUrl: kaburimonoImageBaseUrl + 'mikan-peel-neko.png',
+      },
+      {
+        text: '本日は、えらい猫です。',
+        imageUrl: kaburimonoImageBaseUrl + 'crown-neko.png',
+      },
+    ];
+    const selectedKaburimono =
+      kaburimonoCandidates[
+        Math.floor(Math.random() * kaburimonoCandidates.length)
+      ];
+
+    replyTextAndImageMessage_(
+      event.replyToken,
+      channelAccessToken,
+      selectedKaburimono.text,
+      selectedKaburimono.imageUrl
     );
     return;
   }
