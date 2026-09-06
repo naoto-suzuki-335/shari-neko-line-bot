@@ -618,6 +618,15 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/engawa-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
     },
+    'しゃりねこ動画：季節｜さんま': {
+      guideText:
+        '秋の縁側でさんまが焼けるのを待つしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/grilled-sanma-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/grilled-sanma-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
   };
 
   if (receivedText === 'しゃりねこ動画') {
@@ -958,6 +967,14 @@ function handleLineEvent_(event) {
           type: 'message',
           label: '縁側',
           text: 'しゃりねこ動画：季節｜縁側',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'さんま',
+          text: 'しゃりねこ動画：季節｜さんま',
         },
       },
     ];
