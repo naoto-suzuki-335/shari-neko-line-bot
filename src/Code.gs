@@ -627,6 +627,24 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/grilled-sanma-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
     },
+    'しゃりねこ動画：季節｜紅葉狩り': {
+      guideText:
+        '紅葉を拾って頭に載せるしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-leaves-viewing-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-leaves-viewing-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：季節｜焼き芋': {
+      guideText:
+        '焼き芋を念力で割るしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/roasted-sweet-potato-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/roasted-sweet-potato-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
   };
 
   if (receivedText === 'しゃりねこ動画') {
@@ -975,6 +993,22 @@ function handleLineEvent_(event) {
           type: 'message',
           label: 'さんま',
           text: 'しゃりねこ動画：季節｜さんま',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '紅葉狩り',
+          text: 'しゃりねこ動画：季節｜紅葉狩り',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '焼き芋',
+          text: 'しゃりねこ動画：季節｜焼き芋',
         },
       },
     ];
