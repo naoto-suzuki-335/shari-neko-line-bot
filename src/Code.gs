@@ -137,6 +137,11 @@ function handleLineEvent_(event) {
     return;
   }
 
+  if (receivedText.indexOf('しゃりねこ所長登録:') === 0) {
+    handleDirectorRegistration_(event, receivedText, channelAccessToken);
+    return;
+  }
+
   if (receivedText === 'メニュー') {
     const menuQuickReplyItems = [
       {
@@ -627,15 +632,8 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/grilled-sanma-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
     },
-    'しゃりねこ動画：季節｜紅葉狩り': {
-      guideText:
-        '紅葉を拾って頭に載せるしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-leaves-viewing-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-leaves-viewing-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
-    },
+    'しゃりねこ動画：季節｜紅葉狩り':
+      createAutumnLeavesViewingVideoWork_(),
     'しゃりねこ動画：季節｜焼き芋': {
       guideText:
         '焼き芋を念力で割るしゃりねこを、そっとのぞいてみますか？🐱',
@@ -1762,7 +1760,40 @@ function replyVideoTemplate_(replyToken, channelAccessToken, videoWork) {
     return;
   }
 
-  const message = {
+  const message = createVideoTemplateMessage_(videoWork);
+
+  const response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/reply', {
+    method: 'post',
+    contentType: 'application/json',
+    headers: {
+      Authorization: 'Bearer ' + channelAccessToken,
+    },
+    payload: JSON.stringify({
+      replyToken: replyToken,
+      messages: [message],
+    }),
+    muteHttpExceptions: true,
+  });
+
+  const statusCode = response.getResponseCode();
+
+  if (statusCode < 200 || statusCode >= 300) {
+    console.error(
+      'LINEへの返信に失敗しました。ステータス: %s、内容: %s',
+      statusCode,
+      response.getContentText()
+    );
+  }
+}
+
+/**
+ * 動画作品のButtonsテンプレートメッセージを生成します。
+ *
+ * @param {Object} videoWork 動画作品の案内文、閲覧ページURL、サムネイルURL
+ * @return {Object} LINE Messaging APIへ渡すButtonsテンプレートメッセージ
+ */
+function createVideoTemplateMessage_(videoWork) {
+  return {
     type: 'template',
     altText: 'しゃりねこ動画のご案内',
     template: {
@@ -1788,27 +1819,243 @@ function replyVideoTemplate_(replyToken, channelAccessToken, videoWork) {
       ],
     },
   };
+}
 
-  const response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/reply', {
-    method: 'post',
-    contentType: 'application/json',
-    headers: {
-      Authorization: 'Bearer ' + channelAccessToken,
-    },
-    payload: JSON.stringify({
-      replyToken: replyToken,
-      messages: [message],
-    }),
-    muteHttpExceptions: true,
-  });
+/**
+ * 紅葉狩り動画の案内データを返します。
+ *
+ * @return {Object} 紅葉狩り動画の案内データ
+ */
+function createAutumnLeavesViewingVideoWork_() {
+  return {
+    guideText:
+      '紅葉を拾って頭に載せるしゃりねこを、そっとのぞいてみますか？🐱',
+    pageUrl:
+      'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-leaves-viewing-neko/',
+    thumbnailUrl:
+      'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-leaves-viewing-neko-thumbnail.jpg',
+    categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+  };
+}
+
+/**
+ * 一回限りのトークンを検証し、所長のLINE userIdを登録します。
+ *
+ * @param {Object} event LINEのWebhookイベント
+ * @param {string} receivedText 受信した登録メッセージ
+ * @param {string} channelAccessToken チャネルアクセストークン
+ */
+function handleDirectorRegistration_(event, receivedText, channelAccessToken) {
+  const registrationPrefix = 'しゃりねこ所長登録:';
+  const failureMessage = '所長登録を完了できませんでした。';
+  const successMessage = '所長登録が完了しました。';
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(5000)) {
+    replyDirectorRegistrationResult_(
+      event.replyToken,
+      channelAccessToken,
+      failureMessage
+    );
+    return;
+  }
+
+  try {
+    const scriptProperties = PropertiesService.getScriptProperties();
+    const userId =
+      event && event.source && event.source.type === 'user'
+        ? event.source.userId
+        : '';
+    const token = receivedText.substring(registrationPrefix.length);
+    const storedHash = scriptProperties.getProperty(
+      'DIRECTOR_REGISTRATION_TOKEN_HASH'
+    );
+    const expiresAt = Number(
+      scriptProperties.getProperty('DIRECTOR_REGISTRATION_EXPIRES_AT')
+    );
+    const isValid =
+      !scriptProperties.getProperty('DIRECTOR_LINE_USER_ID') &&
+      /^U[0-9a-fA-F]{32}$/.test(userId) &&
+      token.length > 0 &&
+      /^[0-9a-fA-F]{64}$/.test(storedHash || '') &&
+      Number.isFinite(expiresAt) &&
+      Date.now() <= expiresAt &&
+      constantTimeHexEquals_(sha256Hex_(token), storedHash);
+
+    if (!isValid) {
+      replyDirectorRegistrationResult_(
+        event.replyToken,
+        channelAccessToken,
+        failureMessage
+      );
+      return;
+    }
+
+    scriptProperties.setProperty('DIRECTOR_LINE_USER_ID', userId);
+    scriptProperties.deleteProperty('DIRECTOR_REGISTRATION_TOKEN_HASH');
+    scriptProperties.deleteProperty('DIRECTOR_REGISTRATION_EXPIRES_AT');
+    replyDirectorRegistrationResult_(
+      event.replyToken,
+      channelAccessToken,
+      successMessage
+    );
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 所長登録の一般的な結果だけをReply APIで返します。
+ *
+ * @param {string} replyToken LINEから届いた返信用トークン
+ * @param {string} channelAccessToken チャネルアクセストークン
+ * @param {string} text 一般的な結果メッセージ
+ */
+function replyDirectorRegistrationResult_(replyToken, channelAccessToken, text) {
+  if (!replyToken) {
+    console.error('所長登録結果の返信に必要な情報がありません。');
+    return;
+  }
+
+  let response;
+
+  try {
+    response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/reply', {
+      method: 'post',
+      contentType: 'application/json',
+      headers: {
+        Authorization: 'Bearer ' + channelAccessToken,
+      },
+      payload: JSON.stringify({
+        replyToken: replyToken,
+        messages: [{ type: 'text', text: text }],
+      }),
+      muteHttpExceptions: true,
+    });
+  } catch (error) {
+    console.error('所長登録結果の返信で通信エラーが発生しました。');
+    return;
+  }
 
   const statusCode = response.getResponseCode();
 
   if (statusCode < 200 || statusCode >= 300) {
-    console.error(
-      'LINEへの返信に失敗しました。ステータス: %s、内容: %s',
-      statusCode,
-      response.getContentText()
+    console.error('所長登録結果の返信に失敗しました。ステータス: %s', statusCode);
+  }
+}
+
+/**
+ * UTF-8文字列のSHA-256を16進文字列で返します。
+ *
+ * @param {string} value 対象文字列
+ * @return {string} 小文字のSHA-256文字列
+ */
+function sha256Hex_(value) {
+  return Utilities.computeDigest(
+    Utilities.DigestAlgorithm.SHA_256,
+    value,
+    Utilities.Charset.UTF_8
+  )
+    .map(function (byte) {
+      return ('0' + ((byte + 256) % 256).toString(16)).slice(-2);
+    })
+    .join('');
+}
+
+/**
+ * 2つのSHA-256文字列を定数時間で比較します。
+ *
+ * @param {string} left 比較対象
+ * @param {string} right 比較対象
+ * @return {boolean} 一致する場合はtrue
+ */
+function constantTimeHexEquals_(left, right) {
+  const normalizedLeft = String(left || '').toLowerCase();
+  const normalizedRight = String(right || '').toLowerCase();
+  const maxLength = Math.max(normalizedLeft.length, normalizedRight.length);
+  let difference = normalizedLeft.length ^ normalizedRight.length;
+
+  for (let index = 0; index < maxLength; index++) {
+    difference |=
+      (normalizedLeft.charCodeAt(index) || 0) ^
+      (normalizedRight.charCodeAt(index) || 0);
+  }
+
+  return difference === 0;
+}
+
+/**
+ * 所長だけへ紅葉狩り動画の試運転カードを1通送ります。
+ */
+function sendDirectorAutumnLeavesTrial() {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(5000)) {
+    throw new Error('所長限定試運転を実行できませんでした。');
+  }
+
+  try {
+    const scriptProperties = PropertiesService.getScriptProperties();
+    const channelAccessToken = scriptProperties.getProperty(
+      'LINE_CHANNEL_ACCESS_TOKEN'
     );
+    const directorUserId = scriptProperties.getProperty('DIRECTOR_LINE_USER_ID');
+    const isArmed =
+      scriptProperties.getProperty('DIRECTOR_TRIAL_PUSH_ARMED') === 'true';
+    const wasSent = scriptProperties.getProperty(
+      'DIRECTOR_TRIAL_AUTUMN_LEAVES_SENT_AT'
+    );
+
+    if (
+      !channelAccessToken ||
+      !/^U[0-9a-fA-F]{32}$/.test(directorUserId || '') ||
+      !isArmed ||
+      wasSent
+    ) {
+      throw new Error('所長限定試運転を実行できませんでした。');
+    }
+
+    scriptProperties.deleteProperty('DIRECTOR_TRIAL_PUSH_ARMED');
+    let response;
+
+    try {
+      response = UrlFetchApp.fetch(
+        'https://api.line.me/v2/bot/message/push',
+        {
+          method: 'post',
+          contentType: 'application/json',
+          headers: {
+            Authorization: 'Bearer ' + channelAccessToken,
+          },
+          payload: JSON.stringify({
+            to: directorUserId,
+            messages: [
+              createVideoTemplateMessage_(
+                createAutumnLeavesViewingVideoWork_()
+              ),
+            ],
+          }),
+          muteHttpExceptions: true,
+        }
+      );
+    } catch (error) {
+      console.error('所長限定試運転の送信で通信エラーが発生しました。');
+      throw new Error('所長限定試運転を実行できませんでした。');
+    }
+
+    const statusCode = response.getResponseCode();
+
+    if (statusCode < 200 || statusCode >= 300) {
+      console.error('所長限定試運転の送信に失敗しました。ステータス: %s', statusCode);
+      throw new Error('所長限定試運転を実行できませんでした。');
+    }
+
+    scriptProperties.setProperty(
+      'DIRECTOR_TRIAL_AUTUMN_LEAVES_SENT_AT',
+      new Date().toISOString()
+    );
+    console.log('所長限定試運転の送信が完了しました。');
+  } finally {
+    lock.releaseLock();
   }
 }

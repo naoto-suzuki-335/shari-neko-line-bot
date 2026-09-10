@@ -1516,3 +1516,21 @@ GASのWebアプリは、次の処理を行う。
 - 通常案内のクイックリプライ4項目と除外キーワード4語を混同しない
 - 一度に機能を増やさず、動作確認しながら段階的に進める
 - 本書を実装時の判断基準とし、仕様変更が生じた場合は本書も更新する
+
+## 15. 所長限定・定期配信試運転（第1段階）
+
+将来の定期配信に先立ち、所長本人のLINEアカウントだけを対象として、GASの公開関数を手動実行する試運転機能を設ける。第1段階では「紅葉狩り」のButtonsカード1通だけをPush APIで送信する。自動配信、曜日・時刻トリガー、全友だち配信は対象外とする。
+
+所長の登録メッセージは `しゃりねこ所長登録:<使い捨てトークン>` とし、固定語だけでは登録できない。受信元は1対1トークの `user` に限定し、userIdは `U` と32桁の16進数からなる形式だけを受け付ける。使い捨てトークンの原文は保存せず、UTF-8のSHA-256と有効期限をScript Propertiesへ事前設定して照合する。登録済みuserIdは上書きせず、登録成功後はトークンハッシュと有効期限を直ちに削除する。登録用接頭辞を持つメッセージは、成功・失敗にかかわらず通常会話へ流さない。
+
+Script Propertiesでは、既存の `LINE_CHANNEL_ACCESS_TOKEN` に加え、次を使用する。
+
+- `DIRECTOR_LINE_USER_ID`
+- `DIRECTOR_REGISTRATION_TOKEN_HASH`
+- `DIRECTOR_REGISTRATION_EXPIRES_AT`
+- `DIRECTOR_TRIAL_PUSH_ARMED`
+- `DIRECTOR_TRIAL_AUTUMN_LEAVES_SENT_AT`
+
+試運転は引数を持たない公開関数 `sendDirectorAutumnLeavesTrial` からのみ実行する。宛先は `DIRECTOR_LINE_USER_ID` の単一userIdに固定し、関数引数、配列、受信イベントから指定しない。送信前にはScript Lock、アクセストークン、userId形式、文字列 `true` の送信許可フラグ、未送信状態を検査する。許可フラグはAPI呼び出し前に削除して一回分を消費し、HTTP 2xxの場合だけ送信済み日時を保存する。自動再試行は行わない。
+
+送信には単一宛先のPush APIだけを使用する。broadcast、multicast、narrowcastは実装せず、全友だちまたは複数宛先への配信は行わない。アクセストークン、userId、登録トークン、ハッシュ、リクエスト本文、レスポンス本文をソースコード、Git、ログ、例外、実行結果へ表示しない。
