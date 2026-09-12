@@ -588,6 +588,43 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/going-home-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
     },
+    'しゃりねこ動画：仕事｜陶芸家': {
+      title: '器、できました。',
+      guideText:
+        'ろくろを回して器を仕上げるしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pottery-artist-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pottery-artist-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜寿司屋': {
+      title: '本業です。',
+      guideText: '寿司屋が本業のしゃりねこが、今日もお店に立ちます。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sushi-shop-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi-shop-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜寿司職人': {
+      title: 'へい、おまち。',
+      guideText: 'わさびをちょんと添えて、寿司を握るしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sushi-chef-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi-chef-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜蕎麦職人': {
+      title: 'そば、打ちました。',
+      guideText: 'こねて、のばして、切って。蕎麦を一丁仕上げます。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/soba-chef-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/soba-chef-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
     'しゃりねこ動画：おみせ｜ピザ職人': {
       guideText:
         'ピザを焼くしゃりねこ職人を、そっとのぞいてみますか？🐱',
@@ -1059,6 +1096,38 @@ function handleLineEvent_(event) {
           type: 'message',
           label: '帰宅',
           text: 'しゃりねこ動画：仕事｜帰宅',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '陶芸家',
+          text: 'しゃりねこ動画：仕事｜陶芸家',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '寿司屋',
+          text: 'しゃりねこ動画：仕事｜寿司屋',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '寿司職人',
+          text: 'しゃりねこ動画：仕事｜寿司職人',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '蕎麦職人',
+          text: 'しゃりねこ動画：仕事｜蕎麦職人',
         },
       },
     ];
@@ -1799,31 +1868,38 @@ function replyVideoTemplate_(replyToken, channelAccessToken, videoWork) {
  * @return {Object} LINE Messaging APIへ渡すButtonsテンプレートメッセージ
  */
 function createVideoTemplateMessage_(videoWork) {
+  const template = {
+    type: 'buttons',
+    thumbnailImageUrl: videoWork.thumbnailUrl,
+  };
+
+  if (videoWork.title) {
+    template.title = videoWork.title;
+  }
+
+  template.text = videoWork.guideText;
+  template.defaultAction = {
+    type: 'uri',
+    label: '動画を見る',
+    uri: videoWork.pageUrl,
+  };
+  template.actions = [
+    {
+      type: 'uri',
+      label: '動画を見る',
+      uri: videoWork.pageUrl,
+    },
+    {
+      type: 'message',
+      label: 'ほかの動画',
+      text: videoWork.categoryKeyword,
+    },
+  ];
+
   return {
     type: 'template',
     altText: 'しゃりねこ動画のご案内',
-    template: {
-      type: 'buttons',
-      thumbnailImageUrl: videoWork.thumbnailUrl,
-      text: videoWork.guideText,
-      defaultAction: {
-        type: 'uri',
-        label: '動画を見る',
-        uri: videoWork.pageUrl,
-      },
-      actions: [
-        {
-          type: 'uri',
-          label: '動画を見る',
-          uri: videoWork.pageUrl,
-        },
-        {
-          type: 'message',
-          label: 'ほかの動画',
-          text: videoWork.categoryKeyword,
-        },
-      ],
-    },
+    template: template,
   };
 }
 
