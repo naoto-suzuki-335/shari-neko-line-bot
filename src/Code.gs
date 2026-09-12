@@ -625,6 +625,43 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/soba-chef-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
     },
+    'しゃりねこ動画：仕事｜終電': {
+      title: '寝てません。',
+      guideText:
+        '終電の車内で眠気と戦うしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/last-train-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/last-train-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜書道家': {
+      title: '猫、書きました。',
+      guideText: '筆を走らせて「猫」を仕上げるしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/calligrapher-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/calligrapher-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜紅葉警備員': {
+      title: '帽子、死守。',
+      guideText: 'ライトアップされた紅葉を警備するしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-leaves-guard-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-leaves-guard-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：季節｜てるてる坊主': {
+      title: 'そろそろ、晴れてください。',
+      guideText: '雨の窓辺で、てるてる坊主を作るしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/teru-teru-bozu-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/teru-teru-bozu-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
     'しゃりねこ動画：おみせ｜ピザ職人': {
       guideText:
         'ピザを焼くしゃりねこ職人を、そっとのぞいてみますか？🐱',
@@ -974,6 +1011,14 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：一日｜暑い',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'てるてる坊主',
+          text: 'しゃりねこ動画：季節｜てるてる坊主',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -1128,6 +1173,30 @@ function handleLineEvent_(event) {
           type: 'message',
           label: '蕎麦職人',
           text: 'しゃりねこ動画：仕事｜蕎麦職人',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '終電',
+          text: 'しゃりねこ動画：仕事｜終電',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '書道家',
+          text: 'しゃりねこ動画：仕事｜書道家',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '紅葉警備員',
+          text: 'しゃりねこ動画：仕事｜紅葉警備員',
         },
       },
     ];
