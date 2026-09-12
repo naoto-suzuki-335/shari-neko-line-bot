@@ -426,7 +426,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/last-leaf-sweeping-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/last-leaf-sweeping-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
     },
     'しゃりねこ動画：一日｜朝': {
       guideText: '朝のしゃりねこを、そっとのぞいてみますか？🐱',
@@ -508,7 +508,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/falling-leaf-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/falling-leaf-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
     },
     'しゃりねこ動画：一日｜残暑': {
       guideText:
@@ -543,7 +543,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/acorn-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/acorn-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
     },
     'しゃりねこ動画：一日｜食パン': {
       guideText:
@@ -613,7 +613,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/moon-viewing-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/moon-viewing-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
     },
     'しゃりねこ動画：季節｜縁側': {
       guideText: '縁側で音に気づくしゃりねこを、そっとのぞいてみますか？🐱',
@@ -621,7 +621,7 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/engawa-neko/',
       thumbnailUrl:
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/engawa-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
     },
     'しゃりねこ動画：季節｜さんま': createGrilledSanmaVideoWork_(),
     'しゃりねこ動画：季節｜紅葉狩り':
@@ -635,7 +635,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'おみせとおでかけ',
+          label: 'おでかけ',
           text: 'しゃりねこ動画：おみせとおでかけ',
         },
       },
@@ -643,7 +643,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'しゃりねこの一日',
+          label: '日常',
           text: 'しゃりねこ動画：しゃりねこの一日',
         },
       },
@@ -651,7 +651,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: '季節のしゃりねこ',
+          label: '季節',
           text: 'しゃりねこ動画：季節のしゃりねこ',
         },
       },
@@ -659,7 +659,15 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'おしごとと通勤',
+          label: '秋',
+          text: 'しゃりねこ動画：秋のしゃりねこ',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'おしごと',
           text: 'しゃりねこ動画：おしごとと通勤',
         },
       },
@@ -909,14 +917,6 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: '落ち葉',
-          text: 'しゃりねこ動画：一日｜落ち葉',
-        },
-      },
-      {
-        type: 'action',
-        action: {
-          type: 'message',
           label: '残暑',
           text: 'しゃりねこ動画：一日｜残暑',
         },
@@ -935,6 +935,28 @@ function handleLineEvent_(event) {
           type: 'message',
           label: '暑い',
           text: 'しゃりねこ動画：一日｜暑い',
+        },
+      },
+    ];
+
+    replyTextMessage_(
+      event.replyToken,
+      'どのしゃりねこをのぞいてみますか？🐱',
+      channelAccessToken,
+      true,
+      seasonalVideoQuickReplyItems
+    );
+    return;
+  }
+
+  if (receivedText === 'しゃりねこ動画：秋のしゃりねこ') {
+    const autumnVideoQuickReplyItems = [
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '落ち葉',
+          text: 'しゃりねこ動画：一日｜落ち葉',
         },
       },
       {
@@ -997,10 +1019,10 @@ function handleLineEvent_(event) {
 
     replyTextMessage_(
       event.replyToken,
-      'どのしゃりねこをのぞいてみますか？🐱',
+      'どの秋をのぞいてみますか？🐱',
       channelAccessToken,
       true,
-      seasonalVideoQuickReplyItems
+      autumnVideoQuickReplyItems
     );
     return;
   }
@@ -1818,7 +1840,7 @@ function createAutumnLeavesViewingVideoWork_() {
       'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-leaves-viewing-neko/',
     thumbnailUrl:
       'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-leaves-viewing-neko-thumbnail.jpg',
-    categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
   };
 }
 
@@ -1835,7 +1857,7 @@ function createRoastedSweetPotatoVideoWork_() {
       'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/roasted-sweet-potato-neko/',
     thumbnailUrl:
       'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/roasted-sweet-potato-neko-thumbnail.jpg',
-    categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
   };
 }
 
@@ -1852,7 +1874,7 @@ function createGrilledSanmaVideoWork_() {
       'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/grilled-sanma-neko/',
     thumbnailUrl:
       'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/grilled-sanma-neko-thumbnail.jpg',
-    categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
   };
 }
 
