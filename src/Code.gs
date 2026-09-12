@@ -662,6 +662,42 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/teru-teru-bozu-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
     },
+    'しゃりねこ動画：秋｜栗拾い': {
+      title: '聞いてない。',
+      guideText: '栗を拾おうとして、イガのトゲに気づくしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/chestnut-picking-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/chestnut-picking-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
+    'しゃりねこ動画：一日｜角ロック': {
+      title: 'ロックです。',
+      guideText: '居酒屋で角ロックをじっくり味わうしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/kaku-rock-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/kaku-rock-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜ホッピー': {
+      title: 'ホッピー、濃いめで。',
+      guideText: '居酒屋で好みの濃さに仕上げるしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/hoppy-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/hoppy-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：秋｜秋の日の出': {
+      title: '朝は、来ました。',
+      guideText: '秋の海辺で日の出を見つめるしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-sunrise-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-sunrise-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
     'しゃりねこ動画：おみせ｜ピザ職人': {
       guideText:
         'ピザを焼くしゃりねこ職人を、そっとのぞいてみますか？🐱',
@@ -965,6 +1001,22 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：一日｜ふみふみ',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '角ロック',
+          text: 'しゃりねこ動画：一日｜角ロック',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'ホッピー',
+          text: 'しゃりねこ動画：一日｜ホッピー',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -1095,6 +1147,22 @@ function handleLineEvent_(event) {
           type: 'message',
           label: '焼き芋',
           text: 'しゃりねこ動画：季節｜焼き芋',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '栗拾い',
+          text: 'しゃりねこ動画：秋｜栗拾い',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '秋の日の出',
+          text: 'しゃりねこ動画：秋｜秋の日の出',
         },
       },
     ];
