@@ -315,429 +315,7 @@ function handleLineEvent_(event) {
     return;
   }
 
-  const videoWorks = {
-    'しゃりねこ動画：海辺': {
-      guideText: '海辺のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/umibe-no-sanrinsha-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/umibe-no-sanrinsha-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
-    },
-    'しゃりねこ動画：バリスタ': {
-      guideText: 'カフェのしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/barista-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/barista-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：ソムリエ': {
-      guideText: 'ソムリエのしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sommelier-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sommelier-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：たい焼き': {
-      guideText: 'たい焼きのしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/taiyaki-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/taiyaki-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：たい焼き屋': {
-      guideText: 'たい焼き屋のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/taiyakiya-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/taiyakiya-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：パン職人': {
-      guideText: 'パン屋のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pan-shokunin-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pan-shokunin-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：八百屋': {
-      guideText: '八百屋のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pan-shokunin-yaoya-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pan-shokunin-yaoya-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：花屋': {
-      guideText: '花屋のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/hanaya-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/hanaya-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：レコード屋': {
-      guideText: 'レコード屋のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/record-shop-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/record-shop-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：本屋': {
-      guideText: '本屋のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/honya-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/honya-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：おみせ｜お茶': {
-      guideText: 'お茶を注ぐしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/tea-serving-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/tea-serving-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：おみせ｜おにぎり': {
-      guideText: 'おにぎりを作るしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/onigiri-maker-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/onigiri-maker-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：おみせ｜閉店後': {
-      guideText: '閉店後に一杯やるしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/after-hours-drink-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/after-hours-drink-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：おみせ｜落ち葉掃除': {
-      guideText: '店先で落ち葉を掃くしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/last-leaf-sweeping-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/last-leaf-sweeping-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
-    },
-    'しゃりねこ動画：一日｜朝': {
-      guideText: '朝のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/morning-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/morning-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜海辺': {
-      guideText: '海辺のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/seaside-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/seaside-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜月夜': {
-      guideText: '月夜のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/moonlit-night-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/moonlit-night-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜花畑': {
-      guideText: '花畑のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/flower-field-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/flower-field-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜森の小川': {
-      guideText: '森の小川のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/forest-stream-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/forest-stream-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜風の丘': {
-      guideText: '風の丘のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/windy-hill-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/windy-hill-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜踏切': {
-      guideText: '踏切のしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/train-crossing-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/train-crossing-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜カフェ': {
-      guideText:
-        'カフェでひとやすみするしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/coffee-break-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/coffee-break-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜秋の夜長': {
-      guideText: '秋の夜に本を読むしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-night-reading-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-night-reading-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜落ち葉': {
-      guideText:
-        '落ち葉を見つめるしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/falling-leaf-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/falling-leaf-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
-    },
-    'しゃりねこ動画：一日｜残暑': {
-      guideText:
-        '縁側で残暑を過ごすしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/late-summer-relaxing-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/late-summer-relaxing-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
-    },
-    'しゃりねこ動画：一日｜残暑見舞い': {
-      guideText: '残暑を見舞うしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/late-summer-greeting-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/late-summer-greeting-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
-    },
-    'しゃりねこ動画：一日｜暑い': {
-      guideText:
-        '暑さに不満げなしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/late-summer-complaint-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/late-summer-complaint-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
-    },
-    'しゃりねこ動画：一日｜どんぐり': {
-      guideText:
-        'どんぐりを見つめるしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/acorn-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/acorn-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
-    },
-    'しゃりねこ動画：一日｜食パン': {
-      guideText:
-        '食パンが焼けるのを待つしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/shokupan-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/shokupan-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：仕事｜サラリーマン': {
-      guideText: 'カフェで作業するしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/office-worker-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/office-worker-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜一本見送り': {
-      guideText:
-        '駅で電車を一本見送るしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/train-platform-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/train-platform-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜うとうと': {
-      guideText:
-        '通勤電車でうとうとするしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sleepy-commuter-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sleepy-commuter-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜帰宅': {
-      guideText: '夕方の電車で帰るしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/going-home-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/going-home-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜陶芸家': {
-      title: '器、できました。',
-      guideText:
-        'ろくろを回して器を仕上げるしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pottery-artist-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pottery-artist-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜寿司屋': {
-      title: '本業です。',
-      guideText: '寿司屋が本業のしゃりねこが、今日もお店に立ちます。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sushi-shop-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi-shop-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜寿司職人': {
-      title: 'へい、おまち。',
-      guideText: 'わさびをちょんと添えて、寿司を握るしゃりねこです。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sushi-chef-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi-chef-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜蕎麦職人': {
-      title: 'そば、打ちました。',
-      guideText: 'こねて、のばして、切って。蕎麦を一丁仕上げます。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/soba-chef-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/soba-chef-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜終電': {
-      title: '寝てません。',
-      guideText:
-        '終電の車内で眠気と戦うしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/last-train-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/last-train-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜書道家': {
-      title: '猫、書きました。',
-      guideText: '筆を走らせて「猫」を仕上げるしゃりねこです。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/calligrapher-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/calligrapher-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：仕事｜紅葉警備員': {
-      title: '帽子、死守。',
-      guideText: 'ライトアップされた紅葉を警備するしゃりねこです。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-leaves-guard-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-leaves-guard-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
-    },
-    'しゃりねこ動画：季節｜てるてる坊主': {
-      title: 'そろそろ、晴れてください。',
-      guideText: '雨の窓辺で、てるてる坊主を作るしゃりねこです。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/teru-teru-bozu-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/teru-teru-bozu-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
-    },
-    'しゃりねこ動画：秋｜栗拾い': {
-      title: '聞いてない。',
-      guideText: '栗を拾おうとして、イガのトゲに気づくしゃりねこです。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/chestnut-picking-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/chestnut-picking-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
-    },
-    'しゃりねこ動画：一日｜角ロック': {
-      title: 'ロックです。',
-      guideText: '居酒屋で角ロックをじっくり味わうしゃりねこです。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/kaku-rock-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/kaku-rock-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：一日｜ホッピー': {
-      title: 'ホッピー、濃いめで。',
-      guideText: '居酒屋で好みの濃さに仕上げるしゃりねこです。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/hoppy-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/hoppy-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：秋｜秋の日の出': {
-      title: '朝は、来ました。',
-      guideText: '秋の海辺で日の出を見つめるしゃりねこです。',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-sunrise-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-sunrise-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
-    },
-    'しゃりねこ動画：おみせ｜ピザ職人': {
-      guideText:
-        'ピザを焼くしゃりねこ職人を、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pizza-maker-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pizza-maker-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
-    },
-    'しゃりねこ動画：一日｜ふみふみ': {
-      guideText:
-        '座布団をふみふみするしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/fumifumi-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/fumifumi-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
-    },
-    'しゃりねこ動画：季節｜お月見': {
-      guideText:
-        'お月見団子を待つしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/moon-viewing-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/moon-viewing-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
-    },
-    'しゃりねこ動画：季節｜縁側': {
-      guideText: '縁側で音に気づくしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/engawa-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/engawa-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
-    },
-    'しゃりねこ動画：季節｜さんま': createGrilledSanmaVideoWork_(),
-    'しゃりねこ動画：季節｜紅葉狩り':
-      createAutumnLeavesViewingVideoWork_(),
-    'しゃりねこ動画：季節｜焼き芋': createRoastedSweetPotatoVideoWork_(),
-  };
+  const videoWorks = createVideoWorks_();
 
   if (receivedText === 'しゃりねこ動画') {
     const videoCategoryQuickReplyItems = [
@@ -1999,6 +1577,437 @@ function replyVideoTemplate_(replyToken, channelAccessToken, videoWork) {
 }
 
 /**
+ * 登録済みの動画作品データを返します。
+ *
+ * @return {Object<string, Object>} 正式キーワードをキーとする動画作品データ
+ */
+function createVideoWorks_() {
+  return {
+    'しゃりねこ動画：海辺': {
+      guideText: '海辺のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/umibe-no-sanrinsha-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/umibe-no-sanrinsha-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：バリスタ': {
+      guideText: 'カフェのしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/barista-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/barista-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：ソムリエ': {
+      guideText: 'ソムリエのしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sommelier-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sommelier-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：たい焼き': {
+      guideText: 'たい焼きのしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/taiyaki-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/taiyaki-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：たい焼き屋': {
+      guideText: 'たい焼き屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/taiyakiya-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/taiyakiya-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：パン職人': {
+      guideText: 'パン屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pan-shokunin-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pan-shokunin-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：八百屋': {
+      guideText: '八百屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pan-shokunin-yaoya-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pan-shokunin-yaoya-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：花屋': {
+      guideText: '花屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/hanaya-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/hanaya-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：レコード屋': {
+      guideText: 'レコード屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/record-shop-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/record-shop-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：本屋': {
+      guideText: '本屋のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/honya-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/honya-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：おみせ｜お茶': {
+      guideText: 'お茶を注ぐしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/tea-serving-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/tea-serving-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：おみせ｜おにぎり': {
+      guideText: 'おにぎりを作るしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/onigiri-maker-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/onigiri-maker-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：おみせ｜閉店後': {
+      guideText: '閉店後に一杯やるしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/after-hours-drink-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/after-hours-drink-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：おみせ｜落ち葉掃除': {
+      guideText: '店先で落ち葉を掃くしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/last-leaf-sweeping-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/last-leaf-sweeping-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
+    'しゃりねこ動画：一日｜朝': {
+      guideText: '朝のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/morning-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/morning-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜海辺': {
+      guideText: '海辺のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/seaside-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/seaside-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜月夜': {
+      guideText: '月夜のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/moonlit-night-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/moonlit-night-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜花畑': {
+      guideText: '花畑のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/flower-field-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/flower-field-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜森の小川': {
+      guideText: '森の小川のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/forest-stream-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/forest-stream-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜風の丘': {
+      guideText: '風の丘のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/windy-hill-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/windy-hill-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜踏切': {
+      guideText: '踏切のしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/train-crossing-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/train-crossing-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜カフェ': {
+      guideText:
+        'カフェでひとやすみするしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/coffee-break-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/coffee-break-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜秋の夜長': {
+      guideText: '秋の夜に本を読むしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-night-reading-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-night-reading-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜落ち葉': {
+      guideText:
+        '落ち葉を見つめるしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/falling-leaf-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/falling-leaf-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
+    'しゃりねこ動画：一日｜残暑': {
+      guideText:
+        '縁側で残暑を過ごすしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/late-summer-relaxing-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/late-summer-relaxing-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：一日｜残暑見舞い': {
+      guideText: '残暑を見舞うしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/late-summer-greeting-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/late-summer-greeting-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：一日｜暑い': {
+      guideText:
+        '暑さに不満げなしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/late-summer-complaint-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/late-summer-complaint-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：一日｜どんぐり': {
+      guideText:
+        'どんぐりを見つめるしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/acorn-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/acorn-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
+    'しゃりねこ動画：一日｜食パン': {
+      guideText:
+        '食パンが焼けるのを待つしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/shokupan-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/shokupan-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：仕事｜サラリーマン': {
+      guideText: 'カフェで作業するしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/office-worker-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/office-worker-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜一本見送り': {
+      guideText:
+        '駅で電車を一本見送るしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/train-platform-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/train-platform-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜うとうと': {
+      guideText:
+        '通勤電車でうとうとするしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sleepy-commuter-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sleepy-commuter-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜帰宅': {
+      guideText: '夕方の電車で帰るしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/going-home-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/going-home-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜陶芸家': {
+      title: '器、できました。',
+      guideText:
+        'ろくろを回して器を仕上げるしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pottery-artist-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pottery-artist-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜寿司屋': {
+      title: '本業です。',
+      guideText: '寿司屋が本業のしゃりねこが、今日もお店に立ちます。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sushi-shop-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi-shop-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜寿司職人': {
+      title: 'へい、おまち。',
+      guideText: 'わさびをちょんと添えて、寿司を握るしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sushi-chef-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sushi-chef-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜蕎麦職人': {
+      title: 'そば、打ちました。',
+      guideText: 'こねて、のばして、切って。蕎麦を一丁仕上げます。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/soba-chef-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/soba-chef-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜終電': {
+      title: '寝てません。',
+      guideText:
+        '終電の車内で眠気と戦うしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/last-train-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/last-train-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜書道家': {
+      title: '猫、書きました。',
+      guideText: '筆を走らせて「猫」を仕上げるしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/calligrapher-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/calligrapher-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜紅葉警備員': {
+      title: '帽子、死守。',
+      guideText: 'ライトアップされた紅葉を警備するしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-leaves-guard-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-leaves-guard-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：季節｜てるてる坊主': {
+      title: 'そろそろ、晴れてください。',
+      guideText: '雨の窓辺で、てるてる坊主を作るしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/teru-teru-bozu-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/teru-teru-bozu-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：秋｜栗拾い': {
+      title: '聞いてない。',
+      guideText: '栗を拾おうとして、イガのトゲに気づくしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/chestnut-picking-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/chestnut-picking-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
+    'しゃりねこ動画：一日｜角ロック': {
+      title: 'ロックです。',
+      guideText: '居酒屋で角ロックをじっくり味わうしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/kaku-rock-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/kaku-rock-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：一日｜ホッピー': {
+      title: 'ホッピー、濃いめで。',
+      guideText: '居酒屋で好みの濃さに仕上げるしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/hoppy-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/hoppy-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：秋｜秋の日の出': {
+      title: '朝は、来ました。',
+      guideText: '秋の海辺で日の出を見つめるしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/autumn-sunrise-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-sunrise-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
+    'しゃりねこ動画：おみせ｜ピザ職人': {
+      guideText:
+        'ピザを焼くしゃりねこ職人を、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/pizza-maker-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/pizza-maker-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：一日｜ふみふみ': {
+      guideText:
+        '座布団をふみふみするしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/fumifumi-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/fumifumi-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：季節｜お月見': {
+      guideText:
+        'お月見団子を待つしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/moon-viewing-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/moon-viewing-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
+    'しゃりねこ動画：季節｜縁側': {
+      guideText: '縁側で音に気づくしゃりねこを、そっとのぞいてみますか？🐱',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/engawa-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/engawa-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
+    'しゃりねこ動画：季節｜さんま': createGrilledSanmaVideoWork_(),
+    'しゃりねこ動画：季節｜紅葉狩り':
+      createAutumnLeavesViewingVideoWork_(),
+    'しゃりねこ動画：季節｜焼き芋': createRoastedSweetPotatoVideoWork_(),
+  };
+}
+
+/**
  * 動画作品のButtonsテンプレートメッセージを生成します。
  *
  * @param {Object} videoWork 動画作品の案内文、閲覧ページURL、サムネイルURL
@@ -2089,6 +2098,482 @@ function createGrilledSanmaVideoWork_() {
       'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/grilled-sanma-neko-thumbnail.jpg',
     categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
   };
+}
+
+/**
+ * 週3回の動画broadcast用トリガーを作成します。
+ */
+function installWeeklyVideoBroadcastTriggers() {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(5000)) {
+    throw new Error('週次動画配信のトリガーを作成できませんでした。');
+  }
+
+  const createdTriggers = [];
+
+  try {
+    const scriptProperties = PropertiesService.getScriptProperties();
+    const channelAccessToken = scriptProperties.getProperty(
+      'LINE_CHANNEL_ACCESS_TOKEN'
+    );
+
+    if (
+      !channelAccessToken ||
+      scriptProperties.getProperty('WEEKLY_VIDEO_BROADCAST_ACTIVE') === 'true' ||
+      scriptProperties.getProperty('WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_SLOT') ||
+      getWeeklyVideoBroadcastTriggers_().length > 0
+    ) {
+      throw new Error('週次動画配信のトリガーを作成できませんでした。');
+    }
+
+    const triggerDefinitions = [
+      {
+        handler: 'runSundayNewVideoBroadcast',
+        weekDay: ScriptApp.WeekDay.SUNDAY,
+      },
+      {
+        handler: 'runWednesdayRandomVideoBroadcast',
+        weekDay: ScriptApp.WeekDay.WEDNESDAY,
+      },
+      {
+        handler: 'runFridaySeasonalVideoBroadcast',
+        weekDay: ScriptApp.WeekDay.FRIDAY,
+      },
+    ];
+
+    triggerDefinitions.forEach(function (definition) {
+      createdTriggers.push(
+        ScriptApp.newTrigger(definition.handler)
+          .timeBased()
+          .onWeekDay(definition.weekDay)
+          .atHour(10)
+          .inTimezone('Asia/Tokyo')
+          .create()
+      );
+    });
+
+    scriptProperties.setProperty(
+      'WEEKLY_VIDEO_BROADCAST_TRIGGER_IDS',
+      JSON.stringify(
+        createdTriggers.map(function (trigger) {
+          return trigger.getUniqueId();
+        })
+      )
+    );
+    scriptProperties.setProperty('WEEKLY_VIDEO_BROADCAST_ACTIVE', 'true');
+    console.log('週次動画配信のトリガーを作成しました。');
+  } catch (error) {
+    createdTriggers.forEach(function (trigger) {
+      ScriptApp.deleteTrigger(trigger);
+    });
+    throw new Error('週次動画配信のトリガーを作成できませんでした。');
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 週3回の動画broadcastを停止します。
+ */
+function stopWeeklyVideoBroadcast() {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(5000)) {
+    throw new Error('週次動画配信を停止できませんでした。');
+  }
+
+  try {
+    stopWeeklyVideoBroadcast_(
+      PropertiesService.getScriptProperties(),
+      false
+    );
+    console.log('週次動画配信を停止しました。');
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 日曜日に新しめの作品から1件配信します。
+ */
+function runSundayNewVideoBroadcast() {
+  runWeeklyVideoBroadcast_('SUNDAY_NEW');
+}
+
+/**
+ * 水曜日に全作品から1件配信します。
+ */
+function runWednesdayRandomVideoBroadcast() {
+  runWeeklyVideoBroadcast_('WEDNESDAY_RANDOM');
+}
+
+/**
+ * 金曜日に現在の季節に合う作品から1件配信します。
+ */
+function runFridaySeasonalVideoBroadcast() {
+  runWeeklyVideoBroadcast_('FRIDAY_SEASONAL');
+}
+
+/**
+ * 週次動画配信を1件実行します。
+ *
+ * @param {string} scheduleType 曜日別の配信種別
+ */
+function runWeeklyVideoBroadcast_(scheduleType) {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(5000)) {
+    console.error('週次動画配信を実行できませんでした。');
+    return;
+  }
+
+  try {
+    const scriptProperties = PropertiesService.getScriptProperties();
+    const channelAccessToken = scriptProperties.getProperty(
+      'LINE_CHANNEL_ACCESS_TOKEN'
+    );
+    const schedule = getWeeklyVideoBroadcastSchedule_(scheduleType, new Date());
+
+    if (
+      !schedule ||
+      !channelAccessToken ||
+      scriptProperties.getProperty('WEEKLY_VIDEO_BROADCAST_ACTIVE') !== 'true' ||
+      !getWeeklyVideoBroadcastTriggers_().some(function (trigger) {
+        return trigger.getHandlerFunction() === schedule.handler;
+      })
+    ) {
+      console.error('週次動画配信を実行できませんでした。');
+      return;
+    }
+
+    if (!schedule.isScheduledTime) {
+      console.log('週次動画配信の対象時間外です。');
+      return;
+    }
+
+    const slot = scheduleType + ':' + schedule.dateText;
+    const completedSlot = scriptProperties.getProperty(
+      'WEEKLY_VIDEO_BROADCAST_LAST_COMPLETED_SLOT'
+    );
+
+    if (completedSlot === slot) {
+      console.log('この配信枠はすでに完了しています。');
+      return;
+    }
+
+    if (scriptProperties.getProperty('WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_SLOT')) {
+      stopWeeklyVideoBroadcast_(scriptProperties, true);
+      console.error('送信状態を確定できないため週次動画配信を停止しました。');
+      return;
+    }
+
+    const videoWorks = createVideoWorks_();
+    const candidateKeywords = getWeeklyVideoBroadcastCandidateKeywords_(
+      scheduleType,
+      schedule.month,
+      videoWorks
+    );
+    const selectedKeyword = selectWeeklyVideoBroadcastKeyword_(
+      candidateKeywords,
+      scriptProperties.getProperty('WEEKLY_VIDEO_BROADCAST_LAST_KEYWORD')
+    );
+    const selectedVideo = videoWorks[selectedKeyword];
+
+    if (!selectedVideo) {
+      stopWeeklyVideoBroadcast_(scriptProperties, false);
+      console.error('配信作品を決定できないため週次動画配信を停止しました。');
+      return;
+    }
+
+    scriptProperties.setProperty('WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_SLOT', slot);
+    scriptProperties.setProperty(
+      'WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_KEYWORD',
+      selectedKeyword
+    );
+
+    let statusCode;
+
+    try {
+      statusCode = broadcastVideoMessage_(channelAccessToken, selectedVideo);
+    } catch (error) {
+      scriptProperties.setProperty(
+        'WEEKLY_VIDEO_BROADCAST_LAST_FAILURE_AT',
+        new Date().toISOString()
+      );
+      stopWeeklyVideoBroadcast_(scriptProperties, true);
+      console.error('送信結果を確定できないため週次動画配信を停止しました。');
+      return;
+    }
+
+    if (statusCode < 200 || statusCode >= 300) {
+      scriptProperties.setProperty(
+        'WEEKLY_VIDEO_BROADCAST_LAST_FAILURE_AT',
+        new Date().toISOString()
+      );
+      stopWeeklyVideoBroadcast_(scriptProperties, true);
+      console.error('週次動画配信に失敗しました。ステータス: %s', statusCode);
+      return;
+    }
+
+    scriptProperties.setProperty(
+      'WEEKLY_VIDEO_BROADCAST_LAST_KEYWORD',
+      selectedKeyword
+    );
+    scriptProperties.setProperty(
+      'WEEKLY_VIDEO_BROADCAST_LAST_SENT_AT',
+      new Date().toISOString()
+    );
+    scriptProperties.setProperty(
+      'WEEKLY_VIDEO_BROADCAST_LAST_COMPLETED_SLOT',
+      slot
+    );
+    scriptProperties.deleteProperty('WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_SLOT');
+    scriptProperties.deleteProperty('WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_KEYWORD');
+    scriptProperties.deleteProperty('WEEKLY_VIDEO_BROADCAST_LAST_FAILURE_AT');
+    console.log('週次動画配信が完了しました。');
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 動画カード1件を友だち全員へbroadcastします。
+ *
+ * @param {string} channelAccessToken チャネルアクセストークン
+ * @param {Object} videoWork 動画作品データ
+ * @return {number} HTTPステータスコード
+ */
+function broadcastVideoMessage_(channelAccessToken, videoWork) {
+  const response = UrlFetchApp.fetch(
+    'https://api.line.me/v2/bot/message/broadcast',
+    {
+      method: 'post',
+      contentType: 'application/json',
+      headers: {
+        Authorization: 'Bearer ' + channelAccessToken,
+      },
+      payload: JSON.stringify({
+        messages: [createVideoTemplateMessage_(videoWork)],
+      }),
+      muteHttpExceptions: true,
+    }
+  );
+
+  return response.getResponseCode();
+}
+
+/**
+ * 配信種別に対応する候補キーワードを返します。
+ *
+ * @param {string} scheduleType 曜日別の配信種別
+ * @param {number} month JSTの月（1～12）
+ * @param {Object<string, Object>} videoWorks 全動画作品
+ * @return {Array<string>} 正式キーワード
+ */
+function getWeeklyVideoBroadcastCandidateKeywords_(
+  scheduleType,
+  month,
+  videoWorks
+) {
+  let candidateKeywords;
+
+  if (scheduleType === 'SUNDAY_NEW') {
+    candidateKeywords = [
+      'しゃりねこ動画：仕事｜陶芸家',
+      'しゃりねこ動画：仕事｜寿司屋',
+      'しゃりねこ動画：仕事｜寿司職人',
+      'しゃりねこ動画：仕事｜蕎麦職人',
+      'しゃりねこ動画：仕事｜終電',
+      'しゃりねこ動画：仕事｜書道家',
+      'しゃりねこ動画：仕事｜紅葉警備員',
+      'しゃりねこ動画：季節｜てるてる坊主',
+      'しゃりねこ動画：秋｜栗拾い',
+      'しゃりねこ動画：一日｜角ロック',
+      'しゃりねこ動画：一日｜ホッピー',
+      'しゃりねこ動画：秋｜秋の日の出',
+    ];
+  } else if (scheduleType === 'WEDNESDAY_RANDOM') {
+    candidateKeywords = Object.keys(videoWorks);
+  } else if (scheduleType === 'FRIDAY_SEASONAL') {
+    candidateKeywords = getSeasonalVideoBroadcastCandidateKeywords_(month);
+  } else {
+    return [];
+  }
+
+  const uniqueKeywords = Array.from(new Set(candidateKeywords));
+  const allCandidatesExist = uniqueKeywords.every(function (keyword) {
+    return Object.prototype.hasOwnProperty.call(videoWorks, keyword);
+  });
+
+  return allCandidatesExist && uniqueKeywords.length === candidateKeywords.length
+    ? uniqueKeywords
+    : [];
+}
+
+/**
+ * JSTの月に対応する季節作品の正式キーワードを返します。
+ *
+ * @param {number} month JSTの月（1～12）
+ * @return {Array<string>} 正式キーワード
+ */
+function getSeasonalVideoBroadcastCandidateKeywords_(month) {
+  if (month >= 3 && month <= 5) {
+    return [
+      'しゃりねこ動画：一日｜花畑',
+      'しゃりねこ動画：一日｜森の小川',
+      'しゃりねこ動画：一日｜風の丘',
+      'しゃりねこ動画：一日｜海辺',
+      'しゃりねこ動画：バリスタ',
+    ];
+  }
+
+  if (month >= 6 && month <= 8) {
+    return [
+      'しゃりねこ動画：季節｜てるてる坊主',
+      'しゃりねこ動画：海辺',
+      'しゃりねこ動画：一日｜残暑',
+      'しゃりねこ動画：一日｜残暑見舞い',
+      'しゃりねこ動画：一日｜暑い',
+    ];
+  }
+
+  if (month >= 9 && month <= 11) {
+    return [
+      'しゃりねこ動画：一日｜落ち葉',
+      'しゃりねこ動画：一日｜どんぐり',
+      'しゃりねこ動画：おみせ｜落ち葉掃除',
+      'しゃりねこ動画：季節｜お月見',
+      'しゃりねこ動画：季節｜縁側',
+      'しゃりねこ動画：季節｜さんま',
+      'しゃりねこ動画：季節｜紅葉狩り',
+      'しゃりねこ動画：季節｜焼き芋',
+      'しゃりねこ動画：秋｜栗拾い',
+      'しゃりねこ動画：秋｜秋の日の出',
+    ];
+  }
+
+  if (month === 12 || month === 1 || month === 2) {
+    return [
+      'しゃりねこ動画：一日｜カフェ',
+      'しゃりねこ動画：一日｜食パン',
+      'しゃりねこ動画：一日｜ふみふみ',
+      'しゃりねこ動画：おみせ｜お茶',
+      'しゃりねこ動画：季節｜焼き芋',
+    ];
+  }
+
+  return [];
+}
+
+/**
+ * 直前作品を除外し、候補から均等ランダムに1件選びます。
+ *
+ * @param {Array<string>} candidateKeywords 候補キーワード
+ * @param {string} lastKeyword 直前に配信したキーワード
+ * @return {string|null} 選択したキーワード
+ */
+function selectWeeklyVideoBroadcastKeyword_(candidateKeywords, lastKeyword) {
+  if (!Array.isArray(candidateKeywords) || candidateKeywords.length === 0) {
+    return null;
+  }
+
+  const selectableKeywords = candidateKeywords.filter(function (keyword) {
+    return keyword !== lastKeyword;
+  });
+
+  if (selectableKeywords.length === 0) {
+    return null;
+  }
+
+  return selectableKeywords[
+    Math.floor(Math.random() * selectableKeywords.length)
+  ];
+}
+
+/**
+ * 配信種別と現在時刻から実行条件を返します。
+ *
+ * @param {string} scheduleType 曜日別の配信種別
+ * @param {Date} now 現在日時
+ * @return {Object|null} スケジュール情報
+ */
+function getWeeklyVideoBroadcastSchedule_(scheduleType, now) {
+  const scheduleDefinitions = {
+    SUNDAY_NEW: { day: 0, handler: 'runSundayNewVideoBroadcast' },
+    WEDNESDAY_RANDOM: {
+      day: 3,
+      handler: 'runWednesdayRandomVideoBroadcast',
+    },
+    FRIDAY_SEASONAL: {
+      day: 5,
+      handler: 'runFridaySeasonalVideoBroadcast',
+    },
+  };
+  const definition = scheduleDefinitions[scheduleType];
+
+  if (!definition) {
+    return null;
+  }
+
+  const dateText = Utilities.formatDate(now, 'Asia/Tokyo', 'yyyy-MM-dd');
+  const hour = Number(Utilities.formatDate(now, 'Asia/Tokyo', 'H'));
+  const month = Number(Utilities.formatDate(now, 'Asia/Tokyo', 'M'));
+  const day = new Date(dateText + 'T00:00:00Z').getUTCDay();
+
+  return {
+    handler: definition.handler,
+    dateText: dateText,
+    month: month,
+    isScheduledTime: day === definition.day && hour === 10,
+  };
+}
+
+/**
+ * 週次動画配信用トリガーだけを取得します。
+ *
+ * @return {Array<Object>} 週次動画配信用トリガー
+ */
+function getWeeklyVideoBroadcastTriggers_() {
+  const handlers = getWeeklyVideoBroadcastTriggerHandlers_();
+
+  return ScriptApp.getProjectTriggers().filter(function (trigger) {
+    return handlers.includes(trigger.getHandlerFunction());
+  });
+}
+
+/**
+ * 週次動画配信用のハンドラー名を返します。
+ *
+ * @return {Array<string>} ハンドラー名
+ */
+function getWeeklyVideoBroadcastTriggerHandlers_() {
+  return [
+    'runSundayNewVideoBroadcast',
+    'runWednesdayRandomVideoBroadcast',
+    'runFridaySeasonalVideoBroadcast',
+  ];
+}
+
+/**
+ * 週次動画配信を停止し、専用トリガーだけを削除します。
+ *
+ * @param {Object} scriptProperties Script Properties
+ * @param {boolean} preserveInFlight 未確定の送信状態を保持するか
+ */
+function stopWeeklyVideoBroadcast_(scriptProperties, preserveInFlight) {
+  getWeeklyVideoBroadcastTriggers_().forEach(function (trigger) {
+    ScriptApp.deleteTrigger(trigger);
+  });
+  scriptProperties.deleteProperty('WEEKLY_VIDEO_BROADCAST_ACTIVE');
+  scriptProperties.deleteProperty('WEEKLY_VIDEO_BROADCAST_TRIGGER_IDS');
+
+  if (!preserveInFlight) {
+    scriptProperties.deleteProperty('WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_SLOT');
+    scriptProperties.deleteProperty(
+      'WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_KEYWORD'
+    );
+  }
 }
 
 /**

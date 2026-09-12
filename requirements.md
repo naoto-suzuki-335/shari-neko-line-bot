@@ -1602,3 +1602,53 @@ GAS画面から引数を持たない公開関数 `startDirectorRapidPushTrial` �
 「秋」カテゴリには、既存8作品の後へ「栗拾い」「秋の日の出」をこの順で追加し、合計10作品とする。正式キーワードは、それぞれ `しゃりねこ動画：秋｜栗拾い`、`しゃりねこ動画：秋｜秋の日の出` とする。各作品の `categoryKeyword` は `しゃりねこ動画：秋のしゃりねこ` とする。
 
 最終バッチ4作品は、既存の作品別 `title` 対応を再利用する。既存48作品の作品データとButtons payloadは変更せず、各新作カードでは対応するタイトル、案内文、公開ページ、正式サムネイルおよび所属カテゴリへ戻る「ほかの動画」を使用する。追加後は、おでかけ13作品、日常13作品、季節5作品、秋10作品、おしごと11作品の合計52作品とし、おでかけと日常はLINEクイックリプライの上限13件に達している。
+
+## 20. 週3回の動画自動配信
+
+LINE公式アカウントの友だち全員へ、Messaging APIのbroadcastエンドポイントを使って動画のButtonsカードを1通ずつ配信する。配信時刻はAsia/Tokyoの午前10時台とし、日曜日は新しめの12作品、水曜日は全52作品、金曜日は現在の季節に合う明示的な候補から均等ランダムに1作品を選ぶ。直前に配信した作品は候補から除外する。
+
+日曜日の候補は「陶芸家」「寿司屋」「寿司職人」「蕎麦職人」「終電」「書道家」「紅葉警備員」「てるてる坊主」「栗拾い」「角ロック」「ホッピー」「秋の日の出」の12作品とする。水曜日の候補は `createVideoWorks_()` が返す全52作品とする。
+
+金曜日の候補はJSTの月に応じて次のとおりとする。
+
+- 3～5月：「花畑」「森の小川」「風の丘」「日常の海辺」「バリスタ」
+- 6～8月：「てるてる坊主」「季節の海辺」「残暑」「残暑見舞い」「暑い」
+- 9～11月：「落ち葉」「どんぐり」「落ち葉掃除」「お月見」「縁側」「さんま」「紅葉狩り」「焼き芋」「栗拾い」「秋の日の出」
+- 12～2月：「カフェ」「食パン」「ふみふみ」「お茶」「焼き芋」
+
+登録済み52作品のデータは `createVideoWorks_()` で一元管理し、Webhook返信と自動配信で共用する。Buttonsメッセージは既存の `createVideoTemplateMessage_()` で生成し、既存52作品のデータ、順序およびReply payloadを変更しない。broadcastのリクエスト本文には `to`、userId、宛先配列を含めず、メッセージ1件だけを設定する。
+
+GAS画面から公開関数 `installWeeklyVideoBroadcastTriggers` を手動実行すると、`runSundayNewVideoBroadcast`、`runWednesdayRandomVideoBroadcast`、`runFridaySeasonalVideoBroadcast` を呼ぶ時間主導トリガーを各1件、合計3件だけ作成する。各トリガーには `inTimezone('Asia/Tokyo')` と `atHour(10)` を明示する。既存の週次配信トリガー、実行中状態または送信結果未確定状態がある場合は、重複作成を拒否する。初回は2026年9月13日（日）の午前10時より前にトリガーを作成し、10時台の自動実行を待つ。
+
+各曜日の公開ハンドラーは共通内部関数 `runWeeklyVideoBroadcast_(scheduleType)` を呼ぶ。共通処理はScript Lock、アクセストークン、有効フラグ、対象ハンドラーのトリガー、JSTの曜日と10時台、同一曜日・日付の完了状態を検査する。配信slotは配信種別とJSTの日付の組み合わせとし、同じslotは最大1回だけ成功させる。
+
+API呼び出し前にin-flightのslotと作品キーワードを保存する。HTTP 2xxの場合だけ、最終作品、成功日時、完了slotを保存し、in-flight状態を削除する。直前作品しか候補に残らない場合は配信せず、作品を決定できない異常として週次配信を停止し、週次配信専用トリガーだけを削除する。この場合に代替作品の送信や自動再試行は行わない。通信例外、HTTPエラー、既存のin-flight状態または作品データ不整合が発生した場合も、自動再送せず週次配信を停止する。送信結果が不明な場合はin-flight状態を保持し、再インストールも拒否する。
+
+使用するScript Propertiesは次の専用キーとする。
+
+- `WEEKLY_VIDEO_BROADCAST_ACTIVE`
+- `WEEKLY_VIDEO_BROADCAST_TRIGGER_IDS`
+- `WEEKLY_VIDEO_BROADCAST_LAST_KEYWORD`
+- `WEEKLY_VIDEO_BROADCAST_LAST_SENT_AT`
+- `WEEKLY_VIDEO_BROADCAST_LAST_COMPLETED_SLOT`
+- `WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_SLOT`
+- `WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_KEYWORD`
+- `WEEKLY_VIDEO_BROADCAST_LAST_FAILURE_AT`
+
+公開関数 `stopWeeklyVideoBroadcast` を手動実行すると、上記3ハンドラーを処理する週次配信専用トリガーと稼働状態を削除する。Director短時間試験を含む他機能のトリガーは削除しない。手動停止ではin-flight状態を削除するが、最終作品、最終成功日時および完了slotは履歴として維持する。
+
+アクセストークン、userId、リクエスト本文、レスポンス本文はログ、例外、実行結果へ表示しない。Director登録、Director単発Push、Director短時間試験、Webhook返信および既存動画カードは変更しない。
+
+実装時は次を検証する。
+
+- [ ] `createVideoWorks_()`が52作品を元の順序で返す
+- [ ] 既存52作品のデータとReply Buttons payloadが変更前と一致する
+- [ ] 日曜12作品、水曜52作品、春5作品、夏5作品、秋10作品、冬5作品の正式キーワードがすべて存在する
+- [ ] 候補数にかかわらず直前作品が除外され、直前作品しか候補に残らない場合はAPIを呼ばず週次配信を安全停止する
+- [ ] 同一slotの完了後およびin-flight状態ではbroadcast APIを呼ばない
+- [ ] 成功時だけ最終作品、成功日時および完了slotを更新する
+- [ ] broadcast payloadに `to` がなく、動画カード1件だけが含まれる
+- [ ] HTTPエラーと通信例外で週次配信を停止し、自動再送しない
+- [ ] インストール時に専用トリガーを3件だけ作成し、重複作成しない
+- [ ] 停止時に週次配信専用トリガーだけを削除する
+- [ ] Director用トリガーと既存機能へ影響しない
