@@ -148,14 +148,6 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'どうが',
-          text: 'しゃりねこ動画',
-        },
-      },
-      {
-        type: 'action',
-        action: {
-          type: 'message',
           label: 'かんさつ',
           text: 'しゃりねこ観察',
         },
@@ -172,16 +164,24 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: '和菓子ねこ',
-          text: '和菓子ねこ',
+          label: 'どうが',
+          text: 'しゃりねこ動画',
         },
       },
       {
         type: 'action',
         action: {
           type: 'message',
-          label: '今日のかぶりもの',
+          label: 'かぶりもの',
           text: '今日のかぶりもの',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '和菓子',
+          text: '和菓子ねこ',
         },
       },
     ];
