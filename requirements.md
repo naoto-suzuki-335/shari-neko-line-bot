@@ -1533,3 +1533,19 @@ Script Propertiesでは、既存の `LINE_CHANNEL_ACCESS_TOKEN` に加え、次�
 GAS画面から引数を持たない公開関数 `armDirectorAutumnLeavesTrial` を手動実行し、登録済みuserIdと未送信状態を確認したうえで、紅葉狩りカードのPush送信を1回分だけ許可する。その後、引数を持たない公開関数 `sendDirectorAutumnLeavesTrial` を手動実行する。宛先は `DIRECTOR_LINE_USER_ID` の単一userIdに固定し、関数引数、配列、受信イベントから指定しない。送信前にはScript Lock、アクセストークン、userId形式、文字列 `true` の送信許可フラグ、未送信状態を検査する。許可フラグはAPI呼び出し前に削除して一回分を消費し、HTTP 2xxの場合だけ送信済み日時を保存する。自動再試行は行わない。
 
 送信には単一宛先のPush APIだけを使用する。broadcast、multicast、narrowcastは実装せず、全友だちまたは複数宛先への配信は行わない。アクセストークン、userId、リクエスト本文、レスポンス本文をソースコード、Git、ログ、例外、実行結果へ表示しない。
+
+### 15.1 所長限定・短時間自動配信試験
+
+時間主導トリガーを使い、所長本人へ約1分間隔で「紅葉狩り」「焼き芋」「さんま」のButtonsカードを順番に1通ずつPush送信する。3本の送信完了後は試験状態を削除し、専用トリガーを自動的に削除する。
+
+GAS画面から引数を持たない公開関数 `startDirectorRapidPushTrial` を手動実行して試験を開始する。開始時にアクセストークン、所長userId、試験状態、同名トリガーの有無を検査し、配信位置を0へ初期化して試験中フラグを設定する。`runDirectorRapidPushTrial` を約1分間隔で呼ぶ時間主導トリガーは1件だけ作成し、開始関数からLINE APIは呼び出さない。
+
+`runDirectorRapidPushTrial` は1回につき単一の所長userIdへ動画カード1通だけを送る。送信成功後だけ配信位置を進める。API呼び出し前に処理中フラグを設定し、応答確定前に実行が中断した場合は次回実行で試験を停止することで重複送信を避ける。HTTPエラーまたは通信例外の場合も、安全側で試験状態と専用トリガーを削除し、自動再試行しない。
+
+公開関数 `stopDirectorRapidPushTrial` をGAS画面から手動実行すると、試験状態と `runDirectorRapidPushTrial` を処理するトリガーだけを削除する。他機能のプロジェクトトリガーは削除しない。使用するScript Propertiesは次の専用キーとする。
+
+- `DIRECTOR_RAPID_TRIAL_ACTIVE`
+- `DIRECTOR_RAPID_TRIAL_INDEX`
+- `DIRECTOR_RAPID_TRIAL_IN_FLIGHT`
+
+宛先は常に `DIRECTOR_LINE_USER_ID` の1名だけとし、引数、配列、Webhookイベントから指定しない。broadcast、multicast、narrowcastは使用しない。曜日・時刻を指定する本番定期配信や全友だち配信は、この短時間試験の対象外とする。

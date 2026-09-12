@@ -623,26 +623,10 @@ function handleLineEvent_(event) {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/engawa-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
     },
-    'しゃりねこ動画：季節｜さんま': {
-      guideText:
-        '秋の縁側でさんまが焼けるのを待つしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/grilled-sanma-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/grilled-sanma-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
-    },
+    'しゃりねこ動画：季節｜さんま': createGrilledSanmaVideoWork_(),
     'しゃりねこ動画：季節｜紅葉狩り':
       createAutumnLeavesViewingVideoWork_(),
-    'しゃりねこ動画：季節｜焼き芋': {
-      guideText:
-        '焼き芋を念力で割るしゃりねこを、そっとのぞいてみますか？🐱',
-      pageUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/roasted-sweet-potato-neko/',
-      thumbnailUrl:
-        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/roasted-sweet-potato-neko-thumbnail.jpg',
-      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
-    },
+    'しゃりねこ動画：季節｜焼き芋': createRoastedSweetPotatoVideoWork_(),
   };
 
   if (receivedText === 'しゃりねこ動画') {
@@ -1839,6 +1823,40 @@ function createAutumnLeavesViewingVideoWork_() {
 }
 
 /**
+ * 焼き芋動画の案内データを返します。
+ *
+ * @return {Object} 焼き芋動画の案内データ
+ */
+function createRoastedSweetPotatoVideoWork_() {
+  return {
+    guideText:
+      '焼き芋を念力で割るしゃりねこを、そっとのぞいてみますか？🐱',
+    pageUrl:
+      'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/roasted-sweet-potato-neko/',
+    thumbnailUrl:
+      'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/roasted-sweet-potato-neko-thumbnail.jpg',
+    categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+  };
+}
+
+/**
+ * さんま動画の案内データを返します。
+ *
+ * @return {Object} さんま動画の案内データ
+ */
+function createGrilledSanmaVideoWork_() {
+  return {
+    guideText:
+      '秋の縁側でさんまが焼けるのを待つしゃりねこを、そっとのぞいてみますか？🐱',
+    pageUrl:
+      'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/grilled-sanma-neko/',
+    thumbnailUrl:
+      'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/grilled-sanma-neko-thumbnail.jpg',
+    categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+  };
+}
+
+/**
  * 所長登録を2分間だけ受け付けます。
  */
 function armDirectorRegistration() {
@@ -2066,4 +2084,202 @@ function sendDirectorAutumnLeavesTrial() {
   } finally {
     lock.releaseLock();
   }
+}
+
+/**
+ * 所長限定の短時間自動配信試験を開始します。
+ */
+function startDirectorRapidPushTrial() {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(5000)) {
+    throw new Error('所長限定の短時間配信試験を開始できませんでした。');
+  }
+
+  try {
+    const scriptProperties = PropertiesService.getScriptProperties();
+    const channelAccessToken = scriptProperties.getProperty(
+      'LINE_CHANNEL_ACCESS_TOKEN'
+    );
+    const directorUserId = scriptProperties.getProperty('DIRECTOR_LINE_USER_ID');
+    const rapidTrialTriggers = getDirectorRapidPushTrialTriggers_();
+
+    if (
+      !channelAccessToken ||
+      !/^U[0-9a-fA-F]{32}$/.test(directorUserId || '') ||
+      scriptProperties.getProperty('DIRECTOR_RAPID_TRIAL_ACTIVE') === 'true' ||
+      rapidTrialTriggers.length > 0
+    ) {
+      throw new Error('所長限定の短時間配信試験を開始できませんでした。');
+    }
+
+    scriptProperties.setProperty('DIRECTOR_RAPID_TRIAL_INDEX', '0');
+    scriptProperties.setProperty('DIRECTOR_RAPID_TRIAL_ACTIVE', 'true');
+    scriptProperties.deleteProperty('DIRECTOR_RAPID_TRIAL_IN_FLIGHT');
+
+    try {
+      ScriptApp.newTrigger('runDirectorRapidPushTrial')
+        .timeBased()
+        .everyMinutes(1)
+        .create();
+    } catch (error) {
+      clearDirectorRapidPushTrialState_(scriptProperties);
+      throw new Error('所長限定の短時間配信試験を開始できませんでした。');
+    }
+
+    console.log('所長限定の短時間配信試験を開始しました。');
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 所長限定の短時間自動配信試験を1件進めます。
+ */
+function runDirectorRapidPushTrial() {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(5000)) {
+    console.error('所長限定の短時間配信試験を実行できませんでした。');
+    return;
+  }
+
+  try {
+    const scriptProperties = PropertiesService.getScriptProperties();
+    const channelAccessToken = scriptProperties.getProperty(
+      'LINE_CHANNEL_ACCESS_TOKEN'
+    );
+    const directorUserId = scriptProperties.getProperty('DIRECTOR_LINE_USER_ID');
+    const currentIndexValue = scriptProperties.getProperty(
+      'DIRECTOR_RAPID_TRIAL_INDEX'
+    );
+    const currentIndex = Number(currentIndexValue);
+    const videoWorks = createDirectorRapidPushTrialVideoWorks_();
+    const isValid =
+      scriptProperties.getProperty('DIRECTOR_RAPID_TRIAL_ACTIVE') === 'true' &&
+      !scriptProperties.getProperty('DIRECTOR_RAPID_TRIAL_IN_FLIGHT') &&
+      channelAccessToken &&
+      /^U[0-9a-fA-F]{32}$/.test(directorUserId || '') &&
+      /^\d+$/.test(currentIndexValue || '') &&
+      Number.isInteger(currentIndex) &&
+      currentIndex >= 0 &&
+      currentIndex < videoWorks.length;
+
+    if (!isValid) {
+      stopDirectorRapidPushTrial_(scriptProperties);
+      console.error('所長限定の短時間配信試験を停止しました。');
+      return;
+    }
+
+    scriptProperties.setProperty('DIRECTOR_RAPID_TRIAL_IN_FLIGHT', 'true');
+    let response;
+
+    try {
+      response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
+        method: 'post',
+        contentType: 'application/json',
+        headers: {
+          Authorization: 'Bearer ' + channelAccessToken,
+        },
+        payload: JSON.stringify({
+          to: directorUserId,
+          messages: [createVideoTemplateMessage_(videoWorks[currentIndex])],
+        }),
+        muteHttpExceptions: true,
+      });
+    } catch (error) {
+      stopDirectorRapidPushTrial_(scriptProperties);
+      console.error('所長限定の短時間配信試験を停止しました。');
+      return;
+    }
+
+    const statusCode = response.getResponseCode();
+
+    if (statusCode < 200 || statusCode >= 300) {
+      stopDirectorRapidPushTrial_(scriptProperties);
+      console.error(
+        '所長限定の短時間配信試験を停止しました。ステータス: %s',
+        statusCode
+      );
+      return;
+    }
+
+    const nextIndex = currentIndex + 1;
+    scriptProperties.deleteProperty('DIRECTOR_RAPID_TRIAL_IN_FLIGHT');
+
+    if (nextIndex >= videoWorks.length) {
+      stopDirectorRapidPushTrial_(scriptProperties);
+      console.log('所長限定の短時間配信試験が完了しました。');
+      return;
+    }
+
+    scriptProperties.setProperty('DIRECTOR_RAPID_TRIAL_INDEX', String(nextIndex));
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 所長限定の短時間自動配信試験を停止します。
+ */
+function stopDirectorRapidPushTrial() {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(5000)) {
+    throw new Error('所長限定の短時間配信試験を停止できませんでした。');
+  }
+
+  try {
+    stopDirectorRapidPushTrial_(PropertiesService.getScriptProperties());
+    console.log('所長限定の短時間配信試験を停止しました。');
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 短時間配信試験で送る3作品を返します。
+ *
+ * @return {Array<Object>} 配信順の動画作品
+ */
+function createDirectorRapidPushTrialVideoWorks_() {
+  return [
+    createAutumnLeavesViewingVideoWork_(),
+    createRoastedSweetPotatoVideoWork_(),
+    createGrilledSanmaVideoWork_(),
+  ];
+}
+
+/**
+ * 短時間配信試験用のトリガーだけを取得します。
+ *
+ * @return {Array<Object>} 対象トリガー
+ */
+function getDirectorRapidPushTrialTriggers_() {
+  return ScriptApp.getProjectTriggers().filter(function (trigger) {
+    return trigger.getHandlerFunction() === 'runDirectorRapidPushTrial';
+  });
+}
+
+/**
+ * 短時間配信試験の状態と対象トリガーだけを削除します。
+ *
+ * @param {Object} scriptProperties Script Properties
+ */
+function stopDirectorRapidPushTrial_(scriptProperties) {
+  getDirectorRapidPushTrialTriggers_().forEach(function (trigger) {
+    ScriptApp.deleteTrigger(trigger);
+  });
+  clearDirectorRapidPushTrialState_(scriptProperties);
+}
+
+/**
+ * 短時間配信試験の状態だけを削除します。
+ *
+ * @param {Object} scriptProperties Script Properties
+ */
+function clearDirectorRapidPushTrialState_(scriptProperties) {
+  scriptProperties.deleteProperty('DIRECTOR_RAPID_TRIAL_ACTIVE');
+  scriptProperties.deleteProperty('DIRECTOR_RAPID_TRIAL_INDEX');
+  scriptProperties.deleteProperty('DIRECTOR_RAPID_TRIAL_IN_FLIGHT');
 }
