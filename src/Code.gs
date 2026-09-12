@@ -137,8 +137,8 @@ function handleLineEvent_(event) {
     return;
   }
 
-  if (receivedText.indexOf('しゃりねこ所長登録:') === 0) {
-    handleDirectorRegistration_(event, receivedText, channelAccessToken);
+  if (receivedText === '所長登録') {
+    handleDirectorRegistration_(event, channelAccessToken);
     return;
   }
 
@@ -1839,14 +1839,41 @@ function createAutumnLeavesViewingVideoWork_() {
 }
 
 /**
- * 一回限りのトークンを検証し、所長のLINE userIdを登録します。
+ * 所長登録を2分間だけ受け付けます。
+ */
+function armDirectorRegistration() {
+  const lock = LockService.getScriptLock();
+
+  if (!lock.tryLock(5000)) {
+    throw new Error('所長登録の受付を開始できませんでした。');
+  }
+
+  try {
+    const scriptProperties = PropertiesService.getScriptProperties();
+    scriptProperties.deleteProperty('DIRECTOR_REGISTRATION_TOKEN_HASH');
+    scriptProperties.deleteProperty('DIRECTOR_REGISTRATION_EXPIRES_AT');
+
+    if (scriptProperties.getProperty('DIRECTOR_LINE_USER_ID')) {
+      throw new Error('所長登録はすでに完了しています。');
+    }
+
+    scriptProperties.setProperty(
+      'DIRECTOR_REGISTRATION_ARMED_UNTIL',
+      String(Date.now() + 2 * 60 * 1000)
+    );
+    console.log('所長登録の受付を開始しました。');
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 受付中の所長登録要求を検証し、LINE userIdを登録します。
  *
  * @param {Object} event LINEのWebhookイベント
- * @param {string} receivedText 受信した登録メッセージ
  * @param {string} channelAccessToken チャネルアクセストークン
  */
-function handleDirectorRegistration_(event, receivedText, channelAccessToken) {
-  const registrationPrefix = 'しゃりねこ所長登録:';
+function handleDirectorRegistration_(event, channelAccessToken) {
   const failureMessage = '所長登録を完了できませんでした。';
   const successMessage = '所長登録が完了しました。';
   const lock = LockService.getScriptLock();
@@ -1862,25 +1889,20 @@ function handleDirectorRegistration_(event, receivedText, channelAccessToken) {
 
   try {
     const scriptProperties = PropertiesService.getScriptProperties();
-    const userId =
-      event && event.source && event.source.type === 'user'
-        ? event.source.userId
-        : '';
-    const token = receivedText.substring(registrationPrefix.length);
-    const storedHash = scriptProperties.getProperty(
-      'DIRECTOR_REGISTRATION_TOKEN_HASH'
+    const source = event && event.source;
+    const userId = source && source.userId;
+    const armedUntil = Number(
+      scriptProperties.getProperty('DIRECTOR_REGISTRATION_ARMED_UNTIL')
     );
-    const expiresAt = Number(
-      scriptProperties.getProperty('DIRECTOR_REGISTRATION_EXPIRES_AT')
-    );
+    scriptProperties.deleteProperty('DIRECTOR_REGISTRATION_ARMED_UNTIL');
     const isValid =
       !scriptProperties.getProperty('DIRECTOR_LINE_USER_ID') &&
-      /^U[0-9a-fA-F]{32}$/.test(userId) &&
-      token.length > 0 &&
-      /^[0-9a-fA-F]{64}$/.test(storedHash || '') &&
-      Number.isFinite(expiresAt) &&
-      Date.now() <= expiresAt &&
-      constantTimeHexEquals_(sha256Hex_(token), storedHash);
+      source &&
+      source.type === 'user' &&
+      /^U[0-9a-fA-F]{32}$/.test(userId || '') &&
+      Number.isFinite(armedUntil) &&
+      armedUntil > 0 &&
+      Date.now() <= armedUntil;
 
     if (!isValid) {
       replyDirectorRegistrationResult_(
@@ -1892,8 +1914,6 @@ function handleDirectorRegistration_(event, receivedText, channelAccessToken) {
     }
 
     scriptProperties.setProperty('DIRECTOR_LINE_USER_ID', userId);
-    scriptProperties.deleteProperty('DIRECTOR_REGISTRATION_TOKEN_HASH');
-    scriptProperties.deleteProperty('DIRECTOR_REGISTRATION_EXPIRES_AT');
     replyDirectorRegistrationResult_(
       event.replyToken,
       channelAccessToken,
@@ -1945,43 +1965,31 @@ function replyDirectorRegistrationResult_(replyToken, channelAccessToken, text) 
 }
 
 /**
- * UTF-8文字列のSHA-256を16進文字列で返します。
- *
- * @param {string} value 対象文字列
- * @return {string} 小文字のSHA-256文字列
+ * 所長限定Pushを1回分だけ許可します。
  */
-function sha256Hex_(value) {
-  return Utilities.computeDigest(
-    Utilities.DigestAlgorithm.SHA_256,
-    value,
-    Utilities.Charset.UTF_8
-  )
-    .map(function (byte) {
-      return ('0' + ((byte + 256) % 256).toString(16)).slice(-2);
-    })
-    .join('');
-}
+function armDirectorAutumnLeavesTrial() {
+  const lock = LockService.getScriptLock();
 
-/**
- * 2つのSHA-256文字列を定数時間で比較します。
- *
- * @param {string} left 比較対象
- * @param {string} right 比較対象
- * @return {boolean} 一致する場合はtrue
- */
-function constantTimeHexEquals_(left, right) {
-  const normalizedLeft = String(left || '').toLowerCase();
-  const normalizedRight = String(right || '').toLowerCase();
-  const maxLength = Math.max(normalizedLeft.length, normalizedRight.length);
-  let difference = normalizedLeft.length ^ normalizedRight.length;
-
-  for (let index = 0; index < maxLength; index++) {
-    difference |=
-      (normalizedLeft.charCodeAt(index) || 0) ^
-      (normalizedRight.charCodeAt(index) || 0);
+  if (!lock.tryLock(5000)) {
+    throw new Error('所長限定Pushを許可できませんでした。');
   }
 
-  return difference === 0;
+  try {
+    const scriptProperties = PropertiesService.getScriptProperties();
+    const directorUserId = scriptProperties.getProperty('DIRECTOR_LINE_USER_ID');
+
+    if (
+      !/^U[0-9a-fA-F]{32}$/.test(directorUserId || '') ||
+      scriptProperties.getProperty('DIRECTOR_TRIAL_AUTUMN_LEAVES_SENT_AT')
+    ) {
+      throw new Error('所長限定Pushを許可できませんでした。');
+    }
+
+    scriptProperties.setProperty('DIRECTOR_TRIAL_PUSH_ARMED', 'true');
+    console.log('所長限定Pushを1回分許可しました。');
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 /**

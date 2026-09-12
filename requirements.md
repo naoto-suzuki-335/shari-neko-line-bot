@@ -1521,16 +1521,15 @@ GASのWebアプリは、次の処理を行う。
 
 将来の定期配信に先立ち、所長本人のLINEアカウントだけを対象として、GASの公開関数を手動実行する試運転機能を設ける。第1段階では「紅葉狩り」のButtonsカード1通だけをPush APIで送信する。自動配信、曜日・時刻トリガー、全友だち配信は対象外とする。
 
-所長の登録メッセージは `しゃりねこ所長登録:<使い捨てトークン>` とし、固定語だけでは登録できない。受信元は1対1トークの `user` に限定し、userIdは `U` と32桁の16進数からなる形式だけを受け付ける。使い捨てトークンの原文は保存せず、UTF-8のSHA-256と有効期限をScript Propertiesへ事前設定して照合する。登録済みuserIdは上書きせず、登録成功後はトークンハッシュと有効期限を直ちに削除する。登録用接頭辞を持つメッセージは、成功・失敗にかかわらず通常会話へ流さない。
+GAS画面から引数を持たない公開関数 `armDirectorRegistration` を手動実行すると、所長登録を2分間だけ受け付ける。登録受付中に1対1トークから `所長登録` と完全一致するメッセージを送信し、送信元userIdを登録する。部分一致、前後空白、記号付きのメッセージは登録として扱わない。受信元は `user` に限定し、userIdは `U` と32桁の16進数からなる形式だけを受け付ける。登録済みuserIdは上書きしない。完全一致の登録要求を受けたら、成功・失敗にかかわらず登録許可を削除し、一回で窓口を閉じる。旧方式の使い捨てトークン、SHA-256、有効期限の手入力は廃止する。
 
 Script Propertiesでは、既存の `LINE_CHANNEL_ACCESS_TOKEN` に加え、次を使用する。
 
 - `DIRECTOR_LINE_USER_ID`
-- `DIRECTOR_REGISTRATION_TOKEN_HASH`
-- `DIRECTOR_REGISTRATION_EXPIRES_AT`
+- `DIRECTOR_REGISTRATION_ARMED_UNTIL`
 - `DIRECTOR_TRIAL_PUSH_ARMED`
 - `DIRECTOR_TRIAL_AUTUMN_LEAVES_SENT_AT`
 
-試運転は引数を持たない公開関数 `sendDirectorAutumnLeavesTrial` からのみ実行する。宛先は `DIRECTOR_LINE_USER_ID` の単一userIdに固定し、関数引数、配列、受信イベントから指定しない。送信前にはScript Lock、アクセストークン、userId形式、文字列 `true` の送信許可フラグ、未送信状態を検査する。許可フラグはAPI呼び出し前に削除して一回分を消費し、HTTP 2xxの場合だけ送信済み日時を保存する。自動再試行は行わない。
+GAS画面から引数を持たない公開関数 `armDirectorAutumnLeavesTrial` を手動実行し、登録済みuserIdと未送信状態を確認したうえで、紅葉狩りカードのPush送信を1回分だけ許可する。その後、引数を持たない公開関数 `sendDirectorAutumnLeavesTrial` を手動実行する。宛先は `DIRECTOR_LINE_USER_ID` の単一userIdに固定し、関数引数、配列、受信イベントから指定しない。送信前にはScript Lock、アクセストークン、userId形式、文字列 `true` の送信許可フラグ、未送信状態を検査する。許可フラグはAPI呼び出し前に削除して一回分を消費し、HTTP 2xxの場合だけ送信済み日時を保存する。自動再試行は行わない。
 
-送信には単一宛先のPush APIだけを使用する。broadcast、multicast、narrowcastは実装せず、全友だちまたは複数宛先への配信は行わない。アクセストークン、userId、登録トークン、ハッシュ、リクエスト本文、レスポンス本文をソースコード、Git、ログ、例外、実行結果へ表示しない。
+送信には単一宛先のPush APIだけを使用する。broadcast、multicast、narrowcastは実装せず、全友だちまたは複数宛先への配信は行わない。アクセストークン、userId、リクエスト本文、レスポンス本文をソースコード、Git、ログ、例外、実行結果へ表示しない。
