@@ -142,6 +142,11 @@ function handleLineEvent_(event) {
     return;
   }
 
+  if (receivedText === '配信状況') {
+    handleDirectorWeeklyBroadcastStatus_(event, channelAccessToken);
+    return;
+  }
+
   if (receivedText === 'メニュー') {
     const menuQuickReplyItems = [
       {
@@ -2098,6 +2103,257 @@ function createGrilledSanmaVideoWork_() {
       'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/grilled-sanma-neko-thumbnail.jpg',
     categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
   };
+}
+
+/**
+ * 所長本人だけに週次動画配信の状態を返信します。
+ *
+ * @param {Object} event LINEのWebhookイベント
+ * @param {string} channelAccessToken チャネルアクセストークン
+ */
+function handleDirectorWeeklyBroadcastStatus_(event, channelAccessToken) {
+  const source = event && event.source;
+  const userId = source && source.userId;
+  const scriptProperties = PropertiesService.getScriptProperties();
+  const directorUserId = scriptProperties.getProperty('DIRECTOR_LINE_USER_ID');
+
+  if (
+    !source ||
+    source.type !== 'user' ||
+    !/^U[0-9a-fA-F]{32}$/.test(userId || '') ||
+    !/^U[0-9a-fA-F]{32}$/.test(directorUserId || '') ||
+    userId !== directorUserId
+  ) {
+    return;
+  }
+
+  replyDirectorWeeklyBroadcastStatus_(
+    event.replyToken,
+    channelAccessToken,
+    createDirectorWeeklyBroadcastStatusText_(scriptProperties, new Date())
+  );
+}
+
+/**
+ * 週次動画配信の状態を所長向けの表示文へ整形します。
+ *
+ * @param {Object} scriptProperties Script Properties
+ * @param {Date} now 現在日時
+ * @return {string} 状態表示文
+ */
+function createDirectorWeeklyBroadcastStatusText_(scriptProperties, now) {
+  const isActive =
+    scriptProperties.getProperty('WEEKLY_VIDEO_BROADCAST_ACTIVE') === 'true';
+  const inFlightSlot = scriptProperties.getProperty(
+    'WEEKLY_VIDEO_BROADCAST_IN_FLIGHT_SLOT'
+  );
+  const lastFailureAt = scriptProperties.getProperty(
+    'WEEKLY_VIDEO_BROADCAST_LAST_FAILURE_AT'
+  );
+  let status;
+
+  if (isActive && inFlightSlot) {
+    status = '送信中';
+  } else if (!isActive && inFlightSlot) {
+    status = '異常停止（送信結果未確定）';
+  } else if (isActive) {
+    status = '稼働中';
+  } else if (lastFailureAt) {
+    status = '停止中（エラー記録あり）';
+  } else {
+    status = '停止中';
+  }
+
+  const videoWorks = createVideoWorks_();
+  const lastKeyword = scriptProperties.getProperty(
+    'WEEKLY_VIDEO_BROADCAST_LAST_KEYWORD'
+  );
+  const displayName = getWeeklyVideoBroadcastDisplayName_(
+    lastKeyword,
+    videoWorks
+  );
+  const completedSlot = scriptProperties.getProperty(
+    'WEEKLY_VIDEO_BROADCAST_LAST_COMPLETED_SLOT'
+  );
+  const slotLabel = getWeeklyVideoBroadcastSlotLabel_(completedSlot);
+  const previous =
+    displayName === '記録なし'
+      ? '未配信'
+      : slotLabel + '・' + displayName;
+  const lastSentAtValue = scriptProperties.getProperty(
+    'WEEKLY_VIDEO_BROADCAST_LAST_SENT_AT'
+  );
+  const lastSentAt = new Date(lastSentAtValue || '');
+  const sentAtText = Number.isNaN(lastSentAt.getTime())
+    ? '記録なし'
+    : Utilities.formatDate(lastSentAt, 'Asia/Tokyo', 'M月d日 H:mm');
+  const next = isActive
+    ? getNextWeeklyVideoBroadcastLabel_(now, completedSlot, inFlightSlot)
+    : '停止中';
+
+  return [
+    '週次配信：' + status,
+    '前回：' + previous,
+    '送信日時：' + sentAtText,
+    '次回：' + next,
+  ].join('\n');
+}
+
+/**
+ * 正式キーワードを検証し、作品の表示名だけを返します。
+ *
+ * @param {string} keyword 正式キーワード
+ * @param {Object<string, Object>} videoWorks 全動画作品
+ * @return {string} 作品表示名または記録なし
+ */
+function getWeeklyVideoBroadcastDisplayName_(keyword, videoWorks) {
+  if (
+    !keyword ||
+    !Object.prototype.hasOwnProperty.call(videoWorks, keyword)
+  ) {
+    return '記録なし';
+  }
+
+  const separatorIndex = keyword.lastIndexOf('｜');
+  const prefix = 'しゃりねこ動画：';
+  const displayName =
+    separatorIndex >= 0
+      ? keyword.slice(separatorIndex + 1)
+      : keyword.indexOf(prefix) === 0
+        ? keyword.slice(prefix.length)
+        : '';
+
+  return displayName || '記録なし';
+}
+
+/**
+ * 完了slotを曜日表示へ変換します。
+ *
+ * @param {string} slot 完了slot
+ * @return {string} 曜日表示または不明
+ */
+function getWeeklyVideoBroadcastSlotLabel_(slot) {
+  const match = /^(SUNDAY_NEW|WEDNESDAY_RANDOM|FRIDAY_SEASONAL):(\d{4})-(\d{2})-(\d{2})$/.exec(
+    slot || ''
+  );
+
+  if (!match) {
+    return '不明';
+  }
+
+  const year = Number(match[2]);
+  const month = Number(match[3]);
+  const day = Number(match[4]);
+  const date = new Date(Date.UTC(year, month - 1, day));
+
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() + 1 !== month ||
+    date.getUTCDate() !== day
+  ) {
+    return '不明';
+  }
+
+  return {
+    SUNDAY_NEW: '日曜',
+    WEDNESDAY_RANDOM: '水曜',
+    FRIDAY_SEASONAL: '金曜',
+  }[match[1]];
+}
+
+/**
+ * JST基準で直近の週次動画配信予定を返します。
+ *
+ * @param {Date} now 現在日時
+ * @param {string} completedSlot 最後に完了したslot
+ * @param {string} inFlightSlot 送信中または結果未確定のslot
+ * @return {string} 次回予定
+ */
+function getNextWeeklyVideoBroadcastLabel_(
+  now,
+  completedSlot,
+  inFlightSlot
+) {
+  const dateText = Utilities.formatDate(now, 'Asia/Tokyo', 'yyyy-MM-dd');
+  const hour = Number(Utilities.formatDate(now, 'Asia/Tokyo', 'H'));
+  const dateParts = dateText.split('-').map(Number);
+  const schedules = {
+    0: { type: 'SUNDAY_NEW', label: '日曜' },
+    3: { type: 'WEDNESDAY_RANDOM', label: '水曜' },
+    5: { type: 'FRIDAY_SEASONAL', label: '金曜' },
+  };
+
+  for (let offset = 0; offset <= 7; offset += 1) {
+    const candidateDate = new Date(
+      Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2] + offset)
+    );
+    const schedule = schedules[candidateDate.getUTCDay()];
+
+    if (!schedule) {
+      continue;
+    }
+
+    const candidateDateText = [
+      candidateDate.getUTCFullYear(),
+      String(candidateDate.getUTCMonth() + 1).padStart(2, '0'),
+      String(candidateDate.getUTCDate()).padStart(2, '0'),
+    ].join('-');
+    const slot = schedule.type + ':' + candidateDateText;
+    const todayIsAvailable =
+      offset > 0 ||
+      hour < 10 ||
+      (hour === 10 && slot !== completedSlot && slot !== inFlightSlot);
+
+    if (todayIsAvailable) {
+      return schedule.label + ' 午前10時台';
+    }
+  }
+
+  return '不明';
+}
+
+/**
+ * 所長へ週次配信の状態をReply APIで1件だけ返信します。
+ *
+ * @param {string} replyToken LINEから届いた返信用トークン
+ * @param {string} channelAccessToken チャネルアクセストークン
+ * @param {string} text 状態表示文
+ */
+function replyDirectorWeeklyBroadcastStatus_(
+  replyToken,
+  channelAccessToken,
+  text
+) {
+  if (!replyToken) {
+    console.error('配信状況を返信できませんでした。');
+    return;
+  }
+
+  let response;
+
+  try {
+    response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/reply', {
+      method: 'post',
+      contentType: 'application/json',
+      headers: {
+        Authorization: 'Bearer ' + channelAccessToken,
+      },
+      payload: JSON.stringify({
+        replyToken: replyToken,
+        messages: [{ type: 'text', text: text }],
+      }),
+      muteHttpExceptions: true,
+    });
+  } catch (error) {
+    console.error('配信状況を返信できませんでした。');
+    return;
+  }
+
+  const statusCode = response.getResponseCode();
+
+  if (statusCode < 200 || statusCode >= 300) {
+    console.error('配信状況を返信できませんでした。');
+  }
 }
 
 /**
