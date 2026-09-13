@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="しゃりねこの動画54作品を、5つのカテゴリから楽しめる動画図鑑です。">
+  <title>しゃりねこ動画図鑑</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #fffaf3;
+      --surface: #ffffff;
+      --text: #332820;
+      --muted: #6f6258;
+      --accent: #b44d2d;
+      --border: #ead9ca;
+      --shadow: 0 8px 24px rgba(72, 45, 27, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    main {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 32px 16px 64px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.75rem, 7vw, 2.75rem);
+      line-height: 1.25;
+    }
+
+    .intro {
+      margin: 8px 0 24px;
+      color: var(--muted);
+    }
+
+    .category-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 36px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .category-nav a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    section {
+      scroll-margin-top: 16px;
+    }
+
+    section + section {
+      margin-top: 48px;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: clamp(1.4rem, 5vw, 1.9rem);
+    }
+
+    .count {
+      margin-left: 0.4em;
+      color: var(--muted);
+      font-size: 0.75em;
+      font-weight: 500;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .card-link {
+      display: block;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      color: inherit;
+      text-decoration: none;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .card-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(72, 45, 27, 0.14);
+    }
+
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .card-link img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      background: #f3e9df;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      line-height: 1.4;
+    }
+
+    .description {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 420px) {
+      main {
+        padding: 24px 12px 48px;
+      }
+
+      .category-nav a {
+        padding-inline: 14px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .card-link {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>しゃりねこ動画図鑑</h1>
+      <p class="intro">54作品のしゃりねこを、カテゴリから選んでのぞいてみませんか？🐱</p>
+      <nav aria-label="動画カテゴリ">
+        <ul class="category-nav">
+          <li><a href="#outing">おでかけ</a></li>
+          <li><a href="#daily">日常</a></li>
+          <li><a href="#seasonal">季節</a></li>
+          <li><a href="#autumn">秋</a></li>
+          <li><a href="#work">おしごと</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section id="outing" aria-labelledby="outing-heading">
+      <h2 id="outing-heading">おでかけ<span class="count">13作品</span></h2>
+      <ol class="cards">
+        <li><a class="card-link" href="./barista-neko/"><img src="../assets/images/barista-neko-thumbnail.jpg" alt="カフェで働くバリスタのしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">バリスタ</span><h3>バリスタねこ</h3><p class="description">カフェのしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./sommelier-neko/"><img src="../assets/images/sommelier-neko-thumbnail.jpg" alt="ワインを扱うソムリエのしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">ソムリエ</span><h3>ソムリエねこ</h3><p class="description">ソムリエのしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./taiyaki-neko/"><img src="../assets/images/taiyaki-neko-thumbnail.jpg" alt="たい焼きとしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">たい焼き</span><h3>たい焼きねこ</h3><p class="description">たい焼きのしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./taiyakiya-neko/"><img src="../assets/images/taiyakiya-neko-thumbnail.jpg" alt="たい焼き屋で働くしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">たい焼き屋</span><h3>たい焼き屋ねこ</h3><p class="description">たい焼き屋のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./pan-shokunin-neko/"><img src="../assets/images/pan-shokunin-neko-thumbnail.jpg" alt="パンを作る職人のしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">パン</span><h3>パン職人ねこ</h3><p class="description">パン屋のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./pan-shokunin-yaoya-neko/"><img src="../assets/images/pan-shokunin-yaoya-neko-thumbnail.jpg" alt="八百屋を手伝うしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">八百屋</span><h3>パン職人ねこ｜八百屋さんのお手伝い</h3><p class="description">八百屋のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./hanaya-neko/"><img src="../assets/images/hanaya-neko-thumbnail.jpg" alt="花屋で働くしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">花屋</span><h3>花屋ねこ</h3><p class="description">花屋のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./record-shop-neko/"><img src="../assets/images/record-shop-neko-thumbnail.jpg" alt="レコード屋のしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">レコード</span><h3>レコード屋ねこ</h3><p class="description">レコード屋のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./honya-neko/"><img src="../assets/images/honya-neko-thumbnail.jpg" alt="本屋のしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">本屋</span><h3>本屋ねこ</h3><p class="description">本屋のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./tea-serving-neko/"><img src="../assets/images/tea-serving-neko-thumbnail.jpg" alt="お茶を注ぐしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">お茶</span><h3>ひといき、どうぞ。</h3><p class="description">お茶を注ぐしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./onigiri-maker-neko/"><img src="../assets/images/onigiri-maker-neko-thumbnail.jpg" alt="おにぎりを作るしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">おにぎり</span><h3>へい、おまち。</h3><p class="description">おにぎりを作るしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./after-hours-drink-neko/"><img src="../assets/images/after-hours-drink-neko-thumbnail.jpg" alt="閉店後に一杯飲むしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">閉店後</span><h3>本日の営業、終了です。</h3><p class="description">閉店後に一杯やるしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./pizza-maker-neko/"><img src="../assets/images/pizza-maker-neko-thumbnail.jpg" alt="ピザを焼く職人のしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">ピザ職人</span><h3>焼きたてです。</h3><p class="description">ピザを焼くしゃりねこ職人を、そっとのぞいてみますか？🐱</p></div></a></li>
+      </ol>
+    </section>
+
+    <section id="daily" aria-labelledby="daily-heading">
+      <h2 id="daily-heading">日常<span class="count">13作品</span></h2>
+      <ol class="cards">
+        <li><a class="card-link" href="./morning-neko/"><img src="../assets/images/morning-neko-thumbnail.jpg" alt="朝を過ごすしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">朝</span><h3>しゃりねこの一日｜朝</h3><p class="description">朝のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./seaside-neko/"><img src="../assets/images/seaside-neko-thumbnail.jpg" alt="海辺を過ごすしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">海辺</span><h3>しゃりねこの一日｜海辺</h3><p class="description">海辺のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./moonlit-night-neko/"><img src="../assets/images/moonlit-night-neko-thumbnail.jpg" alt="月夜を過ごすしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">月夜</span><h3>しゃりねこの一日｜月夜</h3><p class="description">月夜のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./flower-field-neko/"><img src="../assets/images/flower-field-neko-thumbnail.jpg" alt="花畑にいるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">花畑</span><h3>しゃりねこの一日｜花畑</h3><p class="description">花畑のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./forest-stream-neko/"><img src="../assets/images/forest-stream-neko-thumbnail.jpg" alt="森の小川にいるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">森の小川</span><h3>しゃりねこの一日｜森の小川</h3><p class="description">森の小川のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./windy-hill-neko/"><img src="../assets/images/windy-hill-neko-thumbnail.jpg" alt="風の丘にいるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">風の丘</span><h3>しゃりねこの一日｜風の丘</h3><p class="description">風の丘のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./train-crossing-neko/"><img src="../assets/images/train-crossing-neko-thumbnail.jpg" alt="踏切で電車を待つしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">踏切</span><h3>でんしゃ、きました。</h3><p class="description">踏切のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./coffee-break-neko/"><img src="../assets/images/coffee-break-neko-thumbnail.jpg" alt="カフェでひとやすみするしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">カフェ</span><h3>ちょっと、ひとやすみ。</h3><p class="description">カフェでひとやすみするしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./autumn-night-reading-neko/"><img src="../assets/images/autumn-night-reading-neko-thumbnail.jpg" alt="秋の夜に本を読むしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">秋の夜長</span><h3>秋の夜長、のはず。</h3><p class="description">秋の夜に本を読むしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./shokupan-neko/"><img src="../assets/images/shokupan-neko-thumbnail.jpg" alt="食パンが焼けるのを待つしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">食パン</span><h3>焼けました。</h3><p class="description">食パンが焼けるのを待つしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./fumifumi-neko/"><img src="../assets/images/fumifumi-neko-thumbnail.jpg" alt="座布団をふみふみするしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">ふみふみ</span><h3>今日もいい生地です。</h3><p class="description">座布団をふみふみするしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./kaku-rock-neko/"><img src="../assets/images/kaku-rock-neko-thumbnail.jpg" alt="居酒屋で角ロックを味わうしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">角ロック</span><h3>ロックです。</h3><p class="description">居酒屋で角ロックをじっくり味わうしゃりねこです。</p></div></a></li>
+        <li><a class="card-link" href="./hoppy-neko/"><img src="../assets/images/hoppy-neko-thumbnail.jpg" alt="居酒屋でホッピーを楽しむしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">ホッピー</span><h3>ホッピー、濃いめで。</h3><p class="description">居酒屋で好みの濃さに仕上げるしゃりねこです。</p></div></a></li>
+      </ol>
+    </section>
+
+    <section id="seasonal" aria-labelledby="seasonal-heading">
+      <h2 id="seasonal-heading">季節<span class="count">5作品</span></h2>
+      <ol class="cards">
+        <li><a class="card-link" href="./umibe-no-sanrinsha-neko/"><img src="../assets/images/umibe-no-sanrinsha-neko-thumbnail.jpg" alt="海辺で三輪車に乗るしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">海辺</span><h3>海辺の三輪車ねこ</h3><p class="description">海辺のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./late-summer-relaxing-neko/"><img src="../assets/images/late-summer-relaxing-neko-thumbnail.jpg" alt="縁側で残暑を過ごすしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">残暑</span><h3>まだまだ暑いですね。</h3><p class="description">縁側で残暑を過ごすしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./late-summer-greeting-neko/"><img src="../assets/images/late-summer-greeting-neko-thumbnail.jpg" alt="残暑見舞いをするしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">残暑見舞い</span><h3>残暑お見舞い申し上げます。</h3><p class="description">残暑を見舞うしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./late-summer-complaint-neko/"><img src="../assets/images/late-summer-complaint-neko-thumbnail.jpg" alt="暑さに不満げなしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">暑い</span><h3>暑いんですけど。</h3><p class="description">暑さに不満げなしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./teru-teru-bozu-neko/"><img src="../assets/images/teru-teru-bozu-neko-thumbnail.jpg" alt="雨の窓辺でてるてる坊主を作るしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">てるてる坊主</span><h3>そろそろ、晴れてください。</h3><p class="description">雨の窓辺で、てるてる坊主を作るしゃりねこです。</p></div></a></li>
+      </ol>
+    </section>
+
+    <section id="autumn" aria-labelledby="autumn-heading">
+      <h2 id="autumn-heading">秋<span class="count">12作品</span></h2>
+      <ol class="cards">
+        <li><a class="card-link" href="./falling-leaf-neko/"><img src="../assets/images/falling-leaf-neko-thumbnail.jpg" alt="落ち葉を見つめるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">落ち葉</span><h3>はっぱ、きました。</h3><p class="description">落ち葉を見つめるしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./acorn-neko/"><img src="../assets/images/acorn-neko-thumbnail.jpg" alt="どんぐりを見つめるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">どんぐり</span><h3>どんぐり、みつけた。</h3><p class="description">どんぐりを見つめるしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./last-leaf-sweeping-neko/"><img src="../assets/images/last-leaf-sweeping-neko-thumbnail.jpg" alt="店先で落ち葉を掃くしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">落ち葉掃除</span><h3>一枚、のこりました。</h3><p class="description">店先で落ち葉を掃くしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./moon-viewing-neko/"><img src="../assets/images/moon-viewing-neko-thumbnail.jpg" alt="お月見団子を待つしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">お月見</span><h3>お団子はまだですか。</h3><p class="description">お月見団子を待つしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./engawa-neko/"><img src="../assets/images/engawa-neko-thumbnail.jpg" alt="秋の縁側にいるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">縁側</span><h3>……いま、鳴いた？</h3><p class="description">縁側で音に気づくしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./grilled-sanma-neko/"><img src="../assets/images/grilled-sanma-neko-thumbnail.jpg" alt="七輪でさんまが焼けるのを待つしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">さんま</span><h3>まだですか。</h3><p class="description">秋の縁側でさんまが焼けるのを待つしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./autumn-leaves-viewing-neko/"><img src="../assets/images/autumn-leaves-viewing-neko-thumbnail.jpg" alt="拾った紅葉を頭に載せるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">紅葉狩り</span><h3>紅葉、ひろいました。</h3><p class="description">紅葉を拾って頭に載せるしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./roasted-sweet-potato-neko/"><img src="../assets/images/roasted-sweet-potato-neko-thumbnail.jpg" alt="焼き芋を念力で割るしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">焼き芋</span><h3>念力で割りました。</h3><p class="description">焼き芋を念力で割るしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./chestnut-picking-neko/"><img src="../assets/images/chestnut-picking-neko-thumbnail.jpg" alt="栗のイガに気づくしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">栗拾い</span><h3>聞いてない。</h3><p class="description">栗を拾おうとして、イガのトゲに気づくしゃりねこです。</p></div></a></li>
+        <li><a class="card-link" href="./autumn-sunrise-neko/"><img src="../assets/images/autumn-sunrise-neko-thumbnail.jpg" alt="秋の海辺で日の出を見つめるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">秋の日の出</span><h3>朝は、来ました。</h3><p class="description">秋の海辺で日の出を見つめるしゃりねこです。</p></div></a></li>
+        <li><a class="card-link" href="./apprentice-witch-neko/"><img src="../assets/images/apprentice-witch-neko-thumbnail.jpg" alt="満月の夜にほうきで飛ぶ魔女見習いのしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">魔女見習い</span><h3>魔女見習いです。</h3><p class="description">満月の夜、ほうきに乗って空を飛ぶ魔女見習いのしゃりねこです。</p></div></a></li>
+        <li><a class="card-link" href="./ghost-pumpkin-neko/"><img src="../assets/images/ghost-pumpkin-neko-thumbnail.jpg" alt="満月の夜におばけかぼちゃと待ち合わせるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">おばけかぼちゃ</span><h3>おばけかぼちゃと、待ち合わせ。</h3><p class="description">満月の夜、おばけかぼちゃと待ち合わせるしゃりねこです。</p></div></a></li>
+      </ol>
+    </section>
+
+    <section id="work" aria-labelledby="work-heading">
+      <h2 id="work-heading">おしごと<span class="count">11作品</span></h2>
+      <ol class="cards">
+        <li><a class="card-link" href="./office-worker-neko/"><img src="../assets/images/office-worker-neko-thumbnail.jpg" alt="カフェで作業するサラリーマンのしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">サラリーマン</span><h3>作業中です。たぶん。</h3><p class="description">カフェで作業するしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./train-platform-neko/"><img src="../assets/images/train-platform-neko-thumbnail.jpg" alt="駅で電車を一本見送るしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">一本見送り</span><h3>一本、見送りました。</h3><p class="description">駅で電車を一本見送るしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./sleepy-commuter-neko/"><img src="../assets/images/sleepy-commuter-neko-thumbnail.jpg" alt="通勤電車でうとうとするしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">うとうと</span><h3>起きています。たぶん。</h3><p class="description">通勤電車でうとうとするしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./going-home-neko/"><img src="../assets/images/going-home-neko-thumbnail.jpg" alt="夕方の電車で帰宅するしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">帰宅</span><h3>帰りは、起きています。</h3><p class="description">夕方の電車で帰るしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./pottery-artist-neko/"><img src="../assets/images/pottery-artist-neko-thumbnail.jpg" alt="ろくろで器を作る陶芸家のしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">陶芸家</span><h3>器、できました。</h3><p class="description">ろくろを回して器を仕上げるしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./sushi-shop-neko/"><img src="../assets/images/sushi-shop-neko-thumbnail.jpg" alt="寿司屋の店に立つしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">寿司屋</span><h3>本業です。</h3><p class="description">寿司屋が本業のしゃりねこが、今日もお店に立ちます。</p></div></a></li>
+        <li><a class="card-link" href="./sushi-chef-neko/"><img src="../assets/images/sushi-chef-neko-thumbnail.jpg" alt="寿司を握る職人のしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">寿司職人</span><h3>へい、おまち。</h3><p class="description">わさびをちょんと添えて、寿司を握るしゃりねこです。</p></div></a></li>
+        <li><a class="card-link" href="./soba-chef-neko/"><img src="../assets/images/soba-chef-neko-thumbnail.jpg" alt="蕎麦を打つ職人のしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">蕎麦職人</span><h3>そば、打ちました。</h3><p class="description">こねて、のばして、切って。蕎麦を一丁仕上げます。</p></div></a></li>
+        <li><a class="card-link" href="./last-train-neko/"><img src="../assets/images/last-train-neko-thumbnail.jpg" alt="終電で眠気と戦うしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">終電</span><h3>寝てません。</h3><p class="description">終電の車内で眠気と戦うしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
+        <li><a class="card-link" href="./calligrapher-neko/"><img src="../assets/images/calligrapher-neko-thumbnail.jpg" alt="筆で猫を書く書道家のしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">書道家</span><h3>猫、書きました。</h3><p class="description">筆を走らせて「猫」を仕上げるしゃりねこです。</p></div></a></li>
+        <li><a class="card-link" href="./autumn-leaves-guard-neko/"><img src="../assets/images/autumn-leaves-guard-neko-thumbnail.jpg" alt="ライトアップされた紅葉を警備するしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">紅葉警備員</span><h3>帽子、死守。</h3><p class="description">ライトアップされた紅葉を警備するしゃりねこです。</p></div></a></li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>
