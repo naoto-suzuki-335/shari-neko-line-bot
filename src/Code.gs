@@ -748,6 +748,22 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：秋｜秋の日の出',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '魔女見習い',
+          text: 'しゃりねこ動画：秋｜魔女見習い',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'おばけかぼちゃ',
+          text: 'しゃりねこ動画：秋｜おばけかぼちゃ',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -2009,6 +2025,26 @@ function createVideoWorks_() {
     'しゃりねこ動画：季節｜紅葉狩り':
       createAutumnLeavesViewingVideoWork_(),
     'しゃりねこ動画：季節｜焼き芋': createRoastedSweetPotatoVideoWork_(),
+    'しゃりねこ動画：秋｜魔女見習い': {
+      title: '魔女見習いです。',
+      guideText:
+        '満月の夜、ほうきに乗って空を飛ぶ魔女見習いのしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/apprentice-witch-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/apprentice-witch-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
+    'しゃりねこ動画：秋｜おばけかぼちゃ': {
+      title: 'おばけかぼちゃと、待ち合わせ。',
+      guideText:
+        '満月の夜、おばけかぼちゃと待ち合わせるしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/ghost-pumpkin-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/ghost-pumpkin-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
   };
 }
 
@@ -2648,6 +2684,8 @@ function getWeeklyVideoBroadcastCandidateKeywords_(
       'しゃりねこ動画：一日｜角ロック',
       'しゃりねこ動画：一日｜ホッピー',
       'しゃりねこ動画：秋｜秋の日の出',
+      'しゃりねこ動画：秋｜魔女見習い',
+      'しゃりねこ動画：秋｜おばけかぼちゃ',
     ];
   } else if (scheduleType === 'WEDNESDAY_RANDOM') {
     candidateKeywords = Object.keys(videoWorks);
@@ -2706,6 +2744,8 @@ function getSeasonalVideoBroadcastCandidateKeywords_(month) {
       'しゃりねこ動画：季節｜焼き芋',
       'しゃりねこ動画：秋｜栗拾い',
       'しゃりねこ動画：秋｜秋の日の出',
+      'しゃりねこ動画：秋｜魔女見習い',
+      'しゃりねこ動画：秋｜おばけかぼちゃ',
     ];
   }
 
