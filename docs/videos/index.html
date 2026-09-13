@@ -60,7 +60,7 @@
       list-style: none;
     }
 
-    .category-nav a {
+    .category-nav button {
       display: inline-flex;
       min-height: 44px;
       align-items: center;
@@ -70,8 +70,21 @@
       border-radius: 999px;
       background: var(--surface);
       color: var(--text);
+      font: inherit;
       font-weight: 700;
-      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .category-nav button[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .gallery-status {
+      margin: -20px 0 32px;
+      color: var(--muted);
+      font-weight: 700;
     }
 
     section {
@@ -121,7 +134,8 @@
       box-shadow: 0 12px 30px rgba(72, 45, 27, 0.14);
     }
 
-    a:focus-visible {
+    a:focus-visible,
+    button:focus-visible {
       outline: 3px solid var(--accent);
       outline-offset: 3px;
     }
@@ -164,7 +178,7 @@
         padding: 24px 12px 48px;
       }
 
-      .category-nav a {
+      .category-nav button {
         padding-inline: 14px;
       }
     }
@@ -179,6 +193,7 @@
       }
     }
   </style>
+  <script src="./gallery.js" defer></script>
 </head>
 <body>
   <main>
@@ -187,16 +202,18 @@
       <p class="intro">54作品のしゃりねこを、カテゴリから選んでのぞいてみませんか？🐱</p>
       <nav aria-label="動画カテゴリ">
         <ul class="category-nav">
-          <li><a href="#outing">おでかけ</a></li>
-          <li><a href="#daily">日常</a></li>
-          <li><a href="#seasonal">季節</a></li>
-          <li><a href="#autumn">秋</a></li>
-          <li><a href="#work">おしごと</a></li>
+          <li><button type="button" data-category="all" aria-pressed="true">すべて</button></li>
+          <li><button type="button" data-category="outing" aria-pressed="false">おでかけ</button></li>
+          <li><button type="button" data-category="daily" aria-pressed="false">日常</button></li>
+          <li><button type="button" data-category="seasonal" aria-pressed="false">季節</button></li>
+          <li><button type="button" data-category="autumn" aria-pressed="false">秋</button></li>
+          <li><button type="button" data-category="work" aria-pressed="false">おしごと</button></li>
         </ul>
       </nav>
+      <p id="gallery-status" class="gallery-status" aria-live="polite">全54作品を表示中</p>
     </header>
 
-    <section id="outing" aria-labelledby="outing-heading">
+    <section id="outing" data-gallery-category="outing" aria-labelledby="outing-heading">
       <h2 id="outing-heading">おでかけ<span class="count">13作品</span></h2>
       <ol class="cards">
         <li><a class="card-link" href="./barista-neko/"><img src="../assets/images/barista-neko-thumbnail.jpg" alt="カフェで働くバリスタのしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">バリスタ</span><h3>バリスタねこ</h3><p class="description">カフェのしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
@@ -215,7 +232,7 @@
       </ol>
     </section>
 
-    <section id="daily" aria-labelledby="daily-heading">
+    <section id="daily" data-gallery-category="daily" aria-labelledby="daily-heading">
       <h2 id="daily-heading">日常<span class="count">13作品</span></h2>
       <ol class="cards">
         <li><a class="card-link" href="./morning-neko/"><img src="../assets/images/morning-neko-thumbnail.jpg" alt="朝を過ごすしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">朝</span><h3>しゃりねこの一日｜朝</h3><p class="description">朝のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
@@ -234,7 +251,7 @@
       </ol>
     </section>
 
-    <section id="seasonal" aria-labelledby="seasonal-heading">
+    <section id="seasonal" data-gallery-category="seasonal" aria-labelledby="seasonal-heading">
       <h2 id="seasonal-heading">季節<span class="count">5作品</span></h2>
       <ol class="cards">
         <li><a class="card-link" href="./umibe-no-sanrinsha-neko/"><img src="../assets/images/umibe-no-sanrinsha-neko-thumbnail.jpg" alt="海辺で三輪車に乗るしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">海辺</span><h3>海辺の三輪車ねこ</h3><p class="description">海辺のしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
@@ -245,7 +262,7 @@
       </ol>
     </section>
 
-    <section id="autumn" aria-labelledby="autumn-heading">
+    <section id="autumn" data-gallery-category="autumn" aria-labelledby="autumn-heading">
       <h2 id="autumn-heading">秋<span class="count">12作品</span></h2>
       <ol class="cards">
         <li><a class="card-link" href="./falling-leaf-neko/"><img src="../assets/images/falling-leaf-neko-thumbnail.jpg" alt="落ち葉を見つめるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">落ち葉</span><h3>はっぱ、きました。</h3><p class="description">落ち葉を見つめるしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
@@ -263,7 +280,7 @@
       </ol>
     </section>
 
-    <section id="work" aria-labelledby="work-heading">
+    <section id="work" data-gallery-category="work" aria-labelledby="work-heading">
       <h2 id="work-heading">おしごと<span class="count">11作品</span></h2>
       <ol class="cards">
         <li><a class="card-link" href="./office-worker-neko/"><img src="../assets/images/office-worker-neko-thumbnail.jpg" alt="カフェで作業するサラリーマンのしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="label">サラリーマン</span><h3>作業中です。たぶん。</h3><p class="description">カフェで作業するしゃりねこを、そっとのぞいてみますか？🐱</p></div></a></li>
