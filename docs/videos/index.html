@@ -82,9 +82,66 @@
     }
 
     .gallery-status {
-      margin: -20px 0 32px;
+      margin: -20px 0 16px;
       color: var(--muted);
       font-weight: 700;
+    }
+
+    .random-picker {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 32px;
+    }
+
+    .random-picker button,
+    .random-result a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .random-picker button {
+      padding: 8px 18px;
+      border: 1px solid var(--accent);
+      background: var(--surface);
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    .random-result {
+      display: flex;
+      min-width: 0;
+      flex: 1 1 320px;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--surface);
+    }
+
+    .random-result[hidden] {
+      display: none;
+    }
+
+    .random-result p {
+      min-width: 0;
+      flex: 1 1 200px;
+      margin: 0;
+    }
+
+    .random-result a {
+      padding: 8px 16px;
+      background: var(--accent);
+      color: #ffffff;
+      text-decoration: none;
     }
 
     section {
@@ -211,6 +268,13 @@
         </ul>
       </nav>
       <p id="gallery-status" class="gallery-status" aria-live="polite">全54作品を表示中</p>
+      <div class="random-picker">
+        <button id="random-video-button" type="button">おまかせ1本</button>
+        <div id="random-video-result" class="random-result" aria-live="polite" hidden>
+          <p>今日のおすすめ：<strong id="random-video-name"></strong></p>
+          <a id="random-video-link" href="">動画を見る</a>
+        </div>
+      </div>
     </header>
 
     <section id="outing" data-gallery-category="outing" aria-labelledby="outing-heading">
