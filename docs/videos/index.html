@@ -51,6 +51,18 @@
       color: var(--muted);
     }
 
+    .liff-status {
+      display: inline-flex;
+      margin: -12px 0 20px;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
     .category-nav {
       display: flex;
       flex-wrap: wrap;
@@ -259,6 +271,7 @@
     <header>
       <h1>しゃりねこ動画図鑑</h1>
       <p class="intro">54作品のしゃりねこを、カテゴリから選んでのぞいてみませんか？🐱</p>
+      <p id="liff-status" class="liff-status" role="status" aria-live="polite" hidden></p>
       <nav aria-label="動画カテゴリ">
         <ul class="category-nav">
           <li><button type="button" data-category="all" aria-pressed="true">すべて</button></li>
