@@ -364,6 +364,14 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：おしごとと通勤',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'uri',
+          label: '図鑑',
+          uri: 'https://liff.line.me/2011681460-ZSwLcXKw',
+        },
+      },
     ];
 
     replyTextMessage_(
