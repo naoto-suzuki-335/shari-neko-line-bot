@@ -1771,3 +1771,22 @@ API呼び出し前にin-flightのslotと作品キーワードを保存する。H
 - [ ] JavaScript無効時も全54作品を閲覧でき、外部通信や永続保存を行わない
 - [ ] 既存個別ページ、MP4、JPEG、Botコード、GAS設定および週次配信機能が不変である
 - [ ] JavaScript構文解析と `git diff --check` が正常で、一時検証物を残さない
+
+## 26. しゃりねこ動画図鑑のLIFF対応（第4スプリント）
+
+動画図鑑をLIFF ID `2011681460-ZSwLcXKw`、LIFF URL `https://liff.line.me/2011681460-ZSwLcXKw`、Endpoint URL `https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/` で利用する。登録Scopeは `openid` のみとする。
+
+図鑑ページでは公式LIFF SDK v2のCDN edge path `https://static.line-scdn.net/liff/edge/2/sdk.js` を読み込み、図鑑専用の `docs/videos/liff-init.js` から `liff.init()` を1回実行する。既存の `gallery.js` はSDKより先に読み込み、SDKの取得失敗、`window.liff` の不在、同期例外または初期化Promiseの拒否が発生しても、静的図鑑、カテゴリ絞り込みおよび「おまかせ1本」の利用を妨げない。
+
+LIFF初期化ではプロフィール、IDトークン、アクセストークン、ユーザー識別子およびコンテキストを取得・表示・保存しない。ログインを強制せず、メッセージ送信、LINE API呼び出し、外部ログ送信、CookieおよびWeb Storageの利用を追加しない。LIFF SDKが読み込めない場合も、JavaScript無効時と同様に既存54作品を閲覧可能とする。
+
+第4スプリントの受け入れ条件は次のとおりとする。
+
+- [ ] 公式LIFF SDK v2を図鑑ページだけで読み込み、指定LIFF IDで `liff.init()` を1回実行する
+- [ ] SDK不在、初期化成功、同期例外および初期化失敗の各場合に既存図鑑が利用できる
+- [ ] 全54作品、リンク、画像、カテゴリ件数、絞り込みおよび「おまかせ1本」が第3スプリントから不変である
+- [ ] `getProfile()`、`getIDToken()`、`getDecodedIDToken()`、`getAccessToken()`、`getContext()`、`login()`およびメッセージ送信APIを使用しない
+- [ ] ユーザー情報の取得・表示・保存、Cookie、localStorage、sessionStorageおよび外部ログ送信を行わない
+- [ ] SDKまたは図鑑JavaScriptを無効化しても全54作品を閲覧できる
+- [ ] 個別動画ページ、MP4、JPEG、Bot、GAS、週次配信、Propertiesおよびトリガーが不変である
+- [ ] JavaScript構文解析と `git diff --check` が正常で、一時検証物を残さない
