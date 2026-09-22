@@ -1936,3 +1936,26 @@ JavaScriptはIIFE内に閉じ、結果更新には `textContent` を使う。`in
 - [ ] `innerHTML`、`eval`、History API、location hash、強制スクロール、console出力を含まない
 - [ ] `docs/videos/`、`src/Code.gs`、`src/appsscript.json`、既存公開素材、Bot、Webhook、GAS、週次配信に差分がない
 - [ ] `git diff --check` が正常で、一時サーバー・ブラウザー・テストファイルを残さない
+
+### 29.6 第2スプリント：LIFF対応
+
+「しゃりねこ お酒の小話」は、動画図鑑とは別のLIFFアプリとして登録する。LIFFアプリ名は「しゃりねこ お酒の小話」、LIFF IDは `2011681460-aIUYxlvf`、LIFF URLは `https://liff.line.me/2011681460-aIUYxlvf`、Endpoint URLは `https://naoto-suzuki-335.github.io/shari-neko-line-bot/sake/` とする。サイズはFull、Scopeは `openid` のみ、友だち追加オプション・Scan QR・モジュールモードはすべてOffとする。
+
+`docs/sake/index.html` では、既存の `sake-guide.js`、公式LIFF SDK v2 `https://static.line-scdn.net/liff/edge/2/sdk.js`、`docs/sake/liff-init.js` の順で、すべて `defer` 付きで読み込む。お酒選択機能はLIFF初期化に依存させない。
+
+`liff-init.js` は `window.liff` と `liff.init()` が存在する場合だけ、ページ表示ごとに指定LIFF IDで初期化を1回行う。初期化成功後だけ `liff.isInClient()` を1回呼び、LIFF内では「LINE内で表示中」、外部ブラウザでは「ブラウザで表示中」と、`role="status"`、`aria-live="polite"` を持つ控えめな状態表示へ示す。状態表示は初期状態を非表示とする。
+
+SDK不在、初期化の同期例外・Promise拒否、`isInClient()` の例外、必須表示要素の不足時は状態表示を非表示のままにし、エラー内容を画面、console、外部へ出力しない。これらの場合も既存のお酒選択、おまかせ小話、リセットおよびJavaScript無効時の静的15記事を維持する。
+
+第2スプリントでは `liff.login()`、`liff.logout()`、プロフィール・各種トークン・コンテキストの取得、メッセージ送信・共有、ユーザー識別情報の取得・保存、Cookie、Web Storage、IndexedDB、外部ログ送信、URL・履歴・hash・スクロール・フォーカス操作を追加しない。Bot導線、既存動画図鑑、Bot、GAS、Webhookおよび週次配信も変更しない。
+
+第2スプリントの受け入れ条件は次のとおりとする。
+
+- [ ] スクリプトを `sake-guide.js`、公式LIFF SDK、`liff-init.js` の順で、すべて `defer` 付きで読み込む
+- [ ] 指定LIFF IDによる初期化を1回だけ行い、成功後だけ `isInClient()` を1回呼ぶ
+- [ ] LIFF内・外部ブラウザの状態表示が正しく、失敗時は非表示のまま既存機能を利用できる
+- [ ] 禁止API、個人情報取得、Storage、Cookie、console出力および外部ログ送信を含まない
+- [ ] 5カテゴリ、静的15記事、全選択、おまかせ小話、リセットおよびJavaScript無効時の閲覧に回帰がない
+- [ ] 390px幅で横スクロールがなく、状態表示が画面を圧迫しない
+- [ ] `sake-guide.js`、`docs/videos/`、`src/`、既存公開物、Bot、GASおよび週次配信が基準HEADから不変である
+- [ ] favicon要求とconsoleエラーがなく、`git diff --check` が正常である

@@ -82,6 +82,18 @@
       font-size: 0.93rem;
     }
 
+    .liff-status {
+      display: inline-block;
+      margin: 0 0 12px;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      background: #fffaf6;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
     .interactive-panel {
       margin-top: 28px;
       padding: 24px;
@@ -259,11 +271,14 @@
     }
   </style>
   <script src="./sake-guide.js" defer></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js" defer></script>
+  <script src="./liff-init.js" defer></script>
 </head>
 <body>
   <main class="page">
     <header class="hero">
       <h1>しゃりねこ お酒の小話</h1>
+      <p class="liff-status" data-liff-status role="status" aria-live="polite" hidden></p>
       <p class="lead">気になるお酒を選ぶと、しゃりねこが短い小話を置いていきます。</p>
       <p class="classification-note">ここでは、製法・原料・産地など、違う切り口の言葉を並べています。厳密な分類表ではなく、お酒を楽しむための15の小話です。</p>
     </header>
