@@ -176,6 +176,14 @@ function handleLineEvent_(event) {
       {
         type: 'action',
         action: {
+          type: 'uri',
+          label: 'お酒の小話',
+          uri: 'https://liff.line.me/2011681460-aIUYxlvf',
+        },
+      },
+      {
+        type: 'action',
+        action: {
           type: 'message',
           label: 'かぶりもの',
           text: '今日のかぶりもの',
