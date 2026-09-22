@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>しゃりねこ お酒の小話</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #fff8ef;
+      --surface: #ffffff;
+      --text: #382720;
+      --muted: #6f5a50;
+      --wine: #8a2945;
+      --wine-dark: #5d1830;
+      --amber: #b86724;
+      --border: #ead6c4;
+      --shadow: 0 10px 28px rgba(83, 46, 29, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--background);
+    }
+
+    body {
+      margin: 0;
+      min-width: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(184, 103, 36, 0.10), transparent 28rem),
+        var(--background);
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .page {
+      width: min(100%, 960px);
+      margin: 0 auto;
+      padding: 40px 20px 64px;
+    }
+
+    .hero {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      color: var(--wine-dark);
+      font-size: clamp(1.75rem, 5vw, 2.6rem);
+      line-height: 1.35;
+    }
+
+    .lead {
+      margin-bottom: 12px;
+      font-size: 1.05rem;
+    }
+
+    .classification-note {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .interactive-panel {
+      margin-top: 28px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .control-heading {
+      margin-bottom: 14px;
+      font-size: 1.2rem;
+    }
+
+    .button-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .choice-button,
+    .action-button {
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 2px solid var(--wine);
+      border-radius: 999px;
+      color: var(--wine-dark);
+      background: #fffaf6;
+      cursor: pointer;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .choice-button[aria-pressed="true"] {
+      color: #ffffff;
+      background: var(--wine);
+    }
+
+    .choice-button[aria-pressed="true"]::before {
+      content: "✓ ";
+    }
+
+    .choice-button:focus-visible,
+    .action-button:focus-visible {
+      outline: 4px solid var(--amber);
+      outline-offset: 3px;
+    }
+
+    .item-panel {
+      margin-top: 24px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .action-button {
+      border-color: var(--amber);
+      color: #572c0c;
+      background: #fff2df;
+    }
+
+    .action-button.secondary {
+      border-color: var(--border);
+      color: var(--text);
+      background: #ffffff;
+    }
+
+    .story-result {
+      margin-top: 24px;
+      padding: 22px;
+      border: 2px solid var(--wine);
+      border-radius: 18px;
+      background: #fffdfb;
+    }
+
+    .result-category,
+    .story-category {
+      margin-bottom: 6px;
+      color: var(--wine);
+      font-size: 0.86rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .result-title,
+    .story-title {
+      margin-bottom: 10px;
+      font-size: 1.25rem;
+      line-height: 1.45;
+    }
+
+    .result-description,
+    .story-description {
+      margin-bottom: 14px;
+    }
+
+    .result-cat-comment,
+    .story-cat-comment {
+      margin-bottom: 0;
+      padding: 10px 12px;
+      border-left: 4px solid var(--amber);
+      border-radius: 0 10px 10px 0;
+      background: #fff5e8;
+      font-weight: 700;
+    }
+
+    .static-stories {
+      margin-top: 36px;
+    }
+
+    .category-section + .category-section {
+      margin-top: 38px;
+    }
+
+    .category-heading {
+      margin-bottom: 16px;
+      color: var(--wine-dark);
+      font-size: 1.45rem;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .story-card {
+      min-width: 0;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: 0 6px 18px rgba(83, 46, 29, 0.07);
+    }
+
+    .safety-note {
+      margin: 36px 0 0;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: #573c30;
+      background: #fff3df;
+      font-weight: 700;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 24px 14px 48px;
+      }
+
+      .hero,
+      .interactive-panel {
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .story-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .choice-button,
+      .action-button {
+        max-width: 100%;
+      }
+    }
+  </style>
+  <script src="./sake-guide.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1>しゃりねこ お酒の小話</h1>
+      <p class="lead">気になるお酒を選ぶと、しゃりねこが短い小話を置いていきます。</p>
+      <p class="classification-note">ここでは、製法・原料・産地など、違う切り口の言葉を並べています。厳密な分類表ではなく、お酒を楽しむための15の小話です。</p>
+    </header>
+
+    <section class="interactive-panel" data-interactive-panel hidden aria-labelledby="category-choice-heading">
+      <h2 id="category-choice-heading" class="control-heading">気になるお酒を選ぶ</h2>
+      <div class="button-list" role="group" aria-label="酒類">
+        <button class="choice-button" type="button" data-category-choice="sake" aria-pressed="false">日本酒</button>
+        <button class="choice-button" type="button" data-category-choice="wine" aria-pressed="false">ワイン</button>
+        <button class="choice-button" type="button" data-category-choice="beer" aria-pressed="false">ビール</button>
+        <button class="choice-button" type="button" data-category-choice="whisky" aria-pressed="false">ウイスキー</button>
+        <button class="choice-button" type="button" data-category-choice="shochu" aria-pressed="false">焼酎</button>
+      </div>
+
+      <div class="item-panel" data-item-panel hidden>
+        <h2 class="control-heading">小話を選ぶ</h2>
+        <div class="button-list" data-item-group="sake" role="group" aria-label="日本酒の小話" hidden>
+          <button class="choice-button" type="button" data-story-choice="sake-junmai" aria-pressed="false">純米酒</button>
+          <button class="choice-button" type="button" data-story-choice="sake-ginjo" aria-pressed="false">吟醸酒</button>
+          <button class="choice-button" type="button" data-story-choice="sake-nigori" aria-pressed="false">にごり酒</button>
+        </div>
+        <div class="button-list" data-item-group="wine" role="group" aria-label="ワインの小話" hidden>
+          <button class="choice-button" type="button" data-story-choice="wine-red" aria-pressed="false">赤ワイン</button>
+          <button class="choice-button" type="button" data-story-choice="wine-white" aria-pressed="false">白ワイン</button>
+          <button class="choice-button" type="button" data-story-choice="wine-sparkling" aria-pressed="false">スパークリングワイン</button>
+        </div>
+        <div class="button-list" data-item-group="beer" role="group" aria-label="ビールの小話" hidden>
+          <button class="choice-button" type="button" data-story-choice="beer-lager" aria-pressed="false">ラガー</button>
+          <button class="choice-button" type="button" data-story-choice="beer-ale" aria-pressed="false">エール</button>
+          <button class="choice-button" type="button" data-story-choice="beer-dark" aria-pressed="false">黒ビール</button>
+        </div>
+        <div class="button-list" data-item-group="whisky" role="group" aria-label="ウイスキーの小話" hidden>
+          <button class="choice-button" type="button" data-story-choice="whisky-scotch" aria-pressed="false">スコッチ</button>
+          <button class="choice-button" type="button" data-story-choice="whisky-irish" aria-pressed="false">アイリッシュ</button>
+          <button class="choice-button" type="button" data-story-choice="whisky-bourbon" aria-pressed="false">バーボン</button>
+        </div>
+        <div class="button-list" data-item-group="shochu" role="group" aria-label="焼酎の小話" hidden>
+          <button class="choice-button" type="button" data-story-choice="shochu-imo" aria-pressed="false">芋焼酎</button>
+          <button class="choice-button" type="button" data-story-choice="shochu-mugi" aria-pressed="false">麦焼酎</button>
+          <button class="choice-button" type="button" data-story-choice="shochu-kome" aria-pressed="false">米焼酎</button>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="action-button" type="button" data-random-story>おまかせ小話</button>
+        <button class="action-button secondary" type="button" data-reset-selection>ほかのお酒を選ぶ</button>
+      </div>
+
+      <article class="story-result" data-story-result role="status" aria-live="polite" aria-atomic="true" hidden>
+        <p class="result-category" data-result-category></p>
+        <h2 class="result-title" data-result-title></h2>
+        <p class="result-description" data-result-description></p>
+        <p class="result-cat-comment" data-result-cat-comment></p>
+      </article>
+    </section>
+
+    <div class="static-stories" data-static-stories>
+      <section class="category-section" aria-labelledby="static-sake-heading">
+        <h2 id="static-sake-heading" class="category-heading">日本酒</h2>
+        <div class="story-grid">
+          <article class="story-card" data-story-id="sake-junmai" data-category="sake">
+            <p class="story-category">日本酒</p>
+            <h3 class="story-title">純米酒</h3>
+            <p class="story-description">米・米麹・水を使って造る日本酒です。米のうまみを感じやすいものもありますが、軽やかなタイプもあり、味わいはさまざまです。</p>
+            <p class="story-cat-comment">「純米＝濃い」とは限らないにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="sake-ginjo" data-category="sake">
+            <p class="story-category">日本酒</p>
+            <h3 class="story-title">吟醸酒</h3>
+            <p class="story-description">よく磨いた米を使い、低い温度でゆっくり発酵させて造ります。果物を思わせる華やかな香りが楽しめるものもあります。</p>
+            <p class="story-cat-comment">まずは香りをそっと楽しむにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="sake-nigori" data-category="sake">
+            <p class="story-category">日本酒</p>
+            <h3 class="story-title">にごり酒</h3>
+            <p class="story-description">米や米麹などのおりを残した、白く濁った日本酒です。まろやかなものや甘みのあるものが多い一方、すっきりしたタイプもあります。</p>
+            <p class="story-cat-comment">見た目は白くても、味はひとつじゃないにゃ。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="category-section" aria-labelledby="static-wine-heading">
+        <h2 id="static-wine-heading" class="category-heading">ワイン</h2>
+        <div class="story-grid">
+          <article class="story-card" data-story-id="wine-red" data-category="wine">
+            <p class="story-category">ワイン</p>
+            <h3 class="story-title">赤ワイン</h3>
+            <p class="story-description">主に黒ぶどうを果皮ごと発酵させて造ります。カベルネ・ソーヴィニヨンやピノ・ノワールなど、ぶどうの種類によって香りや渋みも変わります。</p>
+            <p class="story-cat-comment">同じ赤でも、ぶどうが違うと表情も変わるにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="wine-white" data-category="wine">
+            <p class="story-category">ワイン</p>
+            <h3 class="story-title">白ワイン</h3>
+            <p class="story-description">シャルドネやソーヴィニヨン・ブランなどが代表的なぶどうです。標高が高く比較的涼しい畑や、冷涼な地域では、爽やかな酸味が残りやすい傾向があります。</p>
+            <p class="story-cat-comment">ラベルのぶどう品種を見てみるのも楽しいにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="wine-sparkling" data-category="wine">
+            <p class="story-category">ワイン</p>
+            <h3 class="story-title">スパークリングワイン</h3>
+            <p class="story-description">世界各地で造られる、泡のあるワインです。フランスのシャンパーニュ地方で、決められた条件を満たして造られたものがシャンパンと呼ばれます。</p>
+            <p class="story-cat-comment">泡にもちゃんと出身地があるにゃ。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="category-section" aria-labelledby="static-beer-heading">
+        <h2 id="static-beer-heading" class="category-heading">ビール</h2>
+        <div class="story-grid">
+          <article class="story-card" data-story-id="beer-lager" data-category="beer">
+            <p class="story-category">ビール</p>
+            <h3 class="story-title">ラガー</h3>
+            <p class="story-description">低い温度でじっくり発酵させるビールです。すっきりした飲み口のものが多く、日本でよく見かけるビールにも多く使われています。</p>
+            <p class="story-cat-comment">いつもの一杯も、造り方を知ると少し違って見えるにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="beer-ale" data-category="beer">
+            <p class="story-category">ビール</p>
+            <h3 class="story-title">エール</h3>
+            <p class="story-description">ラガーより高めの温度で発酵させるビールです。果物や花を思わせる、豊かな香りを楽しめるものもあります。</p>
+            <p class="story-cat-comment">香りにも注目すると楽しいにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="beer-dark" data-category="beer">
+            <p class="story-category">ビール</p>
+            <h3 class="story-title">黒ビール</h3>
+            <p class="story-description">色の濃い麦芽や焙煎した麦芽などを使って造るビールです。コーヒーやカカオを思わせる香ばしさを感じるものもありますが、必ずしも重くて苦いとは限りません。</p>
+            <p class="story-cat-comment">黒い見た目だけで、味を決めつけないでにゃ。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="category-section" aria-labelledby="static-whisky-heading">
+        <h2 id="static-whisky-heading" class="category-heading">ウイスキー</h2>
+        <div class="story-grid">
+          <article class="story-card" data-story-id="whisky-scotch" data-category="whisky">
+            <p class="story-category">ウイスキー</p>
+            <h3 class="story-title">スコッチ</h3>
+            <p class="story-description">スコットランドで蒸留・熟成されるウイスキーです。華やかなものから、潮や煙を思わせるものまで、地域や蒸留所によって個性があります。</p>
+            <p class="story-cat-comment">シングルモルトは、ひとつの蒸留所で水と麦芽から造るにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="whisky-irish" data-category="whisky">
+            <p class="story-category">ウイスキー</p>
+            <h3 class="story-title">アイリッシュウイスキー</h3>
+            <p class="story-description">アイルランド島で蒸留・熟成されるウイスキーです。軽やかなものから、しっかりした味わいのものまで、製法や原料によってさまざまな個性があります。</p>
+            <p class="story-cat-comment">同じアイルランド生まれでも、味わいはいろいろあるにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="whisky-bourbon" data-category="whisky">
+            <p class="story-category">ウイスキー</p>
+            <h3 class="story-title">バーボン</h3>
+            <p class="story-description">とうもろこしを51%以上使い、アメリカで造られるウイスキーです。新品の焦がしたオーク樽で貯蔵され、バニラやキャラメルを思わせる香りが出るものもあります。</p>
+            <p class="story-cat-comment">焦がした樽も、香りの手がかりだにゃ。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="category-section" aria-labelledby="static-shochu-heading">
+        <h2 id="static-shochu-heading" class="category-heading">焼酎</h2>
+        <div class="story-grid">
+          <article class="story-card" data-story-id="shochu-imo" data-category="shochu">
+            <p class="story-category">焼酎</p>
+            <h3 class="story-title">芋焼酎</h3>
+            <p class="story-description">さつまいもと麹を主な原料にした焼酎です。鹿児島や宮崎がよく知られ、華やかなものから、ほっこり甘い香りのものまであります。</p>
+            <p class="story-cat-comment">芋の香りも、銘柄によってずいぶん違うにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="shochu-mugi" data-category="shochu">
+            <p class="story-category">焼酎</p>
+            <h3 class="story-title">麦焼酎</h3>
+            <p class="story-description">大麦と麹を主な原料にした焼酎です。軽やかなものから、麦の香ばしさを楽しめるものまであり、大分や長崎の壱岐などが知られています。</p>
+            <p class="story-cat-comment">すっきり派にも、香ばしい派にも出会えるにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="shochu-kome" data-category="shochu">
+            <p class="story-category">焼酎</p>
+            <h3 class="story-title">米焼酎</h3>
+            <p class="story-description">米と麹を主な原料にした焼酎です。やわらかな甘みや、すっきりした香りを楽しめるものがあり、熊本の球磨焼酎がよく知られています。</p>
+            <p class="story-cat-comment">日本酒と同じ米でも、造り方で別のお酒になるにゃ。</p>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <p class="safety-note">20歳未満の飲酒は法律で禁止されています。飲酒運転は絶対にやめましょう。</p>
+  </main>
+</body>
+</html>
