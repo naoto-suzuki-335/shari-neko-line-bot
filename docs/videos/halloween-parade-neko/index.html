@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="仮装した仲間たちと、夜の街を楽しく行進するしゃりねこです。">
+  <title>ハロウィンパレードです。</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 16px;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .back-link:focus-visible {
+      outline: 3px solid #8b4513;
+      outline-offset: 3px;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back-link" href="../halloween/">ハロウィン特集へ戻る</a>
+    <h1>ハロウィンパレードです。</h1>
+    <video
+      controls
+      playsinline
+      preload="metadata"
+      poster="../../assets/images/halloween-parade-neko-thumbnail.jpg"
+    >
+      <source src="../../assets/videos/halloween-parade-neko.mp4" type="video/mp4">
+      お使いのブラウザーは動画の再生に対応していません。
+    </video>
+  </main>
+</body>
+</html>

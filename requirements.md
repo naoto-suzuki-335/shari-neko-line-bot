@@ -1824,17 +1824,19 @@ Botから動画図鑑への導線の受け入れ条件は次のとおりとす�
 
 動画図鑑上部に、独立した特集ページ `docs/videos/halloween/index.html` へ移動する「ハロウィン特集」のリンクを設ける。入口はカテゴリボタンおよび作品カードとは別の通常リンクとし、図鑑の54作品、カテゴリ件数、絞り込みおよび「おまかせ1本」の集計へ重複して含めない。
 
-特集ページには「魔女見習い」「おばけかぼちゃ」「森の夜会」の3作品をこの順で掲載する。各項目は正式サムネイル、表示ラベル、タイトル、説明文および個別動画ページへのリンクを使用する。作品一覧は、今後同じカード構造の項目を追加できるリストとして構成する。「森の夜会」はslugを `forest-night-party-neko` とし、公開MP4を `docs/assets/videos/forest-night-party-neko.mp4`、正式サムネイルを `docs/assets/images/forest-night-party-neko-thumbnail.jpg`、個別ページを `docs/videos/forest-night-party-neko/index.html` に配置する。
+特集ページには「魔女見習い」「おばけかぼちゃ」「森の夜会」「魔法薬研究所」「ハロウィンパレード」の5作品をこの順で掲載する。各項目は正式サムネイル、表示ラベル、タイトル、説明文および個別動画ページへのリンクを使用する。作品一覧は、今後同じカード構造の項目を追加できるリストとして構成する。図鑑上部の特集入口には「5作品」と表示する。
 
-特集掲載は通常図鑑の既存54作品とは別の特集限定表示であり、通常図鑑の総作品数は54作品のままとする。秋カテゴリ12作品、Botの `videoWorks` とクイックリプライ、日曜・水曜・金曜の週次配信候補は変更しない。特集限定作品は通常図鑑のカテゴリ絞り込みおよび「おまかせ1本」の対象に含めない。JavaScript、動画の直接埋め込み、外部ライブラリおよび新しい外部通信は追加しない。
+「森の夜会」はslugを `forest-night-party-neko` とし、公開MP4を `docs/assets/videos/forest-night-party-neko.mp4`、正式サムネイルを `docs/assets/images/forest-night-party-neko-thumbnail.jpg`、個別ページを `docs/videos/forest-night-party-neko/index.html` に配置する。「魔法薬研究所」はslugを `magic-potion-lab-neko` とし、公開MP4を `docs/assets/videos/magic-potion-lab-neko.mp4`、正式サムネイルを `docs/assets/images/magic-potion-lab-neko-thumbnail.jpg`、個別ページを `docs/videos/magic-potion-lab-neko/index.html` に配置する。「ハロウィンパレード」はslugを `halloween-parade-neko` とし、公開MP4を `docs/assets/videos/halloween-parade-neko.mp4`、正式サムネイルを `docs/assets/images/halloween-parade-neko-thumbnail.jpg`、個別ページを `docs/videos/halloween-parade-neko/index.html` に配置する。各個別ページからはハロウィン特集へ戻れるようにする。
+
+特集掲載は通常図鑑の既存54作品とは別の特集限定表示であり、通常図鑑の総作品数は54作品、5カテゴリ、秋カテゴリ12作品のままとする。「魔法薬研究所」と「ハロウィンパレード」は特集限定作品とし、Botの `createVideoWorks_()` とクイックリプライへ追加しない。日曜候補14作品、水曜候補54作品、金曜秋候補12作品は変更せず、GAS、Webhookおよび週次配信へ影響を与えない。特集限定作品は通常図鑑のカテゴリ絞り込みおよび「おまかせ1本」の対象に含めない。JavaScript、動画の直接埋め込み、外部CSS、外部ライブラリおよび新しい外部通信は追加しない。
 
 ハロウィン動画特集の受け入れ条件は次のとおりとする。
 
 - [ ] 図鑑上部の入口がキーボードで操作でき、特集ページへ正しく移動する
-- [ ] 特集ページに「魔女見習い」「おばけかぼちゃ」「森の夜会」が各1件、指定順で掲載される
+- [ ] 特集ページに「魔女見習い」「おばけかぼちゃ」「森の夜会」「魔法薬研究所」「ハロウィンパレード」が各1件、指定順で掲載される
 - [ ] 各作品のサムネイルとリンクが対応する既存公開素材・個別ページを参照する
 - [ ] 特集入口と特集ページの項目が、図鑑の54作品集計、カテゴリ絞り込みおよびランダム選択へ影響しない
-- [ ] JavaScript無効時も入口と特集3作品を閲覧できる
+- [ ] JavaScript無効時も入口と特集5作品を閲覧できる
 - [ ] 390px幅で横スクロールや文字切れがなく、サムネイルの16:9を維持する
 - [ ] 既存54作品、`gallery.js`、LIFF初期化・状態表示、Bot、GAS、週次配信、Propertiesおよびトリガーが不変である
-- [ ] ローカルHTTPで特集ページ、「森の夜会」の個別ページ・MP4・正式サムネイルを取得でき、`git diff --check`が正常である
+- [ ] ローカルHTTPで特集ページ、特集5作品の個別ページ・MP4・正式サムネイルを取得でき、`git diff --check`が正常である
