@@ -152,6 +152,19 @@
       border-top: 1px solid var(--border);
     }
 
+    .wine-section-menu {
+      margin-bottom: 18px;
+    }
+
+    .wine-section-heading {
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .wine-story-group + .wine-story-group {
+      margin-top: 12px;
+    }
+
     .action-row {
       display: flex;
       flex-wrap: wrap;
@@ -198,6 +211,24 @@
     .result-description,
     .story-description {
       margin-bottom: 14px;
+    }
+
+    .result-memory-heading,
+    .story-memory-heading {
+      margin-bottom: 6px;
+      color: var(--wine-dark);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .result-memory,
+    .story-memory {
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fffaf6;
+      font-weight: 700;
     }
 
     .result-cat-comment,
@@ -280,7 +311,7 @@
       <h1>しゃりねこ お酒の小話</h1>
       <p class="liff-status" data-liff-status role="status" aria-live="polite" hidden></p>
       <p class="lead">気になるお酒を選ぶと、しゃりねこが短い小話を置いていきます。</p>
-      <p class="classification-note">ここでは、製法・原料・産地など、違う切り口の言葉を並べています。厳密な分類表ではなく、お酒を楽しむための18の小話です。</p>
+      <p class="classification-note">ここでは、製法・原料・産地など、違う切り口の言葉を並べています。厳密な分類表ではなく、お酒を楽しむための24の小話です。</p>
     </header>
 
     <section class="interactive-panel" data-interactive-panel hidden aria-labelledby="category-choice-heading">
@@ -300,13 +331,30 @@
           <button class="choice-button" type="button" data-story-choice="sake-ginjo" aria-pressed="false">吟醸酒</button>
           <button class="choice-button" type="button" data-story-choice="sake-nigori" aria-pressed="false">にごり酒</button>
         </div>
-        <div class="button-list" data-item-group="wine" role="group" aria-label="ワインの小話" hidden>
-          <button class="choice-button" type="button" data-story-choice="wine-red" aria-pressed="false">赤ワイン</button>
-          <button class="choice-button" type="button" data-story-choice="wine-white" aria-pressed="false">白ワイン</button>
-          <button class="choice-button" type="button" data-story-choice="wine-sparkling" aria-pressed="false">スパークリングワイン</button>
-          <button class="choice-button" type="button" data-story-choice="wine-rose" aria-pressed="false">ロゼワイン</button>
-          <button class="choice-button" type="button" data-story-choice="wine-sweetness" aria-pressed="false">甘口と辛口</button>
-          <button class="choice-button" type="button" data-story-choice="wine-oak-aging" aria-pressed="false">樽熟成</button>
+        <div data-item-group="wine" hidden>
+          <div class="wine-section-menu">
+            <p id="wine-section-heading" class="wine-section-heading">ワインの小話</p>
+            <div class="button-list" role="group" aria-labelledby="wine-section-heading">
+              <button class="choice-button" type="button" data-wine-section-choice="basics" aria-pressed="false"><span aria-hidden="true">🍷</span> まず知る</button>
+              <button class="choice-button" type="button" data-wine-section-choice="grapes" aria-pressed="false"><span aria-hidden="true">🍇</span> ぶどうを知る</button>
+            </div>
+          </div>
+          <div class="button-list wine-story-group" data-wine-story-group="basics" role="group" aria-label="まず知るワインの小話" hidden>
+            <button class="choice-button" type="button" data-story-choice="wine-red" aria-pressed="false">赤ワイン</button>
+            <button class="choice-button" type="button" data-story-choice="wine-white" aria-pressed="false">白ワイン</button>
+            <button class="choice-button" type="button" data-story-choice="wine-sparkling" aria-pressed="false">スパークリングワイン</button>
+            <button class="choice-button" type="button" data-story-choice="wine-rose" aria-pressed="false">ロゼワイン</button>
+            <button class="choice-button" type="button" data-story-choice="wine-sweetness" aria-pressed="false">甘口と辛口</button>
+            <button class="choice-button" type="button" data-story-choice="wine-oak-aging" aria-pressed="false">樽熟成</button>
+          </div>
+          <div class="button-list wine-story-group" data-wine-story-group="grapes" role="group" aria-label="ぶどうを知るワインの小話" hidden>
+            <button class="choice-button" type="button" data-story-choice="wine-cabernet-sauvignon" aria-pressed="false">カベルネ・ソーヴィニヨン</button>
+            <button class="choice-button" type="button" data-story-choice="wine-pinot-noir" aria-pressed="false">ピノ・ノワール</button>
+            <button class="choice-button" type="button" data-story-choice="wine-merlot" aria-pressed="false">メルロー</button>
+            <button class="choice-button" type="button" data-story-choice="wine-chardonnay" aria-pressed="false">シャルドネ</button>
+            <button class="choice-button" type="button" data-story-choice="wine-sauvignon-blanc" aria-pressed="false">ソーヴィニヨン・ブラン</button>
+            <button class="choice-button" type="button" data-story-choice="wine-riesling" aria-pressed="false">リースリング</button>
+          </div>
         </div>
         <div class="button-list" data-item-group="beer" role="group" aria-label="ビールの小話" hidden>
           <button class="choice-button" type="button" data-story-choice="beer-lager" aria-pressed="false">ラガー</button>
@@ -334,6 +382,10 @@
         <p class="result-category" data-result-category></p>
         <h2 class="result-title" data-result-title></h2>
         <p class="result-description" data-result-description></p>
+        <div data-result-memory-section hidden>
+          <p class="result-memory-heading"><span aria-hidden="true">🐱</span> まずはこれだけ</p>
+          <p class="result-memory" data-result-memory></p>
+        </div>
         <p class="result-cat-comment" data-result-cat-comment></p>
       </article>
     </section>
@@ -401,6 +453,72 @@
             <h3 class="story-title">樽熟成</h3>
             <p class="story-description">木の樽で発酵や熟成をすると、バニラやトーストを思わせる香りが加わることがあります。樽を使わず、ぶどうの香りを生かすワインもあります。</p>
             <p class="story-cat-comment">樽の気配は、そっといることもあるにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="wine-cabernet-sauvignon" data-category="wine">
+            <p class="story-category">ワイン</p>
+            <h3 class="story-title">カベルネ・ソーヴィニヨン</h3>
+            <p class="story-description">カシスなどの黒い果実や、ハーブを思わせる香りが現れることのある黒ぶどうです。渋みをしっかり感じるものが多い一方、産地や造り方によって表情は変わります。</p>
+            <p class="story-memory-heading">
+              <span aria-hidden="true">🐱</span>
+              まずはこれだけ
+            </p>
+            <p class="story-memory">黒い果実 × しっかりした渋み</p>
+            <p class="story-cat-comment">この二つを、最初の目印にしたにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="wine-pinot-noir" data-category="wine">
+            <p class="story-category">ワイン</p>
+            <h3 class="story-title">ピノ・ノワール</h3>
+            <p class="story-description">いちごやチェリーなどの赤い果実、花や香辛料を思わせる香りが現れることがあります。渋みがおだやかなものも多い一方、産地や熟成によって印象はさまざまです。</p>
+            <p class="story-memory-heading">
+              <span aria-hidden="true">🐱</span>
+              まずはこれだけ
+            </p>
+            <p class="story-memory">赤い果実 × おだやかな渋み</p>
+            <p class="story-cat-comment">まずは、この組み合わせで覚えたにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="wine-merlot" data-category="wine">
+            <p class="story-category">ワイン</p>
+            <h3 class="story-title">メルロー</h3>
+            <p class="story-description">プラムやチェリー、いちじくなどを思わせる香りが現れることのある黒ぶどうです。口当たりにまるみを感じるものも多い一方、濃く力強いタイプもあります。</p>
+            <p class="story-memory-heading">
+              <span aria-hidden="true">🐱</span>
+              まずはこれだけ
+            </p>
+            <p class="story-memory">プラム × まるみのある口当たり</p>
+            <p class="story-cat-comment">プラムとまるみを、名前のそばに置いて覚えたにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="wine-chardonnay" data-category="wine">
+            <p class="story-category">ワイン</p>
+            <h3 class="story-title">シャルドネ</h3>
+            <p class="story-description">柑橘やりんご、桃などを思わせる香りが現れることのある白ぶどうです。育つ場所や造り方によって、すっきりしたものから香ばしさのあるものまで幅があります。</p>
+            <p class="story-memory-heading">
+              <span aria-hidden="true">🐱</span>
+              まずはこれだけ
+            </p>
+            <p class="story-memory">りんごや桃 × 造り方で変化</p>
+            <p class="story-cat-comment">同じ名前でも変わるところまで、ひと組で覚えたにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="wine-sauvignon-blanc" data-category="wine">
+            <p class="story-category">ワイン</p>
+            <h3 class="story-title">ソーヴィニヨン・ブラン</h3>
+            <p class="story-description">グレープフルーツやライム、青い草などを思わせる香りが現れることのある白ぶどうです。爽やかな酸味を感じるものが多い一方、産地や造り方で印象は変わります。</p>
+            <p class="story-memory-heading">
+              <span aria-hidden="true">🐱</span>
+              まずはこれだけ
+            </p>
+            <p class="story-memory">柑橘 × 爽やかな酸味</p>
+            <p class="story-cat-comment">長い名前を見たら、この二つを思い出すにゃ。</p>
+          </article>
+          <article class="story-card" data-story-id="wine-riesling" data-category="wine">
+            <p class="story-category">ワイン</p>
+            <h3 class="story-title">リースリング</h3>
+            <p class="story-description">りんごや桃、柑橘を思わせる香りと、いきいきした酸味を持つものが多い白ぶどうです。甘口だけでなく辛口もあり、産地や造り方で甘さの幅があります。</p>
+            <p class="story-memory-heading">
+              <span aria-hidden="true">🐱</span>
+              まずはこれだけ
+            </p>
+            <p class="story-memory">りんご × いきいきした酸味</p>
+            <p class="story-cat-comment">甘口か辛口かより先に、この二つを覚えたにゃ。</p>
           </article>
         </div>
       </section>

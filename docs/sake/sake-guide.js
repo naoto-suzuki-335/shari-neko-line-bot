@@ -10,6 +10,8 @@
     var resultCategory = document.querySelector('[data-result-category]');
     var resultTitle = document.querySelector('[data-result-title]');
     var resultDescription = document.querySelector('[data-result-description]');
+    var resultMemorySection = document.querySelector('[data-result-memory-section]');
+    var resultMemory = document.querySelector('[data-result-memory]');
     var resultCatComment = document.querySelector('[data-result-cat-comment]');
     var randomButton = document.querySelector('[data-random-story]');
     var resetButton = document.querySelector('[data-reset-selection]');
@@ -17,11 +19,15 @@
     var itemGroups = Array.prototype.slice.call(document.querySelectorAll('[data-item-group]'));
     var itemButtons = Array.prototype.slice.call(document.querySelectorAll('[data-story-choice]'));
     var storyElements = Array.prototype.slice.call(document.querySelectorAll('[data-story-id]'));
+    var wineSectionButtons = Array.prototype.slice.call(document.querySelectorAll('[data-wine-section-choice]'));
+    var wineStoryGroups = Array.prototype.slice.call(document.querySelectorAll('[data-wine-story-group]'));
 
     if (!interactivePanel || !staticStories || !itemPanel || !resultCard ||
-        !resultCategory || !resultTitle || !resultDescription || !resultCatComment ||
+        !resultCategory || !resultTitle || !resultDescription || !resultMemorySection ||
+        !resultMemory || !resultCatComment ||
         !randomButton || !resetButton || categoryButtons.length !== 5 ||
-        itemGroups.length !== 5 || itemButtons.length !== 18 || storyElements.length !== 18) {
+        itemGroups.length !== 5 || itemButtons.length !== 24 || storyElements.length !== 24 ||
+        wineSectionButtons.length !== 2 || wineStoryGroups.length !== 2) {
       return;
     }
 
@@ -30,9 +36,17 @@
     var categoryCounts = Object.create(null);
     var categoryLabels = Object.create(null);
     var isValid = true;
+    var grapeStoryIds = [
+      'wine-cabernet-sauvignon',
+      'wine-pinot-noir',
+      'wine-merlot',
+      'wine-chardonnay',
+      'wine-sauvignon-blanc',
+      'wine-riesling'
+    ];
     var expectedCategoryCounts = {
       sake: 3,
-      wine: 6,
+      wine: 12,
       beer: 3,
       whisky: 3,
       shochu: 3
@@ -48,14 +62,22 @@
       var categoryElement = element.querySelector('.story-category');
       var titleElement = element.querySelector('.story-title');
       var descriptionElement = element.querySelector('.story-description');
+      var memoryHeadingElement = element.querySelector('.story-memory-heading');
+      var memoryElement = element.querySelector('.story-memory');
       var catCommentElement = element.querySelector('.story-cat-comment');
       var categoryLabel = categoryElement ? categoryElement.textContent.trim() : '';
       var title = titleElement ? titleElement.textContent.trim() : '';
       var description = descriptionElement ? descriptionElement.textContent.trim() : '';
+      var memoryHeading = memoryHeadingElement ? memoryHeadingElement.textContent.trim() : '';
+      var memory = memoryElement ? memoryElement.textContent.trim() : '';
       var catComment = catCommentElement ? catCommentElement.textContent.trim() : '';
+      var requiresMemory = grapeStoryIds.indexOf(id) !== -1;
 
       if (!id || !category || validCategories.indexOf(category) === -1 ||
-          storiesById[id] || !categoryLabel || !title || !description || !catComment) {
+          storiesById[id] || !categoryLabel || !title || !description || !catComment ||
+          Boolean(memoryHeadingElement) !== Boolean(memoryElement) ||
+          (requiresMemory && (!memoryHeading || !memory)) ||
+          (!requiresMemory && (memoryHeadingElement || memoryElement))) {
         isValid = false;
         return;
       }
@@ -71,6 +93,7 @@
         categoryLabel: categoryLabel,
         title: title,
         description: description,
+        memory: memory,
         catComment: catComment,
         element: element
       };
@@ -81,7 +104,7 @@
       categoryLabels[category] = categoryLabel;
     });
 
-    if (!isValid || stories.length !== 18 || validCategories.some(function (category) {
+    if (!isValid || stories.length !== 24 || validCategories.some(function (category) {
       return categoryCounts[category] !== expectedCategoryCounts[category];
     })) {
       return;
@@ -99,14 +122,99 @@
       return;
     }
 
+    var validWineSections = ['basics', 'grapes'];
+    var storyWineSections = Object.create(null);
+    var wineStoryButtonCount = 0;
+
+    if (wineSectionButtons.some(function (button) {
+      var section = button.getAttribute('data-wine-section-choice');
+      return validWineSections.indexOf(section) === -1 ||
+        button.getAttribute('aria-pressed') !== 'false' ||
+        wineSectionButtons.filter(function (candidate) {
+          return candidate.getAttribute('data-wine-section-choice') === section;
+        }).length !== 1;
+    }) || wineStoryGroups.some(function (group) {
+      var section = group.getAttribute('data-wine-story-group');
+      var groupButtons = Array.prototype.slice.call(group.querySelectorAll('[data-story-choice]'));
+
+      if (validWineSections.indexOf(section) === -1 || !group.hidden || groupButtons.length !== 6 ||
+          wineStoryGroups.filter(function (candidate) {
+            return candidate.getAttribute('data-wine-story-group') === section;
+          }).length !== 1) {
+        return true;
+      }
+
+      wineStoryButtonCount += groupButtons.length;
+      return groupButtons.some(function (button) {
+        var storyId = button.getAttribute('data-story-choice');
+        var story = storiesById[storyId];
+        if (!story || story.category !== 'wine' || storyWineSections[storyId]) {
+          return true;
+        }
+        storyWineSections[storyId] = section;
+        return false;
+      });
+    }) || wineStoryButtonCount !== 12 || stories.some(function (story) {
+      return story.category === 'wine' ? !storyWineSections[story.id] : Boolean(storyWineSections[story.id]);
+    })) {
+      return;
+    }
+
     var activeCategory = null;
     var activeStoryId = null;
+    var activeWineSection = null;
     var lastRandomStoryId = null;
 
     function setPressed(buttons, selectedValue, attributeName) {
       buttons.forEach(function (button) {
         button.setAttribute('aria-pressed', button.getAttribute(attributeName) === selectedValue ? 'true' : 'false');
       });
+    }
+
+    function clearResult() {
+      resultCard.hidden = true;
+      resultCategory.textContent = '';
+      resultTitle.textContent = '';
+      resultDescription.textContent = '';
+      resultMemorySection.hidden = true;
+      resultMemory.textContent = '';
+      resultCatComment.textContent = '';
+    }
+
+    function setWineSectionState(section) {
+      if (validWineSections.indexOf(section) === -1) {
+        return false;
+      }
+      setPressed(wineSectionButtons, section, 'data-wine-section-choice');
+      wineStoryGroups.forEach(function (group) {
+        group.hidden = group.getAttribute('data-wine-story-group') !== section;
+      });
+      activeWineSection = section;
+      return true;
+    }
+
+    function resetWineSection() {
+      wineSectionButtons.forEach(function (button) {
+        button.setAttribute('aria-pressed', 'false');
+      });
+      wineStoryGroups.forEach(function (group) {
+        group.hidden = true;
+      });
+      activeWineSection = null;
+    }
+
+    function showWineSection(section) {
+      if (activeCategory !== 'wine' || validWineSections.indexOf(section) === -1 ||
+          section === activeWineSection) {
+        return false;
+      }
+      setWineSectionState(section);
+      itemButtons.forEach(function (button) {
+        button.setAttribute('aria-pressed', 'false');
+      });
+      activeStoryId = null;
+      clearResult();
+      return true;
     }
 
     function showCategory(category) {
@@ -122,7 +230,8 @@
       itemButtons.forEach(function (button) {
         button.setAttribute('aria-pressed', 'false');
       });
-      resultCard.hidden = true;
+      resetWineSection();
+      clearResult();
       activeCategory = category;
       activeStoryId = null;
       return true;
@@ -143,10 +252,20 @@
         activeCategory = story.category;
       }
 
+      if (story.category === 'wine') {
+        if (!setWineSectionState(storyWineSections[story.id])) {
+          return false;
+        }
+      } else {
+        resetWineSection();
+      }
+
       setPressed(itemButtons, story.id, 'data-story-choice');
       resultCategory.textContent = story.categoryLabel;
       resultTitle.textContent = story.title;
       resultDescription.textContent = story.description;
+      resultMemory.textContent = story.memory;
+      resultMemorySection.hidden = !story.memory;
       resultCatComment.textContent = story.catComment;
       resultCard.hidden = false;
       activeStoryId = story.id;
@@ -167,7 +286,8 @@
     }
 
     function resetSelection() {
-      if (activeCategory === null && activeStoryId === null && itemPanel.hidden && resultCard.hidden) {
+      if (activeCategory === null && activeStoryId === null && activeWineSection === null &&
+          itemPanel.hidden && resultCard.hidden) {
         return;
       }
       categoryButtons.forEach(function (button) {
@@ -179,12 +299,9 @@
       itemGroups.forEach(function (group) {
         group.hidden = true;
       });
+      resetWineSection();
       itemPanel.hidden = true;
-      resultCard.hidden = true;
-      resultCategory.textContent = '';
-      resultTitle.textContent = '';
-      resultDescription.textContent = '';
-      resultCatComment.textContent = '';
+      clearResult();
       activeCategory = null;
       activeStoryId = null;
     }
@@ -195,11 +312,18 @@
       });
     });
 
+    wineSectionButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        showWineSection(button.getAttribute('data-wine-section-choice'));
+      });
+    });
+
     itemButtons.forEach(function (button) {
       button.addEventListener('click', function () {
         var storyId = button.getAttribute('data-story-choice');
         var story = typeof storyId === 'string' ? storiesById[storyId] : null;
-        if (!story || story.category !== activeCategory) {
+        if (!story || story.category !== activeCategory ||
+            (story.category === 'wine' && storyWineSections[story.id] !== activeWineSection)) {
           return;
         }
         showStory(storyId);
