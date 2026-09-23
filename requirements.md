@@ -1825,11 +1825,13 @@ Botから動画図鑑への導線の受け入れ条件は次のとおりとす�
 
 動画図鑑上部に、独立した特集ページ `docs/videos/halloween/index.html` へ移動する「ハロウィン特集」のリンクを設ける。入口はカテゴリボタンおよび作品カードとは別の通常リンクとし、図鑑の54作品、カテゴリ件数、絞り込みおよび「おまかせ1本」の集計へ重複して含めない。
 
-特集ページには「魔女見習い」「おばけかぼちゃ」「森の夜会」「魔法薬研究所」「ハロウィンパレード」の5作品をこの順で掲載する。各項目は正式サムネイル、表示ラベル、タイトル、説明文および個別動画ページへのリンクを使用する。作品一覧は、今後同じカード構造の項目を追加できるリストとして構成する。図鑑上部の特集入口には「5作品」と表示する。
+特集ページには「魔女見習い」「おばけかぼちゃ」「森の夜会」「魔法薬研究所」「ハロウィンパレード」「お城探検」「お菓子をもらう」「ハロウィン音楽隊」の8作品をこの順で掲載する。各項目は正式サムネイル、表示ラベル、タイトル、説明文および個別動画ページへのリンクを使用する。作品一覧は、今後同じカード構造の項目を追加できるリストとして構成する。図鑑上部の特集入口には「8作品 →」と表示する。
 
 「森の夜会」はslugを `forest-night-party-neko` とし、公開MP4を `docs/assets/videos/forest-night-party-neko.mp4`、正式サムネイルを `docs/assets/images/forest-night-party-neko-thumbnail.jpg`、個別ページを `docs/videos/forest-night-party-neko/index.html` に配置する。「魔法薬研究所」はslugを `magic-potion-lab-neko` とし、公開MP4を `docs/assets/videos/magic-potion-lab-neko.mp4`、正式サムネイルを `docs/assets/images/magic-potion-lab-neko-thumbnail.jpg`、個別ページを `docs/videos/magic-potion-lab-neko/index.html` に配置する。「ハロウィンパレード」はslugを `halloween-parade-neko` とし、公開MP4を `docs/assets/videos/halloween-parade-neko.mp4`、正式サムネイルを `docs/assets/images/halloween-parade-neko-thumbnail.jpg`、個別ページを `docs/videos/halloween-parade-neko/index.html` に配置する。各個別ページからはハロウィン特集へ戻れるようにする。
 
-特集掲載は通常図鑑の既存54作品とは別の特集限定表示であり、通常図鑑の総作品数は54作品、5カテゴリ、秋カテゴリ12作品のままとする。「魔法薬研究所」と「ハロウィンパレード」は特集限定作品とし、Botの `createVideoWorks_()` とクイックリプライへ追加しない。日曜候補14作品、水曜候補54作品、金曜秋候補12作品は変更せず、GAS、Webhookおよび週次配信へ影響を与えない。特集限定作品は通常図鑑のカテゴリ絞り込みおよび「おまかせ1本」の対象に含めない。JavaScript、動画の直接埋め込み、外部CSS、外部ライブラリおよび新しい外部通信は追加しない。
+特集掲載は通常図鑑の既存54作品とは別の特集限定表示であり、通常図鑑の総作品数は54作品、5カテゴリ、カテゴリ別件数はおでかけ13作品、日常13作品、季節5作品、秋12作品、おしごと11作品のままとする。「森の夜会」「魔法薬研究所」「ハロウィンパレード」「お城探検」「お菓子をもらう」「ハロウィン音楽隊」は特集限定作品とし、Botの `createVideoWorks_()` とクイックリプライへ追加しない。日曜候補14作品、水曜候補54作品、金曜秋候補12作品は変更せず、GAS、Webhookおよび週次配信へ影響を与えない。特集限定作品は通常図鑑のカテゴリ絞り込みおよび「おまかせ1本」の対象に含めない。JavaScript、動画の直接埋め込み、外部CSS、外部ライブラリおよび新しい外部通信は追加しない。JavaScriptが無効な場合も、特集の8作品を閲覧できる静的HTML構造を維持する。
+
+### 28.1 5作品版の完了履歴
 
 ハロウィン動画特集の受け入れ条件は次のとおりとする。
 
@@ -1841,6 +1843,24 @@ Botから動画図鑑への導線の受け入れ条件は次のとおりとす�
 - [ ] 390px幅で横スクロールや文字切れがなく、サムネイルの16:9を維持する
 - [ ] 既存54作品、`gallery.js`、LIFF初期化・状態表示、Bot、GAS、週次配信、Propertiesおよびトリガーが不変である
 - [ ] ローカルHTTPで特集ページ、特集5作品の個別ページ・MP4・正式サムネイルを取得でき、`git diff --check`が正常である
+
+### 28.2 ハロウィン特集3作品追加
+
+5作品版の既存カードを変更せず、特集ページの末尾へ次の3作品を追加し、現在の掲載数を8作品とする。
+
+6. 「お城探検」はslugを `castle-exploration-neko`、表示ラベルを「お城探検」、表示タイトルを「お城探検です。」、説明を「満月の夜、気になるお城へ向かう魔女しゃりねこです。」とする。個別ページは `docs/videos/castle-exploration-neko/index.html`、公開MP4は `docs/assets/videos/castle-exploration-neko.mp4`、正式サムネイルは `docs/assets/images/castle-exploration-neko-thumbnail.jpg` とする。
+7. 「お菓子をもらう」はslugを `trick-or-treat-neko`、表示ラベルを「お菓子をもらう」、表示タイトルを「お菓子をもらいます。」、説明を「ハロウィンの夜、かごを持ってお菓子をもらいに行くしゃりねこです。」とする。個別ページは `docs/videos/trick-or-treat-neko/index.html`、公開MP4は `docs/assets/videos/trick-or-treat-neko.mp4`、正式サムネイルは `docs/assets/images/trick-or-treat-neko-thumbnail.jpg` とする。
+8. 「ハロウィン音楽隊」はslugを `halloween-band-neko`、表示ラベルを「音楽隊」、表示タイトルを「ハロウィン音楽隊です。」、説明を「夜の街で太鼓を鳴らすと、仮装した仲間たちが集まってきます。」とする。個別ページは `docs/videos/halloween-band-neko/index.html`、公開MP4は `docs/assets/videos/halloween-band-neko.mp4`、正式サムネイルは `docs/assets/images/halloween-band-neko-thumbnail.jpg` とする。
+
+3作品追加後の受け入れ条件は次のとおりとする。
+
+- [ ] 特集カードが8件で、既存5カードは変更せず、新作3カードが「お城探検」「お菓子をもらう」「ハロウィン音楽隊」の順で掲載される
+- [ ] 新作3件の個別ページ、公開MP4および正式サムネイルが各1件存在し、カードと個別ページのタイトル、説明および素材参照が一致する
+- [ ] 図鑑上部の特集入口に「8作品 →」と表示され、リンク先が `./halloween/` のままである
+- [ ] JavaScriptや外部依存を追加せず、JavaScript無効時も特集8作品を閲覧できる
+- [ ] 通常図鑑は54作品、カテゴリ別件数は13、13、5、12、11、カテゴリ絞り込みおよび「おまかせ1本」の対象は54作品のままである
+- [ ] Botの54作品、GAS、Webhook、日曜14作品・水曜54作品・金曜秋12作品の週次配信候補およびLIFF設定を変更しない
+- [ ] `git diff --check`が正常で、特集に関係しない既存ファイルおよび素材に差分がない
 
 ## 29. しゃりねこ お酒の小話
 
