@@ -21,7 +21,7 @@
     if (!interactivePanel || !staticStories || !itemPanel || !resultCard ||
         !resultCategory || !resultTitle || !resultDescription || !resultCatComment ||
         !randomButton || !resetButton || categoryButtons.length !== 5 ||
-        itemGroups.length !== 5 || itemButtons.length !== 15 || storyElements.length !== 15) {
+        itemGroups.length !== 5 || itemButtons.length !== 18 || storyElements.length !== 18) {
       return;
     }
 
@@ -30,6 +30,13 @@
     var categoryCounts = Object.create(null);
     var categoryLabels = Object.create(null);
     var isValid = true;
+    var expectedCategoryCounts = {
+      sake: 3,
+      wine: 6,
+      beer: 3,
+      whisky: 3,
+      shochu: 3
+    };
 
     validCategories.forEach(function (category) {
       categoryCounts[category] = 0;
@@ -74,8 +81,8 @@
       categoryLabels[category] = categoryLabel;
     });
 
-    if (!isValid || stories.length !== 15 || validCategories.some(function (category) {
-      return categoryCounts[category] !== 3;
+    if (!isValid || stories.length !== 18 || validCategories.some(function (category) {
+      return categoryCounts[category] !== expectedCategoryCounts[category];
     })) {
       return;
     }
@@ -200,7 +207,11 @@
     });
 
     randomButton.addEventListener('click', function () {
-      var story = chooseRandomStory(stories, lastRandomStoryId);
+      var category = validCategories[Math.floor(Math.random() * validCategories.length)];
+      var categoryStories = stories.filter(function (story) {
+        return story.category === category;
+      });
+      var story = chooseRandomStory(categoryStories, lastRandomStoryId);
       if (!story) {
         return;
       }
