@@ -780,6 +780,14 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：秋｜おばけかぼちゃ',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '映画鑑賞',
+          text: 'しゃりねこ動画：秋｜映画鑑賞',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -2061,6 +2069,16 @@ function createVideoWorks_() {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/ghost-pumpkin-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
     },
+    'しゃりねこ動画：秋｜映画鑑賞': {
+      title: '映画鑑賞です。',
+      guideText:
+        '芸術の秋、ポップコーンを手に映画を楽しむしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/movie-theater-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/movie-theater-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
   };
 }
 
@@ -2702,6 +2720,7 @@ function getWeeklyVideoBroadcastCandidateKeywords_(
       'しゃりねこ動画：秋｜秋の日の出',
       'しゃりねこ動画：秋｜魔女見習い',
       'しゃりねこ動画：秋｜おばけかぼちゃ',
+      'しゃりねこ動画：秋｜映画鑑賞',
     ];
   } else if (scheduleType === 'WEDNESDAY_RANDOM') {
     candidateKeywords = Object.keys(videoWorks);
@@ -2762,6 +2781,7 @@ function getSeasonalVideoBroadcastCandidateKeywords_(month) {
       'しゃりねこ動画：秋｜秋の日の出',
       'しゃりねこ動画：秋｜魔女見習い',
       'しゃりねこ動画：秋｜おばけかぼちゃ',
+      'しゃりねこ動画：秋｜映画鑑賞',
     ];
   }
 
