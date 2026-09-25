@@ -152,8 +152,16 @@ function handleLineEvent_(event) {
       {
         type: 'action',
         action: {
+          type: 'uri',
+          label: '案内所',
+          uri: 'https://liff.line.me/2011681460-zSDqGnoy',
+        },
+      },
+      {
+        type: 'action',
+        action: {
           type: 'message',
-          label: 'かんさつ',
+          label: '観察',
           text: 'しゃりねこ観察',
         },
       },
@@ -161,7 +169,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'あそぶ',
+          label: '遊ぶ',
           text: 'しゃりねこと遊ぶ',
         },
       },
@@ -169,7 +177,7 @@ function handleLineEvent_(event) {
         type: 'action',
         action: {
           type: 'message',
-          label: 'どうが',
+          label: '動画',
           text: 'しゃりねこ動画',
         },
       },
@@ -195,14 +203,6 @@ function handleLineEvent_(event) {
           type: 'message',
           label: '和菓子',
           text: '和菓子ねこ',
-        },
-      },
-      {
-        type: 'action',
-        action: {
-          type: 'uri',
-          label: '案内所',
-          uri: 'https://liff.line.me/2011681460-zSDqGnoy',
         },
       },
     ];
