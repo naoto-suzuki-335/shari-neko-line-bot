@@ -197,6 +197,14 @@ function handleLineEvent_(event) {
           text: '和菓子ねこ',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'uri',
+          label: '案内所',
+          uri: 'https://liff.line.me/2011681460-zSDqGnoy',
+        },
+      },
     ];
 
     replyTextMessage_(
