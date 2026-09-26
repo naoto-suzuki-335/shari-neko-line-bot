@@ -2280,3 +2280,163 @@ Bot導線に問題がある場合は、案内所のURI actionだけを通常の�
 - [ ] 内部キーワード、Webhook分岐および返信関数の追加がない
 - [ ] 通常HTTPSの `/home/` も引き続き利用できる
 - [ ] 既存Bot機能、リッチメニューおよびLIFF設定が不変である
+
+## 32. ハロウィン特集・第1便3作品追加
+
+### 32.1 目的と位置づけ
+
+既存のハロウィン特集8作品へ、特集限定作品3本を追加し、特集を合計11作品とする。通常動画図鑑は55作品を維持し、新作3本は通常図鑑、Bot作品一覧、Botクイックリプライおよび週次配信へ追加しない。
+
+しゃりねこ案内所の「季節の特集」は既存リンクをそのまま利用し、リンク先のハロウィン特集で11作品を表示する。
+
+### 32.2 正式作品情報
+
+1. 魔女の大釜
+   - 表示ラベル：`魔女の大釜`
+   - タイトル：`魔女の大釜です。`
+   - 説明：`ハロウィンの夜、大きな釜で魔法の練習をするしゃりねこです。`
+   - slug：`witch-cauldron-neko`
+   - MP4：`docs/assets/videos/witch-cauldron-neko.mp4`
+   - JPEG：`docs/assets/images/witch-cauldron-neko-thumbnail.jpg`
+   - 個別ページ：`docs/videos/witch-cauldron-neko/index.html`
+2. かぼちゃのお見送り
+   - 表示ラベル：`かぼちゃのお見送り`
+   - タイトル：`かぼちゃがお見送りします。`
+   - 説明：`ハロウィンの夜、かぼちゃに見送られて空へ飛び立つしゃりねこです。`
+   - slug：`pumpkin-farewell-neko`
+   - MP4：`docs/assets/videos/pumpkin-farewell-neko.mp4`
+   - JPEG：`docs/assets/images/pumpkin-farewell-neko-thumbnail.jpg`
+   - 個別ページ：`docs/videos/pumpkin-farewell-neko/index.html`
+3. がいこつさん
+   - 表示ラベル：`がいこつさん`
+   - タイトル：`がいこつさんに会いました。`
+   - 説明：`ハロウィンの森で、がいこつさんと仲良くなるしゃりねこです。`
+   - slug：`skeleton-neko`
+   - MP4：`docs/assets/videos/skeleton-neko.mp4`
+   - JPEG：`docs/assets/images/skeleton-neko-thumbnail.jpg`
+   - 個別ページ：`docs/videos/skeleton-neko/index.html`
+
+### 32.3 公開素材
+
+公開MP4は、次のとおりとする。
+
+- `witch-cauldron-neko.mp4`
+  - 容量：5,917,832 bytes
+  - SHA-256：`BFBF3CBF98E53A7B09CC26942BDFE9FBEF241B9F7051DE8BA9530D6444C96B86`
+- `pumpkin-farewell-neko.mp4`
+  - 容量：5,527,551 bytes
+  - SHA-256：`9C705AF27CFFA739BCA8F32ACB1A7A7339BD13AD866AF3B197C5B6CB00E02F6F`
+- `skeleton-neko.mp4`
+  - 容量：4,236,648 bytes
+  - SHA-256：`228BA07FD0ADBEEA514EE4DC17EA5267DC6810C0DC3AF9FEBE5E5DCF0DB2D26A`
+
+MP4の共通仕様は、MP4互換、H.264 High、yuv420p、1920×1080、30fps、AAC-LC、44.1kHz、stereoおよびfaststart適用とする。FFprobe検査および全編デコードが正常に完了することを要件とする。
+
+正式サムネイルは、次のとおりとする。
+
+- `witch-cauldron-neko-thumbnail.jpg`
+  - 採用元：候補01、0.50秒
+  - 容量：194,627 bytes
+  - SHA-256：`60FA20D74FABEC711C882F5DF0CBAABDF421D0655ED0BF094088EDB2EF80C9D2`
+- `pumpkin-farewell-neko-thumbnail.jpg`
+  - 採用元：候補04、4.10秒
+  - 容量：142,348 bytes
+  - SHA-256：`2B7A4E9D7C24DF5E5BFFACBBC427C639D0C7BF73E787A05D39C4F01AA67DD244`
+- `skeleton-neko-thumbnail.jpg`
+  - 採用元：候補07、6.40秒
+  - 容量：160,931 bytes
+  - SHA-256：`F6070E21684672FE87BEFFDABD77E57B6EF252A35FC318A12E2056CD80EC8DBC`
+
+JPEGの共通仕様は、JPEG／MJPEG、yuvj420p、1920×1080および16:9とする。選定候補から無加工・無再圧縮でコピーし、candidate番号、抽出時刻、slug等の管理文字を含めない。FFprobe検査および全編デコードが正常に完了することを要件とする。
+
+### 32.4 ページと掲載順
+
+個別ページは既存の `docs/videos/halloween-band-neko/index.html` の構造を踏襲する。特集へ戻るリンクは `../halloween/` とし、video要素の `controls`、`playsinline`、`preload="metadata"` および `type="video/mp4"` を維持する。`autoplay`、`loop` およびJavaScriptは追加しない。
+
+ハロウィン特集の既存8作品は内容と順序を変更せず、新規3作品を末尾へ次の順序で追加する。
+
+9. 魔女の大釜
+10. かぼちゃのお見送り
+11. がいこつさん
+
+通常図鑑のハロウィン特集入口は `11作品 →` とする。通常図鑑の通常カード55件およびカテゴリ件数13／13／5／13／11は変更しない。
+
+### 32.5 非変更対象
+
+次は変更しない。
+
+- `src/Code.gs`
+- `src/appsscript.json`
+- Bot作品一覧
+- Botクイックリプライ
+- 週次配信候補
+- `docs/videos/gallery.js`
+- `docs/videos/liff-init.js`
+- `docs/sake/`
+- `docs/home/index.html`
+- 既存LIFF ID・Endpoint
+- Webhook
+- GASデプロイ
+- LINE Developers設定
+- GitHub Pages設定
+
+この追加では `src/` を変更しないため、`clasp push` およびGAS固定デプロイ更新は不要とする。
+
+### 32.6 制作途中素材
+
+次は制作途中素材であり、公開・コミット対象外とする。
+
+- `incoming-videos/majonooogama.MOV`
+- `incoming-videos/kabochamiokuri.mov`
+- `incoming-videos/gaikotsu.MOV`
+- `witch-cauldron-neko-thumbnail-candidates/`
+- `pumpkin-farewell-neko-thumbnail-candidates/`
+- `skeleton-neko-thumbnail-candidates/`
+- 上記候補フォルダー内の候補JPEG 24枚
+- 上記候補フォルダー内のcontact sheet 3枚
+- その他の制作素材
+
+### 32.7 反映手順
+
+反映は、次の順序で行う。
+
+1. ローカル最終監査を行う
+2. 指定12ファイルだけをcommitする
+3. `main` へ通常pushする
+4. GitHub Pagesの公開反映を確認する
+5. HTTP、画像、動画およびブラウザー操作を確認する
+
+`clasp`、GASおよびLINE Developersの操作は行わない。
+
+コミット対象12ファイルは、次のとおりとする。
+
+新規9件：
+
+- 公開MP4 3件
+- 正式サムネイル3件
+- 個別ページ3件
+
+更新3件：
+
+- `docs/videos/halloween/index.html`
+- `docs/videos/index.html`
+- `requirements.md`
+
+### 32.8 受け入れ条件
+
+- [ ] ハロウィン特集が11作品である
+- [ ] 既存8作品の内容と順序が不変である
+- [ ] 新規3作品が指定順で末尾にある
+- [ ] 各作品のラベル、タイトル、説明、リンクおよび画像が正式値と一致する
+- [ ] 個別ページ3件がHTTP 200を返す
+- [ ] MP4 3件とJPEG 3件がHTTP 200を返す
+- [ ] 公開素材の容量とSHA-256が期待値と一致する
+- [ ] MP4のfaststartおよび全編デコードが正常である
+- [ ] 各個別ページからハロウィン特集へ戻れる
+- [ ] 通常図鑑の特集入口が `11作品 →` である
+- [ ] 通常カード55件とカテゴリ件数13／13／5／13／11が不変である
+- [ ] JavaScript無効時も特集11カードを閲覧できる
+- [ ] 390px相当で横スクロールや表示崩れがない
+- [ ] 通常図鑑、動画用LIFF、お酒用LIFFおよびしゃりねこ案内所が従来どおり動作する
+- [ ] Bot、GASおよびLINE Developers設定が不変である
+- [ ] 制作途中素材がコミットされていない
