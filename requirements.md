@@ -2440,3 +2440,150 @@ JPEGの共通仕様は、JPEG／MJPEG、yuvj420p、1920×1080および16:9とす
 - [ ] 通常図鑑、動画用LIFF、お酒用LIFFおよびしゃりねこ案内所が従来どおり動作する
 - [ ] Bot、GASおよびLINE Developers設定が不変である
 - [ ] 制作途中素材がコミットされていない
+
+## 33. ハロウィン特集・第2便（最終便）2作品追加
+
+### 33.1 目的と位置づけ
+
+既存ハロウィン特集11作品へ特集限定作品2本を追加し、全13作品として完成扱いにする。通常動画図鑑は55作品を維持し、新作2本は通常図鑑、Bot作品一覧、Botクイックリプライおよび週次配信へ追加しない。
+
+しゃりねこ案内所の季節特集リンクは、既存のハロウィン特集へのリンクをそのまま利用する。
+
+### 33.2 正式作品情報
+
+1. おばけ探検隊
+   - 表示ラベル：`おばけ探検隊`
+   - タイトル：`おばけ探検隊です。`
+   - 説明：`ハロウィンの夜、おばけのおともだちと空を探検するしゃりねこです。`
+   - slug：`ghost-expedition-neko`
+   - MP4：`docs/assets/videos/ghost-expedition-neko.mp4`
+   - JPEG：`docs/assets/images/ghost-expedition-neko-thumbnail.jpg`
+   - 個別ページ：`docs/videos/ghost-expedition-neko/index.html`
+2. おばけのおともだち
+   - 表示ラベル：`おばけのおともだち`
+   - タイトル：`おばけに会いました。`
+   - 説明：`ハロウィンの夜、おばけに出会い、仲良くなるしゃりねこです。`
+   - slug：`ghost-encounter-neko`
+   - MP4：`docs/assets/videos/ghost-encounter-neko.mp4`
+   - JPEG：`docs/assets/images/ghost-encounter-neko-thumbnail.jpg`
+   - 個別ページ：`docs/videos/ghost-encounter-neko/index.html`
+
+### 33.3 公開素材
+
+公開MP4は次のとおりとする。
+
+- `ghost-expedition-neko.mp4`
+  - 容量：6,575,718 bytes
+  - SHA-256：`51D1931C9E04FE199BE588E35A42E2580129E7E26C256F4115EDE2F9CABC63BD`
+  - 再生時間：10.006349秒
+  - フレーム数：300
+- `ghost-encounter-neko.mp4`
+  - 容量：4,791,308 bytes
+  - SHA-256：`EB13D5DF6AF42641B55C56625A1F9F087F7045231698B2B669303B20665C6CC7`
+  - 再生時間：10.006349秒
+  - フレーム数：300
+
+MP4の共通仕様は、MP4互換、H.264 High、CRF 20、preset medium、yuv420p、1920×1080および30fpsとする。音声はAAC-LC 192kbps、44.1kHzおよびstereoとし、faststartを適用する。FFprobe検査および全編デコードが正常に完了することを要件とする。
+
+正式サムネイルは次のとおりとする。
+
+- `ghost-expedition-neko-thumbnail.jpg`
+  - 採用元：候補07、7.70秒
+  - 容量：155,736 bytes
+  - SHA-256：`4A450D609BDA4D97778C4589414EF98754D262C364A89D11CE0A4AD6195B8F88`
+- `ghost-encounter-neko-thumbnail.jpg`
+  - 採用元：候補06、6.50秒
+  - 容量：150,974 bytes
+  - SHA-256：`26C2C4F4A17F289404438FAA531C80F86563B4EF44310BFCCDCE95E2F75050BE`
+
+JPEGの共通仕様は、JPEG／MJPEG、yuvj420p、1920×1080および16:9とする。選定候補から無加工・無再圧縮でコピーし、candidate番号、抽出時刻、slug等の管理文字を含めず、動画本来のテロップを維持する。FFprobe検査および全編デコードが正常に完了することを要件とする。
+
+### 33.4 ページと掲載順
+
+個別ページは既存の `docs/videos/halloween-band-neko/index.html` の構造を踏襲する。特集へ戻るリンクは `../halloween/` とし、video要素の `controls`、`playsinline`、`preload="metadata"` および `type="video/mp4"` を維持する。`autoplay`、`loop` およびJavaScriptは追加しない。
+
+ハロウィン特集の既存11作品は内容と順序を変更せず、新規2作品を末尾へ次の順序で追加する。
+
+12. おばけ探検隊
+13. おばけのおともだち
+
+通常図鑑のハロウィン特集入口は `13作品 →` とする。通常図鑑の通常カード55件およびカテゴリ件数13／13／5／13／11は変更しない。
+
+### 33.5 非変更対象
+
+次は変更しない。
+
+- `src/Code.gs`
+- `src/appsscript.json`
+- Bot作品一覧
+- Botクイックリプライ
+- 週次配信候補
+- `docs/videos/gallery.js`
+- `docs/videos/liff-init.js`
+- `docs/sake/`
+- `docs/home/index.html`
+- 既存LIFF ID・Endpoint
+- Webhook
+- GASデプロイ
+- LINE Developers設定
+- GitHub Pages設定
+
+この追加では `src/` を変更しないため、`clasp push` およびGAS固定デプロイ更新は不要とする。
+
+### 33.6 制作途中素材
+
+次は制作途中素材であり、公開・コミット対象外とする。
+
+- `incoming-videos/tankentaiobake.mov`
+- `incoming-videos/obake.mov`
+- `ghost-expedition-neko-thumbnail-candidates/`
+- `ghost-encounter-neko-thumbnail-candidates/`
+- 上記候補フォルダー内の候補JPEG 16枚
+- 上記候補フォルダー内のcontact sheet 2枚
+- その他の制作素材
+
+### 33.7 反映手順
+
+反映は、次の順序で行う。
+
+1. ローカル最終監査を行う
+2. 指定9ファイルだけをcommitする
+3. `main` へ通常pushする
+4. GitHub Pagesの公開反映を確認する
+5. HTML、JPEG、MP4およびブラウザー操作を確認する
+
+`clasp`、GASおよびLINE Developersの操作は行わない。
+
+コミット対象9ファイルは、次のとおりとする。
+
+新規6件：
+
+- 公開MP4 2件
+- 正式サムネイル2件
+- 個別ページ2件
+
+更新3件：
+
+- `docs/videos/halloween/index.html`
+- `docs/videos/index.html`
+- `requirements.md`
+
+### 33.8 受け入れ条件
+
+- [ ] ハロウィン特集が13作品である
+- [ ] 既存11作品の内容と順序が不変である
+- [ ] 新規2作品が12番目・13番目に指定順で掲載されている
+- [ ] 各作品のラベル、タイトル、説明、リンクおよび画像が正式値と一致する
+- [ ] 個別ページ2件がHTTP 200を返す
+- [ ] MP4 2件とJPEG 2件がHTTP 200を返す
+- [ ] 公開素材の容量とSHA-256が期待値と一致する
+- [ ] MP4のfaststartおよび全編デコードが正常である
+- [ ] 各個別ページからハロウィン特集へ戻れる
+- [ ] 通常図鑑の特集入口が `13作品 →` である
+- [ ] 通常カード55件とカテゴリ件数13／13／5／13／11が不変である
+- [ ] JavaScript無効時も特集13カードを閲覧できる
+- [ ] 390px相当で横スクロールや表示崩れがない
+- [ ] 通常図鑑、動画用LIFF、お酒用LIFFおよびしゃりねこ案内所が従来どおり動作する
+- [ ] Bot、GASおよびLINE Developers設定が不変である
+- [ ] 制作途中素材がコミットされていない
+- [ ] ハロウィン特集全13作品の完成を確認できる
