@@ -99,6 +99,13 @@
       font-weight: 700;
     }
 
+    .build-marker {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
     .game-status {
       margin-bottom: 14px;
       color: var(--muted);
@@ -288,6 +295,8 @@
         <p class="game-rule">1人用・4組8枚・制限時間なし</p>
         <p class="move-count" role="status" aria-live="polite" aria-atomic="true">手数：<span id="memory-move-count" data-memory-move-count>0</span></p>
       </div>
+
+      <p class="build-marker" data-memory-build-marker>診断版3・HTML更新確認</p>
 
       <p id="memory-game-status" class="game-status" role="status" aria-live="polite" aria-atomic="true" data-memory-status>
         ゲームを準備しています。
