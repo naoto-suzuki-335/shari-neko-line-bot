@@ -99,13 +99,6 @@
       font-weight: 700;
     }
 
-    .build-marker {
-      margin: 0 0 8px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
     .game-status {
       margin-bottom: 14px;
       color: var(--muted);
@@ -296,8 +289,6 @@
         <p class="move-count" role="status" aria-live="polite" aria-atomic="true">手数：<span id="memory-move-count" data-memory-move-count>0</span></p>
       </div>
 
-      <p class="build-marker" data-memory-build-marker>診断版3・HTML更新確認</p>
-
       <p id="memory-game-status" class="game-status" role="status" aria-live="polite" aria-atomic="true" data-memory-game-status>
         ゲームを準備しています。
       </p>
@@ -342,45 +333,6 @@
     </section>
   </main>
 
-  <!-- Memory game startup diagnostic: start -->
-  <script>
-    (function () {
-      try {
-        var statusElement = document.querySelector("[data-memory-game-status]");
-        if (statusElement) {
-          statusElement.textContent = "診断A：ページのJavaScriptは動作しています。";
-        }
-      } catch (error) {
-      }
-    })();
-  </script>
-  <script id="memory-game-script" src="./memory-game.js?v=3-diagnostic" defer></script>
-  <script>
-    (function () {
-      try {
-        var scriptElement = document.getElementById("memory-game-script");
-        var statusElement = document.querySelector("[data-memory-game-status]");
-        var diagnosticA = "診断A：ページのJavaScriptは動作しています。";
-
-        if (!scriptElement || !statusElement) {
-          return;
-        }
-
-        scriptElement.addEventListener("error", function () {
-          statusElement.textContent = "診断C：ゲーム本体を読み込めませんでした。";
-        });
-
-        scriptElement.addEventListener("load", function () {
-          window.setTimeout(function () {
-            if (statusElement.textContent === diagnosticA) {
-              statusElement.textContent = "診断C：ゲーム本体は読み込まれましたが、実行できませんでした。";
-            }
-          }, 0);
-        });
-      } catch (error) {
-      }
-    })();
-  </script>
-  <!-- Memory game startup diagnostic: end -->
+  <script src="./memory-game.js?v=4" defer></script>
 </body>
 </html>

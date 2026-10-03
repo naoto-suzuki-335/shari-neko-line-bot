@@ -1,16 +1,6 @@
 (function () {
   "use strict";
 
-  /* Memory game startup diagnostic: start */
-  try {
-    var diagnosticStatus = document.querySelector("[data-memory-game-status]");
-    if (diagnosticStatus) {
-      diagnosticStatus.textContent = "診断B：ゲーム本体を実行しています。";
-    }
-  } catch (diagnosticError) {
-  }
-  /* Memory game startup diagnostic: end */
-
   const EXPECTED_PAIR_COUNT = 4;
   const READY_MESSAGE = "カードを2枚選んでください。";
   const INITIALIZATION_ERROR_MESSAGE = "ゲームを開始できませんでした。";
