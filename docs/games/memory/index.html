@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="しゃりねこのカードを2枚ずつめくって、同じ絵柄をそろえる神経衰弱ゲームです。">
+  <title>しゃりねこ神経衰弱</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #fff9f0;
+      --surface: #fffdfb;
+      --text: #382b24;
+      --muted: #705f55;
+      --accent: #a3482d;
+      --accent-dark: #71321f;
+      --border: #ead7c7;
+      --card-back: #f4dfca;
+      --matched: #edf4e6;
+      --shadow: 0 10px 28px rgba(77, 46, 29, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      overflow-wrap: anywhere;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.7;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    main {
+      width: min(720px, 100%);
+      margin: 0 auto;
+      padding: 32px 14px 48px;
+    }
+
+    header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--accent);
+      font-size: clamp(1.9rem, 8vw, 2.8rem);
+      line-height: 1.3;
+    }
+
+    .intro {
+      margin: 12px 0 0;
+      color: var(--muted);
+    }
+
+    .game-panel {
+      padding: clamp(16px, 5vw, 28px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .game-details {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px 16px;
+      margin-bottom: 18px;
+    }
+
+    .game-details p,
+    .game-status,
+    .completion-message,
+    noscript p {
+      margin: 0;
+    }
+
+    .game-rule {
+      color: var(--muted);
+    }
+
+    .move-count {
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+
+    .game-status {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .memory-board {
+      display: grid;
+      width: min(100%, 520px);
+      min-width: 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0 auto;
+    }
+
+    .memory-board[aria-busy="true"] {
+      min-height: 44px;
+    }
+
+    .memory-card {
+      position: relative;
+      min-width: 0;
+      min-height: 44px;
+      aspect-ratio: 1;
+      overflow: hidden;
+      padding: 0;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      background: var(--card-back);
+      color: var(--accent-dark);
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(77, 46, 29, 0.08);
+      touch-action: manipulation;
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .memory-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 9px 20px rgba(77, 46, 29, 0.13);
+    }
+
+    .memory-card:focus-visible,
+    .restart-button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .memory-card:disabled {
+      cursor: default;
+      opacity: 1;
+    }
+
+    .memory-card__back,
+    .memory-card__front {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+    }
+
+    .memory-card__back {
+      font-size: clamp(2rem, 14vw, 4rem);
+      font-weight: 800;
+    }
+
+    .memory-card__front {
+      visibility: hidden;
+      background: #ffffff;
+    }
+
+    .memory-card.is-flipped .memory-card__back,
+    .memory-card.is-matched .memory-card__back {
+      visibility: hidden;
+    }
+
+    .memory-card.is-flipped .memory-card__front,
+    .memory-card.is-matched .memory-card__front {
+      visibility: visible;
+    }
+
+    .memory-card.is-matched {
+      border-color: #69874f;
+      background: var(--matched);
+      box-shadow: 0 0 0 3px #d5e5c7;
+    }
+
+    .memory-card.is-matched::after {
+      position: absolute;
+      right: 8px;
+      bottom: 6px;
+      content: "一致";
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #456731;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .memory-card__image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .memory-card__fallback {
+      display: none;
+      color: var(--accent-dark);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .memory-card.is-image-unavailable .memory-card__image {
+      display: none;
+    }
+
+    .memory-card.is-image-unavailable .memory-card__fallback {
+      display: block;
+    }
+
+    .completion {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border: 2px solid #69874f;
+      border-radius: 14px;
+      background: var(--matched);
+      text-align: center;
+    }
+
+    .completion-message {
+      font-weight: 800;
+    }
+
+    .restart-button {
+      display: flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      margin: 18px auto 0;
+      padding: 10px 20px;
+      border: 2px solid var(--accent);
+      border-radius: 999px;
+      background: var(--accent);
+      color: #ffffff;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    noscript p {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff7ed;
+    }
+
+    @media (min-width: 520px) {
+      main {
+        padding: 48px 20px 64px;
+      }
+
+      .memory-board {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .memory-card {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>しゃりねこ神経衰弱</h1>
+      <p class="intro">カードを2枚ずつめくって、同じしゃりねこをそろえましょう。</p>
+    </header>
+
+    <section class="game-panel" aria-labelledby="memory-game-heading">
+      <h2 id="memory-game-heading" hidden>ゲーム盤面</h2>
+
+      <div class="game-details">
+        <p class="game-rule">1人用・4組8枚・制限時間なし</p>
+        <p class="move-count" role="status" aria-live="polite" aria-atomic="true">手数：<span id="memory-move-count" data-memory-move-count>0</span></p>
+      </div>
+
+      <p id="memory-game-status" class="game-status" role="status" aria-live="polite" aria-atomic="true" data-memory-status>
+        ゲームを準備しています。
+      </p>
+
+      <div
+        id="memory-board"
+        class="memory-board"
+        role="group"
+        aria-label="神経衰弱のカード8枚"
+        aria-busy="true"
+        data-memory-board
+        data-card-back="?"
+        data-mismatch-delay="800"
+      ></div>
+
+      <div id="memory-card-definitions" hidden aria-hidden="true">
+        <span data-memory-card-definition data-card-id="maguro" data-card-name="まぐろ" data-card-image="../../assets/images/sushi/maguro-neko.png"></span>
+        <span data-memory-card-definition data-card-id="matcha" data-card-name="抹茶" data-card-image="../../assets/images/wagashi/matcha-neko.png"></span>
+        <span data-memory-card-definition data-card-id="shark" data-card-name="サメ" data-card-image="../../assets/images/kaburimono/shark-neko.png"></span>
+        <span data-memory-card-definition data-card-id="crown" data-card-name="王冠" data-card-image="../../assets/images/kaburimono/crown-neko.png"></span>
+      </div>
+
+      <div
+        id="memory-completion"
+        class="completion"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        data-memory-completion
+        hidden
+      >
+        <p class="completion-message">全組そろいましたにゃ！</p>
+      </div>
+
+      <button id="memory-restart" class="restart-button" type="button" data-memory-restart hidden>
+        もう一度遊ぶ
+      </button>
+
+      <noscript>
+        <p>このゲームを遊ぶにはJavaScriptを有効にしてください。</p>
+      </noscript>
+    </section>
+  </main>
+
+  <script src="./memory-game.js" defer></script>
+</body>
+</html>
