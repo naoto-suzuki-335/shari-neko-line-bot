@@ -333,6 +333,45 @@
     </section>
   </main>
 
-  <script src="./memory-game.js?v=2" defer></script>
+  <!-- Memory game startup diagnostic: start -->
+  <script>
+    (function () {
+      try {
+        var statusElement = document.querySelector("[data-memory-game-status]");
+        if (statusElement) {
+          statusElement.textContent = "診断A：ページのJavaScriptは動作しています。";
+        }
+      } catch (error) {
+      }
+    })();
+  </script>
+  <script id="memory-game-script" src="./memory-game.js?v=3-diagnostic" defer></script>
+  <script>
+    (function () {
+      try {
+        var scriptElement = document.getElementById("memory-game-script");
+        var statusElement = document.querySelector("[data-memory-game-status]");
+        var diagnosticA = "診断A：ページのJavaScriptは動作しています。";
+
+        if (!scriptElement || !statusElement) {
+          return;
+        }
+
+        scriptElement.addEventListener("error", function () {
+          statusElement.textContent = "診断C：ゲーム本体を読み込めませんでした。";
+        });
+
+        scriptElement.addEventListener("load", function () {
+          window.setTimeout(function () {
+            if (statusElement.textContent === diagnosticA) {
+              statusElement.textContent = "診断C：ゲーム本体は読み込まれましたが、実行できませんでした。";
+            }
+          }, 0);
+        });
+      } catch (error) {
+      }
+    })();
+  </script>
+  <!-- Memory game startup diagnostic: end -->
 </body>
 </html>
