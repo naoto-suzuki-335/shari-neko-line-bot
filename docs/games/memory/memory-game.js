@@ -21,12 +21,18 @@
   let isInitialized = false;
   let isComplete = false;
   let gameGeneration = 0;
-  let cardsById = new Map();
+  let cardsById = null;
 
   function clearPendingTimer() {
     if (pendingTimerId !== null) {
       window.clearTimeout(pendingTimerId);
       pendingTimerId = null;
+    }
+  }
+
+  function clearElement(element) {
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
     }
   }
 
@@ -40,10 +46,10 @@
     secondCard = null;
     matchedPairs = 0;
     moves = 0;
-    cardsById = new Map();
+    cardsById = null;
 
     if (board) {
-      board.replaceChildren();
+      clearElement(board);
       board.setAttribute("aria-busy", "false");
     }
     if (moveCount) {
@@ -110,7 +116,7 @@
     return { definitions, cardBack, mismatchDelay };
   }
 
-  const configuration = readConfiguration();
+  let configuration = null;
 
   function shuffleDeck(cards) {
     for (let index = cards.length - 1; index > 0; index -= 1) {
@@ -322,26 +328,26 @@
   }
 
   function startGame(shouldFocusFirstCard) {
-    clearPendingTimer();
-    gameGeneration += 1;
-    isInitialized = false;
-    isComplete = false;
-    isLocked = true;
-    firstCard = null;
-    secondCard = null;
-    matchedPairs = 0;
-    moves = 0;
-    deck = [];
-    cardsById = new Map();
-
-    board.setAttribute("aria-busy", "true");
-    board.replaceChildren();
-    moveCount.textContent = "0";
-    status.textContent = "ゲームを準備しています。";
-    completion.hidden = true;
-    restartButton.hidden = true;
-
     try {
+      clearPendingTimer();
+      gameGeneration += 1;
+      isInitialized = false;
+      isComplete = false;
+      isLocked = true;
+      firstCard = null;
+      secondCard = null;
+      matchedPairs = 0;
+      moves = 0;
+      deck = [];
+      cardsById = new Map();
+
+      board.setAttribute("aria-busy", "true");
+      clearElement(board);
+      moveCount.textContent = "0";
+      status.textContent = "ゲームを準備しています。";
+      completion.hidden = true;
+      restartButton.hidden = true;
+
       deck = createDeck();
       const fragment = document.createDocumentFragment();
 
@@ -371,13 +377,22 @@
     }
   }
 
-  if (!configuration) {
-    showInitializationError();
-    return;
+  function initializeGame() {
+    try {
+      configuration = readConfiguration();
+      if (!configuration) {
+        showInitializationError();
+        return;
+      }
+
+      restartButton.addEventListener("click", function () {
+        startGame(true);
+      });
+      startGame(false);
+    } catch (error) {
+      showInitializationError();
+    }
   }
 
-  restartButton.addEventListener("click", function () {
-    startGame(true);
-  });
-  startGame(false);
+  initializeGame();
 })();
