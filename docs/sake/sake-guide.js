@@ -26,7 +26,7 @@
         !resultCategory || !resultTitle || !resultDescription || !resultMemorySection ||
         !resultMemory || !resultCatComment ||
         !randomButton || !resetButton || categoryButtons.length !== 5 ||
-        itemGroups.length !== 5 || itemButtons.length !== 24 || storyElements.length !== 24 ||
+        itemGroups.length !== 5 || itemButtons.length !== 27 || storyElements.length !== 27 ||
         wineSectionButtons.length !== 2 || wineStoryGroups.length !== 2) {
       return;
     }
@@ -48,7 +48,7 @@
       sake: 3,
       wine: 12,
       beer: 3,
-      whisky: 3,
+      whisky: 6,
       shochu: 3
     };
 
@@ -104,7 +104,7 @@
       categoryLabels[category] = categoryLabel;
     });
 
-    if (!isValid || stories.length !== 24 || validCategories.some(function (category) {
+    if (!isValid || stories.length !== 27 || validCategories.some(function (category) {
       return categoryCounts[category] !== expectedCategoryCounts[category];
     })) {
       return;
