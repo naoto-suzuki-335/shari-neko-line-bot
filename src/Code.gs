@@ -898,6 +898,22 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：仕事｜紅葉警備員',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '美容院',
+          text: 'しゃりねこ動画：仕事｜美容院',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '現場監督',
+          text: 'しゃりねこ動画：仕事｜現場監督',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -1973,6 +1989,24 @@ function createVideoWorks_() {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/autumn-leaves-guard-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
     },
+    'しゃりねこ動画：仕事｜美容院': {
+      title: 'ひげ、整えました。',
+      guideText: '美容院でひげをきれいに整えてもらうしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/hair-salon-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/hair-salon-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
+    'しゃりねこ動画：仕事｜現場監督': {
+      title: '今日も、異常なしです。',
+      guideText: '建設現場を見回り、安全を確認する現場監督のしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/construction-supervisor-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/construction-supervisor-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おしごとと通勤',
+    },
     'しゃりねこ動画：季節｜てるてる坊主': {
       title: 'そろそろ、晴れてください。',
       guideText: '雨の窓辺で、てるてる坊主を作るしゃりねこです。',
@@ -2729,6 +2763,8 @@ function getWeeklyVideoBroadcastCandidateKeywords_(
       'しゃりねこ動画：秋｜魔女見習い',
       'しゃりねこ動画：秋｜おばけかぼちゃ',
       'しゃりねこ動画：秋｜映画鑑賞',
+      'しゃりねこ動画：仕事｜美容院',
+      'しゃりねこ動画：仕事｜現場監督',
     ];
   } else if (scheduleType === 'WEDNESDAY_RANDOM') {
     candidateKeywords = Object.keys(videoWorks);

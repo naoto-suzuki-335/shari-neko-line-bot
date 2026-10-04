@@ -2949,3 +2949,182 @@ GitHub Pagesでのゲーム単体の公開確認とiPhone Safariでの実機確�
 - [x] GitHub Pagesで27話とウイスキー6話が正常に表示される
 - [ ] LINE内のお酒の小話用LIFFで27話、ウイスキー6話、個別選択、リセットおよび「おまかせ小話」が正常に動作する
 - [x] 既存LIFF、Bot、GASおよびLINE Developers設定が変更されていない
+
+## 37. 通常動画図鑑・Bot おしごと2作品追加
+
+### 37.1 目的と位置づけ
+
+通常動画図鑑とBotの「おしごとと通勤」へ、美容院と現場監督の2作品を同じ内容で追加する。Web通常動画図鑑は55作品から57作品、おしごとカテゴリは11作品から13作品となる。Botのおしごとクイックリプライも13件となり、LINEのクイックリプライ上限へ到達する。
+
+今後おしごと作品を追加する場合、Bot側は掲載作品の入替制、または「図鑑でもっと見る」などの導線へ再設計する。Web通常動画図鑑は全作品のアーカイブとして引き続き拡張できる。WebとBotに既存するカテゴリ名や内容の差を補正する作業は別工程とする。
+
+### 37.2 正式作品情報
+
+1. 美容院
+   - 表示ラベル：`美容院`
+   - title／h1：`ひげ、整えました。`
+   - 説明：`美容院でひげをきれいに整えてもらうしゃりねこです。`
+   - slug：`hair-salon-neko`
+   - Webカテゴリ：`work`／おしごと
+   - Botカテゴリ：`しゃりねこ動画：おしごとと通勤`
+   - Bot内部キーワード：`しゃりねこ動画：仕事｜美容院`
+   - おしごと掲載順：12番目
+   - 公開MP4：`docs/assets/videos/hair-salon-neko.mp4`
+   - 正式画像：`docs/assets/images/hair-salon-neko-thumbnail.jpg`
+   - 個別ページ：`docs/videos/hair-salon-neko/index.html`
+2. 現場監督
+   - 表示ラベル：`現場監督`
+   - title／h1：`今日も、異常なしです。`
+   - 説明：`建設現場を見回り、安全を確認する現場監督のしゃりねこです。`
+   - slug：`construction-supervisor-neko`
+   - Webカテゴリ：`work`／おしごと
+   - Botカテゴリ：`しゃりねこ動画：おしごとと通勤`
+   - Bot内部キーワード：`しゃりねこ動画：仕事｜現場監督`
+   - おしごと掲載順：13番目
+   - 公開MP4：`docs/assets/videos/construction-supervisor-neko.mp4`
+   - 正式画像：`docs/assets/images/construction-supervisor-neko-thumbnail.jpg`
+   - 個別ページ：`docs/videos/construction-supervisor-neko/index.html`
+
+### 37.3 公開素材と検証値
+
+元MOVは次のとおりであり、コミット対象外の未追跡素材として保全する。
+
+- `incoming-videos/hairsalon.mov`
+  - 9,008,273 bytes
+  - 更新日時：2026年10月4日 16:20:38 +09:00
+  - SHA-256：`705C0B5297E9819945AEC357AB71CE5565B370482B20F55C69E1B319455D75B5`
+- `incoming-videos/genbakantoku.mov`
+  - 15,456,602 bytes
+  - 更新日時：2026年10月4日 16:20:28 +09:00
+  - SHA-256：`8BBA6E7F83A3FF13D54D918D8D9A1A5B7B37C9D07885EC27E8ECCBB7679068EB`
+
+公開MP4は次のとおりとする。
+
+- `hair-salon-neko.mp4`
+  - 3,739,057 bytes
+  - SHA-256：`97C219E6752BBBFDF6E167B935A1724D441D6883EDD15A3656D96E68478DB451`
+  - 7.500000秒、225フレーム
+- `construction-supervisor-neko.mp4`
+  - 5,219,440 bytes
+  - SHA-256：`38E5CC648EB0DD4D744C94ACF6F73186ED9973C3B6ADC38D8F6D8671F74650A0`
+  - 10.006349秒、300フレーム
+
+MP4の共通仕様は、MP4互換、H.264 High、yuv420p、1920×1080、30fps、AAC-LC、44.1kHz、stereoおよびfaststart適用とする。FFprobeと全編デコードは正常で、デコードエラーは0行である。変換は各1回、`-n` による上書き禁止で実施し、リサイズ、トリミング、色補正および文字追加は行わない。
+
+正式サムネイルは次のとおりとする。
+
+- 美容院
+  - コピー元：`hair-salon-neko-thumbnail-candidates/candidate-05-4.00s.jpg`
+  - コピー先：`docs/assets/images/hair-salon-neko-thumbnail.jpg`
+  - 163,590 bytes
+  - SHA-256：`D24C70D413F0560495653BFF2491FB958C1F6E4AD879EE714A8C269CC04A27B6`
+  - 動画本来のテロップ：`ひげ3本、整えました。`
+- 現場監督
+  - コピー元：`construction-supervisor-neko-thumbnail-candidates/candidate-01-0.50s.jpg`
+  - コピー先：`docs/assets/images/construction-supervisor-neko-thumbnail.jpg`
+  - 186,028 bytes
+  - SHA-256：`EB9278CD3674A08D0CEDB1E855464FFD84AF299CBE50A3311E1C82A72F142DAE`
+  - 動画本来のテロップ：`現場監督です。`
+
+JPEGの共通仕様は、JPEG／MJPEG、yuvj420p、1920×1080および16:9とする。正式画像は選定候補と容量、SHA-256およびバイト列が完全一致し、加工、再圧縮および管理表示の追加を行わない。
+
+個別ページは、通常図鑑の現行テンプレート `docs/videos/autumn-leaves-guard-neko/index.html` を使用し、差分を作品固有情報だけとする。現行通常ページと同様に戻るリンクは設けず、`controls`、`playsinline`、`preload="metadata"` および `type="video/mp4"` を維持し、autoplay、loopおよびJavaScriptは追加しない。戻る導線と通常ページ全体のアクセシビリティ改善は別工程とする。
+
+### 37.4 Web通常動画図鑑
+
+`docs/videos/index.html` のおしごとカテゴリ末尾へ、12番目に美容院、13番目に現場監督を追加する。追加後の通常カードは57件、カテゴリ件数は13／13／5／13／13とする。既存55カードの内容と順序は変更しない。
+
+画面上の現在件数は `57作品` とし、ハロウィン特集入口の `13作品 →` は維持する。`docs/videos/gallery.js`、LIFF初期化およびCSSは変更せず、JavaScriptが無効な場合も静的HTML内の57カードを閲覧できる構造を維持する。
+
+### 37.5 Bot・クイックリプライ・定期配信
+
+`createVideoWorks_()` は57作品とし、カテゴリ件数をWebと同じ13／13／5／13／13とする。既存55作品の内容と順序は変更せず、おしごと既存11作品の末尾へ美容院と現場監督を追加する。
+
+おしごとクイックリプライは13件とし、既存11件の末尾へ12番目として美容院、13番目として現場監督を追加する。13件はLINEのクイックリプライ上限以内であり、14件目や「もっと見る」は追加しない。
+
+水曜配信は既存の `Object.keys(videoWorks)` により全作品を取得するため、新規2作品を自動的に対象とする。日曜新作候補は既存15件の末尾へ、16番目に `しゃりねこ動画：仕事｜美容院`、17番目に `しゃりねこ動画：仕事｜現場監督` を追加する。抽選、直前結果除外および送信ロジックは変更しない。
+
+### 37.6 FFmpeg環境の復旧記録
+
+2026年10月4日、WinGetでは `Gyan.FFmpeg` 9.0.2が登録済みであったが、パッケージディレクトリが空で、実行ファイルとコマンド解決が失われていた。`winget repair` はportableパッケージのため利用できなかったため、壊れた登録だけを解除し、公式WinGetソースから同じ `Gyan.FFmpeg` 9.0.2を再導入した。別バージョン、別パッケージおよび手動ダウンロードは使用していない。
+
+復旧後、FFmpeg、FFprobe、FFplay、libx264およびAACが利用可能であることを再確認し、入力検証と変換を実施した。リポジトリと素材への影響はない。実行ファイルのSHA-256は次のとおりである。
+
+- `ffmpeg.exe`：`589E50B766D251AFDF181DD664D40BD94407E200B019989FD7468C7D118A28D0`
+- `ffprobe.exe`：`02264DFA4F56BAAA31E443ECE8AA16D397F6B008200E7FD184D22B9009E75FD3`
+- `ffplay.exe`：`6DE07C2F9E5580F6250220341A449B62E03B7B6619848011D9178B1F7599630E`
+
+### 37.7 非変更対象と制作途中素材
+
+次を変更しない。
+
+- `docs/videos/gallery.js`
+- 各 `liff-init.js`
+- `docs/home/`
+- `docs/sake/`
+- ハロウィン特集
+- 今回追加する2作品を除く既存作品の内容
+- `src/appsscript.json`
+- `.clasp.json`
+- 固定4語、反応ワード、今日の運勢および通常案内
+- 既存LIFF IDおよびEndpoint
+- LINE Developers設定
+- GAS Properties
+
+元MOV 2本、候補JPEG 16枚、contact sheet 2枚、各9件の候補フォルダーおよびその他の未追跡制作素材はコミット対象外とし、削除、移動および変更を行わない。
+
+### 37.8 反映手順とコミット対象
+
+コミット対象は次の9件だけとし、1回のコミットへまとめる。
+
+新規6件：
+
+- `docs/assets/videos/hair-salon-neko.mp4`
+- `docs/assets/videos/construction-supervisor-neko.mp4`
+- `docs/assets/images/hair-salon-neko-thumbnail.jpg`
+- `docs/assets/images/construction-supervisor-neko-thumbnail.jpg`
+- `docs/videos/hair-salon-neko/index.html`
+- `docs/videos/construction-supervisor-neko/index.html`
+
+更新3件：
+
+- `docs/videos/index.html`
+- `src/Code.gs`
+- `requirements.md`
+
+反映は次の順序で行う。
+
+1. ローカル最終監査
+2. 指定9件だけをステージ
+3. ローカルコミットを1回作成
+4. `main` へ通常push
+5. GitHub PagesでHTML、JPEGおよびMP4を確認
+6. 通常の `clasp push`
+7. GASエディタで作品データ、13件の順序およびURLを確認
+8. 人が既存固定デプロイを新バージョンへ更新
+9. LINE実機でおしごと13件、追加2作品および配信候補を確認
+
+force push、新規GASデプロイの作成、LIFF設定変更およびLINE Developers変更は行わない。
+
+### 37.9 受け入れ条件
+
+- [ ] 公開MP4 2本が正式な容量、SHA-256およびメディア仕様と一致する
+- [ ] 正式JPEG 2枚が選定候補と容量、SHA-256およびバイト列で一致する
+- [ ] 個別ページ2件が現行通常テンプレートと一致し、差分が作品固有情報だけである
+- [ ] Web通常カードが57件である
+- [ ] Webのカテゴリ件数が13／13／5／13／13である
+- [ ] 既存55カードの内容と順序が変更されていない
+- [ ] おしごとの12番目が美容院、13番目が現場監督である
+- [ ] 画面上の現在件数が `57作品` である
+- [ ] Botの `createVideoWorks_()` が57作品である
+- [ ] Botのカテゴリ件数がWebと同じ13／13／5／13／13である
+- [ ] おしごとクイックリプライが13件である
+- [ ] おしごとクイックリプライの12番目が美容院、13番目が現場監督である
+- [ ] 日曜新作候補の16番目と17番目へ新規2作品が指定順で追加されている
+- [ ] 水曜配信が `Object.keys(videoWorks)` により新規2作品を自動的に対象とする
+- [ ] GitHub PagesでHTML、JPEGおよびMP4の公開反映を確認できる
+- [ ] 通常の `clasp push` が成功する
+- [ ] 既存固定GASデプロイが新バージョンへ更新される
+- [ ] LINE実機でおしごと13件、新規2作品および配信候補が正常である
+- [ ] 元MOV、候補JPEG、contact sheetおよびその他の制作途中素材がコミットされていない
+- [ ] 指定9件以外にコミット対象の差分がない
