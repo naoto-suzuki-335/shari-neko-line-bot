@@ -3064,7 +3064,7 @@ JPEGの共通仕様は、JPEG／MJPEG、yuvj420p、1920×1080および16:9とす
 - `docs/sake/`
 - ハロウィン特集
 - 今回追加する2作品を除く既存作品の内容
-- `src/appsscript.json`
+- `src/appsscript.json`（初回9件コミット時は非変更。後続のmanifest同期工程では変更対象とする）
 - `.clasp.json`
 - 固定4語、反応ワード、今日の運勢および通常案内
 - 既存LIFF IDおよびEndpoint
@@ -3091,6 +3091,8 @@ JPEGの共通仕様は、JPEG／MJPEG、yuvj420p、1920×1080および16:9とす
 - `docs/videos/index.html`
 - `src/Code.gs`
 - `requirements.md`
+
+上記9件は初回公開コミットの対象履歴である。後続のmanifest同期は別コミットで管理し、`src/appsscript.json` を変更対象とする。次回のclasp反映対象は `Code.gs` と `appsscript.json` の2件とし、新規GASプロジェクトおよび新規デプロイは作成しない。既存固定デプロイの更新は、限定したforce pushが成功した後に人が実施する。
 
 反映は次の順序で行う。
 
@@ -3128,3 +3130,27 @@ force push、新規GASデプロイの作成、LIFF設定変更およびLINE Deve
 - [ ] LINE実機でおしごと13件、新規2作品および配信候補が正常である
 - [ ] 元MOV、候補JPEG、contact sheetおよびその他の制作途中素材がコミットされていない
 - [ ] 指定9件以外にコミット対象の差分がない
+
+### 37.10 2026年10月4日のclasp差分監査とmanifest同期
+
+GitHub Pagesへの公開確認後、通常の `clasp push` を1回実行した。終了コードは0であったが、出力は `Skipping push.` となり、転送されたファイルは0件だった。推測で既存固定デプロイの更新へ進まず、リポジトリ外の隔離一時領域へ既存GASプロジェクトのHEADを読み取り専用でcloneし、ローカルとの比較監査を実施した。
+
+比較の結果、リモートの `Code.js` は旧55作品版、ローカルの `src/Code.gs` は57作品版であり、美容院と現場監督に関する36行がリモートに存在しなかった。リモートのおしごとクイックリプライは11件、日曜新作候補は15件であり、美容院と現場監督はGAS HEADへ未反映だった。
+
+リモートの `appsscript.json` には、次の既存設定が存在した。
+
+- `executeAs`：`USER_DEPLOYING`
+- `access`：`ANYONE_ANONYMOUS`
+
+ローカルmanifestには `webapp` 設定がなかったため、単純な `clasp push --force` では既存設定を失う可能性があると判断し、実行しなかった。リモートの `webapp` 設定を正式なローカルmanifestへ同期し、Gitで別コミットとして管理してから、`Code.gs` と `appsscript.json` だけを限定してforce pushする方針とする。
+
+cloneは読み取り専用で実施し、GAS HEAD、既存デプロイおよびGitへの変更は行っていない。比較用の一時ディレクトリは監査完了後に削除した。新規GASプロジェクトと新規デプロイは作成せず、既存固定デプロイは限定force push成功後に人が新バージョンへ更新する。
+
+後続工程の受け入れ条件は次のとおりとし、現時点ではすべて未確認とする。
+
+- [ ] ローカルmanifestとGAS HEADの `webapp` 設定が一致する
+- [ ] 限定force pushで `Code.gs` と `appsscript.json` だけを反映する
+- [ ] force push後のGAS HEADが57作品版である
+- [ ] force push後も既存の `webapp` 設定を維持する
+- [ ] 既存固定デプロイを新バージョンへ更新する
+- [ ] LINE実機で新規2作品と関連導線を確認する
