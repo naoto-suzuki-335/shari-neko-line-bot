@@ -66,6 +66,26 @@
     }
   }
 
+  function scrollToPlayArea() {
+    if (!elements || !elements.playArea || typeof elements.playArea.scrollIntoView !== "function") {
+      return;
+    }
+    try {
+      var behavior = "smooth";
+      if (typeof window.matchMedia === "function" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        behavior = "auto";
+      }
+      elements.playArea.scrollIntoView({ behavior: behavior, block: "start" });
+    } catch (error) {
+      try {
+        elements.playArea.scrollIntoView();
+      } catch (fallbackError) {
+        return;
+      }
+    }
+  }
+
   function setMenuEnabled(enabled) {
     menuItems.forEach(function (item) {
       item.button.disabled = !enabled;
@@ -205,6 +225,7 @@
     elements.gamePanel.hidden = false;
     elements.modePanel.hidden = true;
     beginRound(false);
+    scrollToPlayArea();
   }
 
   function completeGame() {
@@ -337,6 +358,7 @@
     roundIndex += 1;
     orderSequence = [];
     beginRound(false);
+    scrollToPlayArea();
   }
 
   function handleRetry() {
@@ -346,6 +368,7 @@
     answerIndex = 0;
     currentPlayer = 1;
     beginRound(true);
+    scrollToPlayArea();
   }
 
   function handleRestart() {
