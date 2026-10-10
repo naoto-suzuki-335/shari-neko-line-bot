@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="注文を順番に覚えて、同じ順番でメニューを選ぶ記憶ゲームです。">
+  <title>しゃりねこ注文おぼえ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #3f3028;
+      --muted: #6f5a4e;
+      --surface: #fffdf9;
+      --surface-soft: #fff6e9;
+      --accent: #d86f45;
+      --accent-dark: #8f3f24;
+      --gold: #e4a62f;
+      --border: #ead7c8;
+      --focus: #1769aa;
+      --shadow: 0 12px 30px rgba(91, 58, 39, 0.12);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: #fff9f1;
+    }
+
+    body {
+      min-width: 0;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top, rgba(255, 229, 190, 0.65), transparent 36rem),
+        #fff9f1;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      touch-action: manipulation;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .page {
+      width: min(100%, 960px);
+      margin: 0 auto;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        max(14px, env(safe-area-inset-right))
+        max(48px, env(safe-area-inset-bottom))
+        max(14px, env(safe-area-inset-left));
+    }
+
+    .hero,
+    .mode-panel,
+    .game-panel {
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 26px 22px;
+      text-align: center;
+    }
+
+    h1,
+    h2,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: clamp(1.8rem, 7vw, 2.7rem);
+      line-height: 1.25;
+    }
+
+    .lead,
+    .game-status {
+      margin-bottom: 0;
+    }
+
+    .lead {
+      color: var(--muted);
+    }
+
+    .game-status {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      color: var(--accent-dark);
+      background: var(--surface-soft);
+      font-weight: 700;
+    }
+
+    .mode-panel,
+    .game-panel {
+      margin-top: 18px;
+      padding: 22px;
+    }
+
+    .mode-fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .mode-legend {
+      margin-bottom: 14px;
+      padding: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .mode-options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .mode-option {
+      display: flex;
+      min-height: 48px;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      background: #fffaf4;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .mode-option input {
+      width: 22px;
+      height: 22px;
+      flex: 0 0 auto;
+      accent-color: var(--accent);
+    }
+
+    .primary-button,
+    .secondary-button,
+    .menu-button {
+      min-width: 0;
+      min-height: 44px;
+      border: 2px solid var(--accent);
+      border-radius: 999px;
+      color: #ffffff;
+      background: var(--accent);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .primary-button,
+    .secondary-button {
+      padding: 10px 18px;
+    }
+
+    .primary-button {
+      margin-top: 18px;
+    }
+
+    .secondary-button {
+      border-color: var(--border);
+      color: var(--ink);
+      background: #ffffff;
+    }
+
+    button:disabled,
+    input:disabled + span {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    [data-order-start]:disabled {
+      border-color: #b9ada5;
+      color: #5f554f;
+      background: #ddd7d2;
+      cursor: not-allowed;
+      opacity: 0.72;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .game-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .summary-item {
+      min-width: 0;
+      margin: 0;
+      padding: 10px;
+      border-radius: 14px;
+      background: var(--surface-soft);
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .order-display {
+      display: grid;
+      min-height: 190px;
+      place-items: center;
+      padding: 16px;
+      border: 2px dashed var(--gold);
+      border-radius: 20px;
+      background: #fffdf8;
+      text-align: center;
+    }
+
+    .order-display[aria-busy="true"] {
+      background: #fff6df;
+    }
+
+    .order-item {
+      display: grid;
+      place-items: center;
+      gap: 6px;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .order-item img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+    }
+
+    .menu-heading {
+      margin: 22px 0 12px;
+      font-size: 1.15rem;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .menu-button {
+      display: grid;
+      min-height: 112px;
+      place-items: center;
+      gap: 4px;
+      padding: 8px 4px;
+      border-radius: 18px;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.25;
+    }
+
+    .menu-button:not(:disabled):active {
+      transform: scale(0.98);
+    }
+
+    .menu-button img {
+      width: min(72px, 100%);
+      height: 72px;
+      object-fit: contain;
+    }
+
+    .menu-name {
+      display: block;
+    }
+
+    .action-area,
+    .game-controls,
+    .completion-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .round-message {
+      flex-basis: 100%;
+      margin-bottom: 0;
+      font-weight: 800;
+    }
+
+    .completion {
+      margin-top: 20px;
+      padding: 18px;
+      border: 2px solid var(--gold);
+      border-radius: 18px;
+      background: #fff8e8;
+    }
+
+    .completion p {
+      margin-bottom: 0;
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    noscript p {
+      margin: 18px 0 0;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #ffffff;
+    }
+
+    @media (min-width: 761px) {
+      .page {
+        padding-right: 24px;
+        padding-left: 24px;
+      }
+
+      .mode-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .menu-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .hero,
+      .mode-panel,
+      .game-panel {
+        border-radius: 18px;
+      }
+
+      .hero,
+      .mode-panel,
+      .game-panel {
+        padding: 18px 14px;
+      }
+
+      .menu-button {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+  <script src="./order-memory.js?v=2" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1>しゃりねこ注文おぼえ</h1>
+      <p class="lead">注文を順番に覚えて、同じ順番でメニューを選びましょう。</p>
+      <p class="game-status visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-order-game-status>ゲームを準備しています。</p>
+    </header>
+
+    <section class="mode-panel" aria-labelledby="order-mode-heading" data-order-mode-panel>
+      <fieldset class="mode-fieldset">
+        <legend id="order-mode-heading" class="mode-legend">遊び方を選ぶ</legend>
+        <div class="mode-options">
+          <label class="mode-option">
+            <input type="radio" name="order-mode" value="solo" data-order-mode disabled>
+            <span>ひとりで遊ぶ</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="order-mode" value="alternate" data-order-mode disabled>
+            <span>交互に遊ぶ</span>
+          </label>
+        </div>
+      </fieldset>
+      <button class="primary-button" type="button" data-order-start disabled>ゲームを始める</button>
+    </section>
+
+    <section class="game-panel" aria-labelledby="order-game-heading" data-order-game-panel hidden>
+      <div data-order-play-area>
+        <h2 id="order-game-heading">注文を覚える</h2>
+
+        <div class="game-summary">
+          <p class="summary-item" role="status" aria-live="polite" aria-atomic="true">ラウンド <span data-order-round>1 / 5</span></p>
+          <p class="summary-item" role="status" aria-live="polite" aria-atomic="true" data-order-current-player hidden></p>
+        </div>
+
+        <div class="order-display" data-order-display aria-live="polite" aria-atomic="true" aria-busy="false">
+          <div class="order-item" data-order-display-content>
+            <span>ゲームを始めると注文が表示されます。</span>
+          </div>
+        </div>
+
+        <h2 class="menu-heading">メニュー</h2>
+        <div class="menu-grid" data-order-menu aria-label="注文メニュー">
+          <button class="menu-button" type="button" data-order-item="maguro" disabled>
+            <img src="../../assets/images/games/order-memory/maguro-neko.png" alt="" width="180" height="180">
+            <span class="menu-name">マグロ</span>
+          </button>
+          <button class="menu-button" type="button" data-order-item="tamago" disabled>
+            <img src="../../assets/images/games/order-memory/tamago-neko.png" alt="" width="180" height="180">
+            <span class="menu-name">たまご</span>
+          </button>
+          <button class="menu-button" type="button" data-order-item="ebi" disabled>
+            <img src="../../assets/images/games/order-memory/ebi-neko.png" alt="" width="180" height="180">
+            <span class="menu-name">えび</span>
+          </button>
+          <button class="menu-button" type="button" data-order-item="edamame" disabled>
+            <img src="../../assets/images/games/order-memory/edamame.png" alt="" width="180" height="180">
+            <span class="menu-name">枝豆</span>
+          </button>
+          <button class="menu-button" type="button" data-order-item="beer" disabled>
+            <img src="../../assets/images/games/order-memory/beer.png" alt="" width="180" height="180">
+            <span class="menu-name">ビール</span>
+          </button>
+          <button class="menu-button" type="button" data-order-item="imo-mizu" disabled>
+            <img src="../../assets/images/games/order-memory/imo-mizu.png" alt="" width="180" height="180">
+            <span class="menu-name">芋水</span>
+          </button>
+        </div>
+
+        <div class="action-area" data-order-action hidden>
+          <p class="round-message" data-order-action-message hidden></p>
+          <button class="primary-button" type="button" data-order-next hidden>次のラウンドへ</button>
+          <button class="primary-button" type="button" data-order-retry hidden>もう一度確認する</button>
+        </div>
+
+        <div class="game-controls">
+          <button class="secondary-button" type="button" data-order-restart>最初から</button>
+          <button class="secondary-button" type="button" data-order-mode-reset>モード選択へ</button>
+        </div>
+      </div>
+
+      <section class="completion" data-order-completion tabindex="-1" hidden aria-labelledby="order-completion-heading">
+        <h2 id="order-completion-heading">クリア</h2>
+        <p>全ラウンドをクリアしました。注文どおりです。</p>
+        <div class="completion-actions">
+          <button class="primary-button" type="button" data-order-restart>もう一度遊ぶ</button>
+          <button class="secondary-button" type="button" data-order-mode-reset>モード選択へ</button>
+        </div>
+      </section>
+    </section>
+
+    <noscript>
+      <p>このゲームを遊ぶにはJavaScriptを有効にしてください。</p>
+    </noscript>
+  </main>
+</body>
+</html>
