@@ -123,6 +123,10 @@
     }
 
     var validWineSections = ['basics', 'grapes'];
+    var expectedWineSectionCounts = {
+      basics: 9,
+      grapes: 6
+    };
     var storyWineSections = Object.create(null);
     var wineStoryButtonCount = 0;
 
@@ -137,7 +141,8 @@
       var section = group.getAttribute('data-wine-story-group');
       var groupButtons = Array.prototype.slice.call(group.querySelectorAll('[data-story-choice]'));
 
-      if (validWineSections.indexOf(section) === -1 || !group.hidden || groupButtons.length !== 6 ||
+      if (validWineSections.indexOf(section) === -1 || !group.hidden ||
+          groupButtons.length !== expectedWineSectionCounts[section] ||
           wineStoryGroups.filter(function (candidate) {
             return candidate.getAttribute('data-wine-story-group') === section;
           }).length !== 1) {
