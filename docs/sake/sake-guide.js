@@ -26,7 +26,7 @@
         !resultCategory || !resultTitle || !resultDescription || !resultMemorySection ||
         !resultMemory || !resultCatComment ||
         !randomButton || !resetButton || categoryButtons.length !== 5 ||
-        itemGroups.length !== 5 || itemButtons.length !== 27 || storyElements.length !== 27 ||
+        itemGroups.length !== 5 || itemButtons.length !== 30 || storyElements.length !== 30 ||
         wineSectionButtons.length !== 2 || wineStoryGroups.length !== 2) {
       return;
     }
@@ -46,7 +46,7 @@
     ];
     var expectedCategoryCounts = {
       sake: 3,
-      wine: 12,
+      wine: 15,
       beer: 3,
       whisky: 6,
       shochu: 3
@@ -104,7 +104,7 @@
       categoryLabels[category] = categoryLabel;
     });
 
-    if (!isValid || stories.length !== 27 || validCategories.some(function (category) {
+    if (!isValid || stories.length !== 30 || validCategories.some(function (category) {
       return categoryCounts[category] !== expectedCategoryCounts[category];
     })) {
       return;
@@ -154,7 +154,7 @@
         storyWineSections[storyId] = section;
         return false;
       });
-    }) || wineStoryButtonCount !== 12 || stories.some(function (story) {
+    }) || wineStoryButtonCount !== 15 || stories.some(function (story) {
       return story.category === 'wine' ? !storyWineSections[story.id] : Boolean(storyWineSections[story.id]);
     })) {
       return;
