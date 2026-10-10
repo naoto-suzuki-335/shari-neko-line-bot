@@ -3386,3 +3386,59 @@ PC・タブレットでの実描画、キーボード操作、JavaScript無効�
 - [ ] 外部通信、保存処理、個人情報取得、LIFF、BotおよびGAS連携がない
 - [ ] 既存神経衰弱、案内所、動画図鑑、お酒の小話、Bot、GASおよび既存LIFFへ影響しない
 - [ ] ゲーム単体の公開・実機確認に合格するまで案内所へ接続しない
+
+## 40. しゃりねこ案内所への注文おぼえ入口追加
+
+### 40.1 目的と位置づけ
+
+単体公開とスマートフォン実機確認を完了した「しゃりねこ注文おぼえ」へ、しゃりねこ案内所から移動できる第5の入口を追加する。既存4入口の内容、順序および構造は維持し、「しゃりねこ神経衰弱」の直後へ独立したカードとして掲載する。
+
+### 40.2 正式表示内容
+
+- 絵文字：`🧾`
+- 見出し：`しゃりねこ注文おぼえ`
+- 説明：`注文を順番に覚えて、同じ順番でメニューを選んで遊べます。`
+- 相対リンク：`../games/order-memory/`
+- meta description：`しゃりねこ動画図鑑、お酒の小話、季節の特集、神経衰弱、注文おぼえへ進める案内所です。`
+
+案内所の掲載順は、しゃりねこ動画図鑑、お酒の小話、季節の特集、しゃりねこ神経衰弱、しゃりねこ注文おぼえの順とする。
+
+### 40.3 HTML実装
+
+`docs/home/index.html`の既存`nav`内にある`ul.guide-list`へ、既存カードと同じ`li.guide-card`、ネイティブ`a.guide-link`および3つの`span`からなる第5カードを追加する。絵文字には`aria-hidden="true"`を設定し、`target`属性は付けず同一画面で遷移する。
+
+既存CSSをそのまま利用し、新規CSS、JavaScript、LIFF SDK、外部HTTP(S)参照および外部依存は追加しない。既存の`nav`の`aria-label`、44px以上の操作領域、`:focus-visible`および`prefers-reduced-motion`対応を維持する。
+
+### 40.4 遷移先と公開URL
+
+- 遷移先ファイル：`docs/games/order-memory/index.html`
+- 案内所からの相対リンク：`../games/order-memory/`
+- 公開URL：[https://naoto-suzuki-335.github.io/shari-neko-line-bot/games/order-memory/](https://naoto-suzuki-335.github.io/shari-neko-line-bot/games/order-memory/)
+
+### 40.5 非変更対象
+
+注文おぼえゲーム本体、神経衰弱、お酒の小話、動画図鑑、既存4カード、既存LIFF初期化、`src/`、`.clasp.json`、BotおよびGASは変更しない。案内所専用LIFFのID、EndpointおよびLINE Developers設定も変更しない。
+
+本追加はGitHub Pagesで配信する静的HTMLの更新であり、`clasp push`、GASデプロイ、GAS関数実行およびLINE Developers操作は不要である。
+
+### 40.6 反映手順と切り戻し
+
+反映は、HTMLと要件記録のローカル検証、指定ファイルのコミット、mainへの通常push、GitHub Pages公開確認、LINE内の案内所専用LIFFでの表示と遷移確認の順で行う。新規GASデプロイや案内所専用LIFFのEndpoint変更は行わない。
+
+切り戻しが必要な場合は、第5カードと今回のmeta description変更、および本章の記録だけを対象とし、既存4カード、ゲーム本体、LIFF設定、BotおよびGASへ影響させない。
+
+### 40.7 受け入れ条件
+
+- [ ] 案内所のカードが5件である
+- [ ] 既存4カードの内容、順序、リンクおよびHTML構造が変更されていない
+- [ ] 第5カードが「しゃりねこ神経衰弱」の直後に掲載されている
+- [ ] 第5カードの絵文字、見出し、説明および相対リンクが正式値と一致する
+- [ ] 第5カードから公開中の注文おぼえへ同一画面で遷移できる
+- [ ] meta descriptionが5入口を表す正式文と一致する
+- [ ] 5カードすべての装飾絵文字が`aria-hidden="true"`である
+- [ ] 空リンク、重複リンクおよび`target`属性がない
+- [ ] 既存CSS、`nav`の`aria-label`、44px以上の操作領域、可視フォーカスおよび`prefers-reduced-motion`対応が維持されている
+- [ ] JavaScript、LIFF SDK、外部HTTP(S)参照および外部依存が追加されていない
+- [ ] 注文おぼえ、神経衰弱、お酒の小話、動画図鑑、Bot、GASおよび既存LIFFが変更されていない
+- [ ] 案内所専用LIFFのID、EndpointおよびLINE Developers設定が変更されていない
+- [ ] GitHub PagesとLINE内の案内所専用LIFFで第5カードの表示と注文おぼえへの遷移を確認する
