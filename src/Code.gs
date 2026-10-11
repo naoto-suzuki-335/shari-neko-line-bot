@@ -678,6 +678,30 @@ function handleLineEvent_(event) {
           text: 'しゃりねこ動画：季節｜てるてる坊主',
         },
       },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: '釣り',
+          text: 'しゃりねこ動画：季節｜釣り',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'おさかな散歩',
+          text: 'しゃりねこ動画：季節｜おさかな散歩',
+        },
+      },
+      {
+        type: 'action',
+        action: {
+          type: 'message',
+          label: 'シュノーケリング',
+          text: 'しゃりねこ動画：季節｜シュノーケリング',
+        },
+      },
     ];
 
     replyTextMessage_(
@@ -2016,6 +2040,34 @@ function createVideoWorks_() {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/teru-teru-bozu-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
     },
+    'しゃりねこ動画：季節｜釣り': {
+      title: '大物すぎました。',
+      guideText: '海辺で釣りを楽しみ、大きな魚と出会うしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/fishing-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/fishing-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：季節｜おさかな散歩': {
+      title: '乗せてもらいました。',
+      guideText: '釣りで出会った魚に乗せてもらい、海を進むしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/fish-walk-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/fish-walk-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：季節｜シュノーケリング': {
+      title: '専属ガイドです。',
+      guideText:
+        'シュノーケルを着け、魚に案内してもらいながら海の中を進むしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/snorkeling-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/snorkeling-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
     'しゃりねこ動画：秋｜栗拾い': {
       title: '聞いてない。',
       guideText: '栗を拾おうとして、イガのトゲに気づくしゃりねこです。',
@@ -2765,6 +2817,9 @@ function getWeeklyVideoBroadcastCandidateKeywords_(
       'しゃりねこ動画：秋｜映画鑑賞',
       'しゃりねこ動画：仕事｜美容院',
       'しゃりねこ動画：仕事｜現場監督',
+      'しゃりねこ動画：季節｜釣り',
+      'しゃりねこ動画：季節｜おさかな散歩',
+      'しゃりねこ動画：季節｜シュノーケリング',
     ];
   } else if (scheduleType === 'WEDNESDAY_RANDOM') {
     candidateKeywords = Object.keys(videoWorks);
@@ -2801,13 +2856,26 @@ function getSeasonalVideoBroadcastCandidateKeywords_(month) {
     ];
   }
 
-  if (month >= 6 && month <= 8) {
+  if (month === 6) {
     return [
       'しゃりねこ動画：季節｜てるてる坊主',
       'しゃりねこ動画：海辺',
       'しゃりねこ動画：一日｜残暑',
       'しゃりねこ動画：一日｜残暑見舞い',
       'しゃりねこ動画：一日｜暑い',
+    ];
+  }
+
+  if (month === 7 || month === 8) {
+    return [
+      'しゃりねこ動画：季節｜てるてる坊主',
+      'しゃりねこ動画：海辺',
+      'しゃりねこ動画：一日｜残暑',
+      'しゃりねこ動画：一日｜残暑見舞い',
+      'しゃりねこ動画：一日｜暑い',
+      'しゃりねこ動画：季節｜釣り',
+      'しゃりねこ動画：季節｜おさかな散歩',
+      'しゃりねこ動画：季節｜シュノーケリング',
     ];
   }
 

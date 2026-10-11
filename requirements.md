@@ -3500,3 +3500,162 @@ LINE実機では、「ワイン」から「まず知る」を選択した後に�
 - [ ] `docs/sake/liff-init.js`、LIFF設定、Bot、GAS、`src/`、`.clasp.json`およびLINE Developers設定が変更されていない
 - [x] GitHub Pagesで`./sake-guide.js?v=30-auto-scroll`を含む修正版の公開反映を確認する
 - [ ] スマートフォンおよびLINE内LIFFで対象3経路と非対象操作を実機確認する
+
+## 42. 通常動画図鑑・Bot 海の三部作追加
+
+### 42.1 目的と三部作の位置づけ
+
+通常動画図鑑とBotの「季節のしゃりねこ」へ、釣り、おさかな散歩、シュノーケリングの3作品を追加する。正式順序は、釣り、おさかな散歩、シュノーケリングとし、表示上は季節カテゴリの6～8番目へ掲載する。各作品は単体でも閲覧可能とし、作品番号は公開表示せず、掲載順と説明文で控えめにつながりを示す。
+
+通常作品総数は57件から60件へ更新する。カテゴリ件数は、おみせとおでかけ13件、しゃりねこの一日13件、季節のしゃりねこ5件、秋のしゃりねこ13件、おしごとと通勤13件の`13／13／5／13／13`から、季節だけを8件とする`13／13／8／13／13`へ更新する。
+
+### 42.2 元動画と素材保全
+
+元MOVは未追跡の制作素材として保持し、変更、移動、削除およびコミットを行わない。
+
+- `incoming-videos/tsuri.mov`：16,465,870 bytes、SHA-256 `B21BF866B0DD400C6585CADB4FE1ABA863F57CCEF5234CA2223BB70E82221BE1`
+- `incoming-videos/osakanatosanpo.mov`：16,325,152 bytes、SHA-256 `CFAD42154C16E676D495CC823290DF6D9F38FC67E62C6EFF72F942CC6F2CE202`
+- `incoming-videos/diving.mov`：15,235,339 bytes、SHA-256 `3FF7CD2CCF9EE13E105970B9C5493445D6B3932FEFFF236C0929C21BDFF6049C`
+
+元MOV名`diving.mov`は制作時の原本名として維持する。映像内容の確認後、一時的な公開名`diving-neko`から正式公開名`snorkeling-neko`へ名称を変更した。以後、公開パス、コードおよび正式要件では`snorkeling-neko`だけを使用する。
+
+入力3本はFFprobeおよび全編nullデコードが各終了コード0、デコードエラー0行である。共通仕様はQuickTime／MOV、H.264 High、`yuv420p`、1920×1080、30fps、AAC-LC、44.1kHz、stereo、回転情報なしである。
+
+公開MP4は既存のFFmpeg 9.0.2を使用し、libx264 High、preset medium、CRF 20、`yuv420p`、30fps、AAC-LC 192kbps、44.1kHz stereo、faststart、`-n`の共通仕様で各1回だけ変換した。
+
+- `docs/assets/videos/fishing-neko.mp4`：6,640,672 bytes、SHA-256 `4F7FEE485DFE42178506B4492C64925B684F4DD2A441A949F4D5C75C2854360C`、10.166667秒、305フレーム
+- `docs/assets/videos/fish-walk-neko.mp4`：6,386,855 bytes、SHA-256 `AD5B8D530435AA6B80B34C08053F6C5983782549BF0E13D9F235E321CDA1FCA1`、9.800000秒、294フレーム
+- `docs/assets/videos/snorkeling-neko.mp4`：6,574,290 bytes、SHA-256 `9B2C0329D738898B8FD5A65E4914FA231B504B29BB3803661FF7E957392E4C37`、8.066667秒、242フレーム
+
+公開MP4 3本はいずれも映像1ストリーム、音声1ストリームで、出力FFprobe終了コード0、全フレーム読取り数とフレーム数の一致、全編nullデコード終了コード0、デコードエラー0行、`moov`が`mdat`より前のfaststart、回転情報なしを確認した。
+
+正式サムネイルは選定候補を無加工でコピーし、コピー元と全バイト一致する。3枚ともJPEG／MJPEG、`yuvj420p`、1920×1080、16:9であり、FFprobeおよび全編デコードの終了コード0、エラー0行、文字および管理表示なしを確認した。
+
+- 釣り：`fishing-neko-thumbnail-candidates/candidate-06-6.50s.jpg`から`docs/assets/images/fishing-neko-thumbnail.jpg`へコピー。81,131 bytes、SHA-256 `5DCE866243DBDA699D872F3E3A36B32115FFACADAAA2608BD25E06E0483682A2`
+- おさかな散歩：`fish-walk-neko-thumbnail-candidates/candidate-08-9.00s.jpg`から`docs/assets/images/fish-walk-neko-thumbnail.jpg`へコピー。67,261 bytes、SHA-256 `66D8DCC447082DF94290B69AED57EF3C74B04E7B420CC7E63D6B48A5646F63F5`
+- シュノーケリング：`snorkeling-neko-thumbnail-candidates/candidate-05-4.40s.jpg`から`docs/assets/images/snorkeling-neko-thumbnail.jpg`へコピー。102,112 bytes、SHA-256 `EE728223B156AEA02FF1EBD409012F95BB01288A4489B4AD7C25EB2CB3B17FF8`
+
+### 42.3 正式作品情報
+
+3作品のWebカテゴリは、親セクションの`data-gallery-category="seasonal"`で管理し、Botカテゴリは`しゃりねこ動画：季節のしゃりねこ`とする。
+
+#### 釣り
+
+- 表示ラベル：`釣り`
+- title／h1：`大物すぎました。`
+- 説明：`海辺で釣りを楽しみ、大きな魚と出会うしゃりねこです。`
+- slug：`fishing-neko`
+- 公開MP4：`docs/assets/videos/fishing-neko.mp4`
+- 公開MP4 URL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/videos/fishing-neko.mp4`
+- 正式サムネイル：`docs/assets/images/fishing-neko-thumbnail.jpg`
+- 正式サムネイルURL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/fishing-neko-thumbnail.jpg`
+- 個別ページ：`docs/videos/fishing-neko/index.html`
+- 個別ページ公開URL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/fishing-neko/`
+- 内部キーワード：`しゃりねこ動画：季節｜釣り`
+
+#### おさかな散歩
+
+- 表示ラベル：`おさかな散歩`
+- title／h1：`乗せてもらいました。`
+- 説明：`釣りで出会った魚に乗せてもらい、海を進むしゃりねこです。`
+- slug：`fish-walk-neko`
+- 公開MP4：`docs/assets/videos/fish-walk-neko.mp4`
+- 公開MP4 URL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/videos/fish-walk-neko.mp4`
+- 正式サムネイル：`docs/assets/images/fish-walk-neko-thumbnail.jpg`
+- 正式サムネイルURL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/fish-walk-neko-thumbnail.jpg`
+- 個別ページ：`docs/videos/fish-walk-neko/index.html`
+- 個別ページ公開URL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/fish-walk-neko/`
+- 内部キーワード：`しゃりねこ動画：季節｜おさかな散歩`
+
+#### シュノーケリング
+
+- 表示ラベル：`シュノーケリング`
+- title／h1：`専属ガイドです。`
+- 説明：`シュノーケルを着け、魚に案内してもらいながら海の中を進むしゃりねこです。`
+- slug：`snorkeling-neko`
+- 公開MP4：`docs/assets/videos/snorkeling-neko.mp4`
+- 公開MP4 URL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/videos/snorkeling-neko.mp4`
+- 正式サムネイル：`docs/assets/images/snorkeling-neko-thumbnail.jpg`
+- 正式サムネイルURL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/snorkeling-neko-thumbnail.jpg`
+- 個別ページ：`docs/videos/snorkeling-neko/index.html`
+- 個別ページ公開URL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/snorkeling-neko/`
+- 内部キーワード：`しゃりねこ動画：季節｜シュノーケリング`
+
+### 42.4 Web通常動画図鑑
+
+`docs/videos/index.html`の通常作品総数を60件、カテゴリ件数を`13／13／8／13／13`とする。既存57カードの内容と順序を維持し、季節カテゴリの既存5カード直後へ、釣り、おさかな散歩、シュノーケリングを6～8番目として正式順で追加する。ハロウィン特集13作品は別枠のため変更しない。
+
+個別ページ3件は季節カテゴリの現行通常ページをテンプレートとし、作品固有のmeta description、title、h1、posterおよびsourceだけを変更する。`docs/videos/gallery.js`および各`liff-init.js`は変更しない。
+
+### 42.5 Bot・クイックリプライ・定期配信
+
+`createVideoWorks_()`は57作品から60作品へ更新し、季節カテゴリの既存5作品直後へ新規3作品を正式順で追加する。季節カテゴリは8件となる。季節クイックリプライも既存5件を維持し、末尾へ釣り、おさかな散歩、シュノーケリングを追加して8件とする。LINEクイックリプライ上限13件以内であり、追加項目は設けない。
+
+日曜新作候補は既存17件を維持し、18番目に釣り、19番目におさかな散歩、20番目にシュノーケリングを追加して20件とする。水曜配信は`Object.keys(videoWorks)`を使う既存処理を維持し、新規3作品を自動的に候補へ含める。
+
+金曜季節配信は、7月候補と8月候補の各末尾へ新規3作品を正式順で追加する。1～6月および9～12月には追加しない。抽選、直前結果除外、送信および月・日付判定の既存ロジックは変更しない。
+
+### 42.6 非変更対象と制作途中素材
+
+`docs/videos/gallery.js`、各`liff-init.js`、`docs/home/`、`docs/sake/`、`docs/games/`、`src/appsscript.json`、`.clasp.json`、LINE Developers設定、既存カード、既存個別ページおよび既存公開素材は変更しない。新規GASプロジェクト、LINE Developers設定変更およびLIFF変更は不要である。
+
+元MOV 3本、各9件の候補フォルダー、候補JPEG 24枚およびcontact sheet 3枚は未追跡の制作途中素材として保持し、コミット対象に含めない。
+
+### 42.7 変換・実装・反映手順
+
+作業は、元MOVの保全確認、FFprobeと全編nullデコード、公開MP4への各1回の変換、出力検証、候補JPEGとcontact sheetの作成、人による正式サムネイル選定、正式画像の無加工コピー、正式作品情報の確定、個別ページ・Web図鑑・Botの実装、本章の記録、最終監査の順で行う。
+
+コミット対象は次の12件に限定する。
+
+新規9件：
+
+- `docs/assets/videos/fishing-neko.mp4`
+- `docs/assets/videos/fish-walk-neko.mp4`
+- `docs/assets/videos/snorkeling-neko.mp4`
+- `docs/assets/images/fishing-neko-thumbnail.jpg`
+- `docs/assets/images/fish-walk-neko-thumbnail.jpg`
+- `docs/assets/images/snorkeling-neko-thumbnail.jpg`
+- `docs/videos/fishing-neko/index.html`
+- `docs/videos/fish-walk-neko/index.html`
+- `docs/videos/snorkeling-neko/index.html`
+
+更新3件：
+
+- `docs/videos/index.html`
+- `src/Code.gs`
+- `requirements.md`
+
+最終監査後、指定12件だけをコミットし、mainへ通常pushする。GitHub PagesでWeb公開を確認後、manifest保全を確認して既存GASプロジェクトへ`clasp push`し、GAS HEADを比較する。人が既存固定デプロイを新バージョンへ更新し、最後にLINE実機確認を行う。新規GASプロジェクト、新規LIFFおよびLINE Developers設定変更は行わない。
+
+### 42.8 受け入れ条件
+
+- [ ] 元MOV 3本の容量、SHA-256および原本名が正式記録と一致し、未追跡制作素材として保全されている
+- [ ] 元MOV 3本のFFprobeおよび全編nullデコードが終了コード0、エラー0行である
+- [ ] 公開MP4 3本が指定の変換仕様で各1回だけ作成されている
+- [ ] 公開MP4 3本のパス、容量、SHA-256、再生時間およびフレーム数が正式値と一致する
+- [ ] 公開MP4 3本が映像1・音声1、H.264 High、`yuv420p`、1920×1080、30fps、AAC-LC、44.1kHz stereo、回転情報なしである
+- [ ] 公開MP4 3本の全フレーム読取りと全編nullデコードが成功し、faststart済みである
+- [ ] 正式サムネイル3枚が指定候補との全バイト一致、正式パス、容量およびSHA-256を満たす
+- [ ] 正式サムネイル3枚がJPEG／MJPEG、`yuvj420p`、1920×1080、16:9で正常にデコードできる
+- [ ] 正式サムネイル3枚に動画本来の表示以外の文字、候補番号、時刻、slugおよび管理表示がない
+- [ ] 個別ページ3件のtitle、h1、description、posterおよびsourceが正式値と一致する
+- [ ] 個別ページ3件が現行テンプレートを維持し、作品固有5項目以外に差分がない
+- [ ] 通常動画図鑑が60カード、カテゴリ件数`13／13／8／13／13`である
+- [ ] 既存57カードが内容・順序・HTML構造を維持している
+- [ ] 新規3カードが季節6～8番目に釣り、おさかな散歩、シュノーケリングの順で掲載されている
+- [ ] 新規3カードの表示ラベル、title、説明、リンクおよび画像が正式値と一致する
+- [ ] Web 60カードとBot 60作品が一対一で対応し、リンクおよび画像参照に重複や欠落がない
+- [ ] `createVideoWorks_()`が60作品、カテゴリ件数`13／13／8／13／13`である
+- [ ] 既存57作品の内容、内部キーワードおよび順序が変更されていない
+- [ ] 季節クイックリプライが既存5件を維持した8件で、新規3件が正式順かつLINE上限13件以内である
+- [ ] 日曜新作候補が既存17件を維持した20件で、18～20番目が新規3件の正式順である
+- [ ] 水曜配信が`Object.keys(videoWorks)`を維持し、新規3作品を候補に含む
+- [ ] 金曜季節配信は7月と8月だけに新規3件を正式順で追加し、ほかの月には追加していない
+- [ ] 日曜・水曜・金曜候補の全内部キーワードが作品データに存在し、重複がない
+- [ ] 抽選、直前結果除外、送信および月・日付判定の既存ロジックが維持されている
+- [ ] `docs/videos/gallery.js`、各`liff-init.js`、`src/appsscript.json`、`.clasp.json`および指定外ファイルが変更されていない
+- [ ] コミット対象が新規9件と更新3件の指定12件だけで、元MOV・候補JPEG・contact sheetを含まない
+- [ ] GitHub Pagesで通常動画図鑑、新規個別ページ、公開MP4および正式サムネイルの反映を確認する
+- [ ] manifestの既存設定を保全して`clasp push`し、GAS HEADがローカル`src/`と一致する
+- [ ] 人が既存固定デプロイを新バージョンへ更新し、新規GASプロジェクトを作成していない
+- [ ] LINE実機で季節クイックリプライ、新規3作品、日曜・水曜・金曜配信対象および既存機能を確認する
