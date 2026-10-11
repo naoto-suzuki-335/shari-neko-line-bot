@@ -176,6 +176,26 @@
       });
     }
 
+    function scrollToElement(element) {
+      if (!element || typeof element.scrollIntoView !== 'function') {
+        return;
+      }
+      try {
+        var behavior = 'smooth';
+        if (typeof window.matchMedia === 'function' &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          behavior = 'auto';
+        }
+        element.scrollIntoView({ behavior: behavior, block: 'start' });
+      } catch (error) {
+        try {
+          element.scrollIntoView();
+        } catch (fallbackError) {
+          return;
+        }
+      }
+    }
+
     function clearResult() {
       resultCard.hidden = true;
       resultCategory.textContent = '';
@@ -319,7 +339,14 @@
 
     wineSectionButtons.forEach(function (button) {
       button.addEventListener('click', function () {
-        showWineSection(button.getAttribute('data-wine-section-choice'));
+        var section = button.getAttribute('data-wine-section-choice');
+        if (showWineSection(section)) {
+          wineStoryGroups.forEach(function (group) {
+            if (group.getAttribute('data-wine-story-group') === section) {
+              scrollToElement(group);
+            }
+          });
+        }
       });
     });
 
@@ -331,7 +358,9 @@
             (story.category === 'wine' && storyWineSections[story.id] !== activeWineSection)) {
           return;
         }
-        showStory(storyId);
+        if (showStory(storyId)) {
+          scrollToElement(resultCard);
+        }
       });
     });
 
