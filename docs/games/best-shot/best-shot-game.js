@@ -75,6 +75,24 @@
     }
   }
 
+  function scrollToResult() {
+    if (!elements || !elements.result || typeof elements.result.scrollIntoView !== "function") {
+      return;
+    }
+    try {
+      elements.result.scrollIntoView({
+        behavior: reducedMotion ? "auto" : "smooth",
+        block: "nearest"
+      });
+    } catch (error) {
+      try {
+        elements.result.scrollIntoView();
+      } catch (fallbackError) {
+        return;
+      }
+    }
+  }
+
   function readNumberAttribute(element, name) {
     var value = element ? element.getAttribute(name) : "";
     if (!value || !/^\d+$/.test(value)) {
@@ -274,6 +292,7 @@
     elements.retryButton.hidden = false;
     setStatus(message);
     elements.retryButton.focus();
+    scrollToResult();
   }
 
   function completeGame() {
@@ -304,6 +323,7 @@
     elements.retryButton.hidden = true;
     setStatus(message);
     elements.nextButton.focus();
+    scrollToResult();
   }
 
   function animateFrame(timestamp, generation) {
