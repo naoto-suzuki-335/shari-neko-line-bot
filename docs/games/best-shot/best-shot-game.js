@@ -75,18 +75,18 @@
     }
   }
 
-  function scrollToResult() {
-    if (!elements || !elements.result || typeof elements.result.scrollIntoView !== "function") {
+  function scrollToResultAction(button) {
+    if (!button || button.hidden || typeof button.scrollIntoView !== "function") {
       return;
     }
     try {
-      elements.result.scrollIntoView({
+      button.scrollIntoView({
         behavior: reducedMotion ? "auto" : "smooth",
         block: "nearest"
       });
     } catch (error) {
       try {
-        elements.result.scrollIntoView();
+        button.scrollIntoView();
       } catch (fallbackError) {
         return;
       }
@@ -292,7 +292,7 @@
     elements.retryButton.hidden = false;
     setStatus(message);
     elements.retryButton.focus();
-    scrollToResult();
+    scrollToResultAction(elements.retryButton);
   }
 
   function completeGame() {
@@ -323,7 +323,7 @@
     elements.retryButton.hidden = true;
     setStatus(message);
     elements.nextButton.focus();
-    scrollToResult();
+    scrollToResultAction(elements.nextButton);
   }
 
   function animateFrame(timestamp, generation) {
