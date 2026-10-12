@@ -16,6 +16,7 @@
   var SUCCESS_DISTANCE = 32;
   var REDUCED_MOTION_SPEED_FACTOR = 0.7;
   var MAX_DELTA_SECONDS = 0.05;
+  var RESULT_BOTTOM_MARGIN = 24;
   var DEGREES_PER_PIXEL = 360 / (Math.PI * CAT_SIZE);
   var CAT_IMAGE_PATH = "../../assets/images/games/best-shot/rolling-sharineko.png";
 
@@ -84,27 +85,78 @@
       !elements.result ||
       elements.result.hidden ||
       !button ||
-      button.hidden ||
-      typeof button.scrollIntoView !== "function"
+      button.hidden
     ) {
       return;
     }
+
+    var buttonRect;
     try {
-      button.scrollIntoView({
-        behavior: reducedMotion ? "auto" : "smooth",
-        block: "nearest"
-      });
+      buttonRect = button.getBoundingClientRect();
     } catch (error) {
+      return;
+    }
+    var viewportHeight;
+    try {
+      viewportHeight = window.visualViewport &&
+        Number.isFinite(window.visualViewport.height) &&
+        window.visualViewport.height > 0
+        ? window.visualViewport.height
+        : window.innerHeight;
+    } catch (viewportError) {
+      return;
+    }
+    if (!buttonRect || !Number.isFinite(buttonRect.bottom) || !Number.isFinite(viewportHeight) || viewportHeight <= 0) {
+      return;
+    }
+    var scrollDistance = buttonRect.bottom - viewportHeight + RESULT_BOTTOM_MARGIN;
+    if (!Number.isFinite(scrollDistance) || scrollDistance <= 0) {
+      return;
+    }
+
+    if (typeof window.scrollBy === "function") {
       try {
-        button.scrollIntoView();
+        window.scrollBy({
+          left: 0,
+          top: scrollDistance,
+          behavior: reducedMotion ? "auto" : "smooth"
+        });
       } catch (fallbackError) {
+        try {
+          window.scrollBy(0, scrollDistance);
+        } catch (numericFallbackError) {
+          return;
+        }
+      }
+      return;
+    }
+
+    if (typeof window.scrollTo !== "function") {
+      return;
+    }
+    var currentLeft = Number.isFinite(window.scrollX)
+      ? window.scrollX
+      : (Number.isFinite(window.pageXOffset) ? window.pageXOffset : 0);
+    var currentTop = Number.isFinite(window.scrollY)
+      ? window.scrollY
+      : (Number.isFinite(window.pageYOffset) ? window.pageYOffset : 0);
+    try {
+      window.scrollTo({
+        left: currentLeft,
+        top: currentTop + scrollDistance,
+        behavior: reducedMotion ? "auto" : "smooth"
+      });
+    } catch (scrollToError) {
+      try {
+        window.scrollTo(currentLeft, currentTop + scrollDistance);
+      } catch (scrollToFallbackError) {
         return;
       }
     }
   }
 
   function scrollToResultAction(button, expectedPhase) {
-    if (!button || button.hidden || typeof button.scrollIntoView !== "function") {
+    if (!button || button.hidden) {
       return;
     }
     var generation = gameGeneration;

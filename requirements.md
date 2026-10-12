@@ -3677,7 +3677,7 @@ GitHub Pages上で単独動作する新規ミニゲーム「しゃりねこ ベ�
 - 公開URL：`https://naoto-suzuki-335.github.io/shari-neko-line-bot/games/best-shot/`
 - HTML：`docs/games/best-shot/index.html`
 - JavaScript：`docs/games/best-shot/best-shot-game.js`
-- script参照：`./best-shot-game.js?v=4`
+- script参照：`./best-shot-game.js?v=5`
 
 ### 43.2 正式画像と素材保全
 
@@ -3722,7 +3722,7 @@ titleおよびh1は`しゃりねこ ベストショット`、meta descriptionは
 
 画像読込失敗時は画像を隠して`しゃりねこ`の文字代替を表示する。JavaScript無効時は`noscript`で案内する。初期化不整合や実行例外ではframeを停止し、操作を無効化して安全停止する。
 
-ゲーム開始、次ラウンド、同じラウンドの再挑戦および「もう一度遊ぶ」の直後は、表示済みプレイ領域へ自動スクロールする。通常時はsmooth、reduced-motion時はauto、blockはstartとする。撮影判定後は、ベストと通常成功では表示中の「次のラウンドへ」または「撮影を終える」、早い、遅い、未撮影通過およびresizeによる再挑戦待ちでは表示中の「もう一度ねらう」へ自動スクロールする。結果表示と対象ボタンのhidden解除、文言設定およびフォーカスを完了した後、`requestAnimationFrame`で1描画待ち、同じ表示中ボタンと現在のphase、入力ロックおよびゲーム世代を再確認してから、通常時はsmooth、reduced-motion時はauto、blockはnearestとして1回だけ実行する。予約後に状態が変化した場合は実行せず、`requestAnimationFrame`非対応時は同じ安全確認を伴う同期処理へフォールバックする。hidden状態のボタン、初期表示、ゲーム開始前、rolling中、次ラウンド開始、再挑戦開始、完了、idleへ戻る操作およびvisibilitychangeによる再開では結果用スクロールを行わない。`scrollIntoView`非対応時は何もせず、オプション付き呼出し失敗時は同じ対象へ引数なしで1回だけ再試行し、再失敗も内部で終了する。
+ゲーム開始、次ラウンド、同じラウンドの再挑戦および「もう一度遊ぶ」の直後は、表示済みプレイ領域へ`scrollIntoView`で自動スクロールする。通常時はsmooth、reduced-motion時はauto、blockはstartとする。撮影判定後は、ベストと通常成功では表示中の「次のラウンドへ」または「撮影を終える」、早い、遅い、未撮影通過およびresizeによる再挑戦待ちでは表示中の「もう一度ねらう」を計測対象とする。結果表示と対象ボタンのhidden解除、文言設定およびフォーカスを完了した後、`requestAnimationFrame`で1描画待ち、同じ表示中ボタンと現在のphase、入力ロックおよびゲーム世代を再確認する。対象ボタンの`getBoundingClientRect()`による下端と、利用可能なら`visualViewport.height`、非対応時は`innerHeight`による実表示高との差へ24pxの下部余白を加え、正の不足分がある場合だけ`window.scrollBy`で下方向へ移動する。通常時はsmooth、reduced-motion時はautoとし、`scrollBy`非対応時は現在位置へ不足分を加えた`window.scrollTo`を使用する。オプション付き呼出し失敗時は同じAPIの数値引数形式を1回だけ試し、再失敗は内部で終了する。結果用処理では`scrollIntoView`を使用しない。予約後に状態が変化した場合は実行せず、`requestAnimationFrame`非対応時は同じ計測と安全確認を伴う同期処理へフォールバックする。hidden状態のボタン、初期表示、ゲーム開始前、rolling中、次ラウンド開始、再挑戦開始、完了、idleへ戻る操作およびvisibilitychangeによる再開では結果用スクロールを行わない。
 
 ### 43.7 非変更対象と公開手順
 
@@ -3746,12 +3746,14 @@ PC幅のローカル実画面で、初期画面が正常に表示され、「ゲ
 
 その後のiPhone実機再確認では、結果領域上部の「撮影結果」と判定文がすでに表示範囲へ入っていたため、結果領域全体への`block: "nearest"`では追加移動が発生しない、または移動量が不足し、操作ボタンが画面下へ隠れたままとなった。v2の実機確認は不合格とし、スクロール対象を結果領域全体から、その時点で表示中の結果操作ボタンへ変更した。成功時は「次のラウンドへ」または「撮影を終える」、失敗、未撮影通過およびresize時は「もう一度ねらう」を対象とし、フォーカス後に同じボタンへ`block: "nearest"`で1回だけ実行するv3として公開した。v3のGitHub Pages公開反映は確認済みである。
 
-2026年10月12日のv3公開版iPhone実機確認では、操作ボタンをスクロール対象に変更しても自動スクロールせず、「次のラウンドへ」が画面下へ隠れたままとなったため、v3の実機確認は不合格とする。結果表示、対象ボタンのhidden解除、文言設定およびフォーカスと同じ同期処理内で`scrollIntoView`を実行しているタイミングを原因と判断し、v4では`requestAnimationFrame`で1描画待ってから、表示中の結果操作ボタンと現在状態を再確認してスクロールする。JavaScript参照は`./best-shot-game.js?v=4`へ更新する。v4修正版のGitHub Pages公開確認とiPhone実機での再確認は未実施である。
+2026年10月12日のv3公開版iPhone実機確認では、操作ボタンをスクロール対象に変更しても自動スクロールせず、「次のラウンドへ」が画面下へ隠れたままとなったため、v3の実機確認は不合格とした。結果表示、対象ボタンのhidden解除、文言設定およびフォーカスと同じ同期処理内で`scrollIntoView`を実行しているタイミングを原因と判断し、v4では`requestAnimationFrame`で1描画待ってから、表示中の結果操作ボタンと現在状態を再確認してスクロールする方式へ変更した。JavaScript参照は`./best-shot-game.js?v=4`へ更新し、v4のGitHub Pages公開反映は確認済みである。
+
+同日のv4公開版iPhone実機確認では、1描画待ってから表示中ボタンへ`scrollIntoView`を実行しても自動スクロールせず、v3と同じ位置に留まり「撮影結果」と判定文だけが見え、「次のラウンドへ」が画面下へ隠れたままとなったため、v4の実機確認は不合格とする。v5では結果用`scrollIntoView`方式を廃止し、ボタン下端と`visualViewport.height`、非対応時は`innerHeight`から不足分を求め、24pxの下部余白を含む正の不足分だけ`window.scrollBy`する。`scrollBy`非対応時は現在位置へ不足分を加えた`window.scrollTo`を使用する。JavaScript参照は`./best-shot-game.js?v=5`へ更新する。v5修正版のGitHub Pages公開確認とiPhone実機での再確認は未実施である。
 
 - [ ] 正式PNGが入力PNGと容量、SHA-256および全バイトで一致し、1254×1254px、RGBA、四隅透過で正常にデコードできる
 - [ ] 入力PNGが未追跡制作素材として容量、更新日時およびSHA-256不変で保全されている
 - [ ] title、h1、meta description、案内文、補足文、ラウンド文および判定文が正式値と一致する
-- [ ] 外部scriptが`./best-shot-game.js?v=4`の1件だけで、defer付き、inline scriptおよび外部依存がない
+- [ ] 外部scriptが`./best-shot-game.js?v=5`の1件だけで、defer付き、inline scriptおよび外部依存がない
 - [ ] 撮影ステージ240px、猫112×112px、撮影枠156×156pxで、390px幅に横スクロールがない
 - [ ] 全5ラウンドが横断時間3.8、3.3、2.8、2.4、2.0秒の順で速くなる
 - [x] 猫が左から右へ移動し、通常時は移動距離に連動して時計回りに回転する
