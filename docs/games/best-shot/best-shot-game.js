@@ -2,6 +2,7 @@
   "use strict";
 
   var ROUND_DURATIONS = [3.8, 3.3, 2.8, 2.4, 2.0];
+  var ROUND_ROTATION_MULTIPLIERS = [1.00, 1.10, 1.20, 1.30, 1.40];
   var ROUND_MESSAGES = [
     "得意の前転、披露します。",
     "もう一度、転がります。",
@@ -302,6 +303,11 @@
     elements.roundMessage.textContent = ROUND_MESSAGES[roundIndex];
   }
 
+  function getRoundRotationMultiplier() {
+    var multiplier = ROUND_ROTATION_MULTIPLIERS[roundIndex];
+    return Number.isFinite(multiplier) && multiplier > 0 ? multiplier : 1.0;
+  }
+
   function calculateRoundGeometry() {
     stageWidth = elements.stage.clientWidth;
     if (!Number.isFinite(stageWidth) || stageWidth <= FRAME_SIZE) {
@@ -414,7 +420,7 @@
       var movedDistance = speed * deltaSeconds;
       catX += movedDistance;
       if (!reducedMotion) {
-        catAngle = (catAngle + movedDistance * DEGREES_PER_PIXEL) % 360;
+        catAngle = (catAngle + movedDistance * DEGREES_PER_PIXEL * getRoundRotationMultiplier()) % 360;
       }
       if (catX >= travelEndX) {
         catX = travelEndX;
