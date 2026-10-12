@@ -75,8 +75,18 @@
     }
   }
 
-  function scrollToResultAction(button) {
-    if (!button || button.hidden || typeof button.scrollIntoView !== "function") {
+  function performResultActionScroll(button, expectedPhase, generation) {
+    if (
+      generation !== gameGeneration ||
+      phase !== expectedPhase ||
+      !isLocked ||
+      !elements ||
+      !elements.result ||
+      elements.result.hidden ||
+      !button ||
+      button.hidden ||
+      typeof button.scrollIntoView !== "function"
+    ) {
       return;
     }
     try {
@@ -91,6 +101,21 @@
         return;
       }
     }
+  }
+
+  function scrollToResultAction(button, expectedPhase) {
+    if (!button || button.hidden || typeof button.scrollIntoView !== "function") {
+      return;
+    }
+    var generation = gameGeneration;
+    if (typeof window.requestAnimationFrame === "function") {
+      animationFrameId = window.requestAnimationFrame(function () {
+        animationFrameId = null;
+        performResultActionScroll(button, expectedPhase, generation);
+      });
+      return;
+    }
+    performResultActionScroll(button, expectedPhase, generation);
   }
 
   function readNumberAttribute(element, name) {
@@ -292,7 +317,7 @@
     elements.retryButton.hidden = false;
     setStatus(message);
     elements.retryButton.focus();
-    scrollToResultAction(elements.retryButton);
+    scrollToResultAction(elements.retryButton, "round-failed");
   }
 
   function completeGame() {
@@ -323,7 +348,7 @@
     elements.retryButton.hidden = true;
     setStatus(message);
     elements.nextButton.focus();
-    scrollToResultAction(elements.nextButton);
+    scrollToResultAction(elements.nextButton, "round-cleared");
   }
 
   function animateFrame(timestamp, generation) {
