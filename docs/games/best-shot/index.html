@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="転がるしゃりねこを撮影枠の中央で撮る、タイミングゲームです。">
+  <title>しゃりねこ ベストショット</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #3f3028;
+      --muted: #6f5a4e;
+      --surface: #fffdf9;
+      --surface-soft: #fff6e9;
+      --accent: #d86f45;
+      --accent-dark: #8f3f24;
+      --gold: #e4a62f;
+      --border: #ead7c8;
+      --focus: #1769aa;
+      --shadow: 0 12px 30px rgba(91, 58, 39, 0.12);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: #fff9f1;
+    }
+
+    body {
+      min-width: 0;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top, rgba(255, 229, 190, 0.65), transparent 36rem),
+        #fff9f1;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    button {
+      min-height: 44px;
+      font: inherit;
+      touch-action: manipulation;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .page {
+      width: min(100%, 960px);
+      margin: 0 auto;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        max(14px, env(safe-area-inset-right))
+        max(48px, env(safe-area-inset-bottom))
+        max(14px, env(safe-area-inset-left));
+    }
+
+    .hero,
+    .start-panel,
+    .game-panel {
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 26px 22px;
+      text-align: center;
+    }
+
+    h1,
+    h2,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: clamp(1.8rem, 7vw, 2.7rem);
+      line-height: 1.25;
+    }
+
+    .lead {
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+
+    .hint {
+      margin-bottom: 0;
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+
+    .start-panel,
+    .game-panel {
+      margin-top: 18px;
+      padding: 22px;
+    }
+
+    .start-panel {
+      text-align: center;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-width: 0;
+      padding: 10px 18px;
+      border: 2px solid var(--accent);
+      border-radius: 999px;
+      color: #ffffff;
+      background: var(--accent);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .secondary-button {
+      border-color: var(--border);
+      color: var(--ink);
+      background: #ffffff;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
+
+    button:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .play-area {
+      max-width: 720px;
+      margin: 0 auto;
+      scroll-margin-top: 12px;
+    }
+
+    .game-summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .summary-item,
+    .round-line {
+      min-width: 0;
+      margin: 0;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: var(--surface-soft);
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .round-line {
+      color: var(--accent-dark);
+    }
+
+    .shot-stage {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      overflow: hidden;
+      border: 2px solid #9cc67c;
+      border-radius: 20px;
+      background:
+        linear-gradient(to bottom, #dff4ff 0 62%, #9fd379 62% 68%, #72b554 68% 100%);
+      isolation: isolate;
+    }
+
+    .shot-stage[aria-busy="true"] {
+      border-color: var(--gold);
+    }
+
+    .shot-frame {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      width: 156px;
+      height: 156px;
+      border: 4px dashed rgba(255, 253, 239, 0.96);
+      border-radius: 18px;
+      box-shadow: 0 0 0 2px rgba(90, 69, 49, 0.28);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+
+    .cat-mover {
+      position: absolute;
+      z-index: 1;
+      top: 64px;
+      left: 0;
+      width: 112px;
+      height: 112px;
+      will-change: transform;
+    }
+
+    .rolling-cat {
+      display: block;
+      width: 112px;
+      height: 112px;
+      object-fit: contain;
+      transform-origin: center;
+      will-change: transform;
+    }
+
+    .cat-fallback {
+      display: grid;
+      width: 112px;
+      height: 112px;
+      place-items: center;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      color: var(--ink);
+      background: rgba(255, 253, 249, 0.94);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .shoot-area {
+      display: grid;
+      place-items: center;
+      margin-top: 16px;
+    }
+
+    .shoot-button {
+      width: min(100%, 280px);
+      min-height: 54px;
+      font-size: 1.1rem;
+    }
+
+    .result-panel,
+    .completion {
+      margin-top: 18px;
+      padding: 18px;
+      border: 2px solid var(--gold);
+      border-radius: 18px;
+      background: #fff8e8;
+    }
+
+    .result-message,
+    .completion p {
+      margin-bottom: 0;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .result-actions,
+    .game-controls,
+    .completion-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    noscript p {
+      margin: 18px 0 0;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #ffffff;
+    }
+
+    @media (max-width: 520px) {
+      .hero,
+      .start-panel,
+      .game-panel {
+        padding: 18px 14px;
+        border-radius: 18px;
+      }
+
+      .shot-stage {
+        border-radius: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+
+      .cat-mover,
+      .rolling-cat {
+        will-change: auto;
+      }
+    }
+  </style>
+  <script src="./best-shot-game.js?v=1" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1>しゃりねこ ベストショット</h1>
+      <p class="lead">転がるしゃりねこが撮影枠に来たところで、「撮影する」を押してください。</p>
+      <p class="hint">中央に近いほど、ベストショットになります。</p>
+      <p class="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-best-shot-status>ゲームを準備しています。</p>
+    </header>
+
+    <section class="start-panel" aria-labelledby="best-shot-start-heading" data-best-shot-start-panel>
+      <h2 id="best-shot-start-heading">撮影を始めましょう</h2>
+      <button class="primary-button" type="button" data-best-shot-start disabled>ゲームを始める</button>
+    </section>
+
+    <section class="game-panel" aria-labelledby="best-shot-game-heading" data-best-shot-game-panel hidden>
+      <div class="play-area" data-best-shot-play-area>
+        <h2 id="best-shot-game-heading">撮影ステージ</h2>
+        <div class="game-summary">
+          <p class="summary-item">ラウンド <span data-best-shot-round>1 / 5</span></p>
+          <p class="round-line" data-best-shot-round-message>得意の前転、披露します。</p>
+        </div>
+
+        <div
+          class="shot-stage"
+          data-best-shot-stage
+          data-stage-height="240"
+          data-cat-size="112"
+          data-frame-size="156"
+          data-best-distance="14"
+          data-success-distance="32"
+          aria-label="しゃりねこ撮影ステージ"
+          aria-busy="false"
+        >
+          <div class="shot-frame" data-best-shot-frame>
+            <span class="visually-hidden">撮影枠</span>
+          </div>
+          <div class="cat-mover" data-best-shot-cat-mover>
+            <img
+              class="rolling-cat"
+              src="../../assets/images/games/best-shot/rolling-sharineko.png"
+              alt="芝生の上を転がるしゃりねこ"
+              data-best-shot-cat-image
+            >
+            <span class="cat-fallback" data-best-shot-cat-fallback hidden>しゃりねこ</span>
+          </div>
+        </div>
+
+        <div class="shoot-area">
+          <button class="primary-button shoot-button" type="button" data-best-shot-shoot disabled>撮影する</button>
+        </div>
+
+        <section class="result-panel" data-best-shot-result hidden aria-labelledby="best-shot-result-heading">
+          <h2 id="best-shot-result-heading">撮影結果</h2>
+          <p class="result-message" data-best-shot-result-message></p>
+          <div class="result-actions">
+            <button class="primary-button" type="button" data-best-shot-next hidden>次のラウンドへ</button>
+            <button class="primary-button" type="button" data-best-shot-retry hidden>もう一度ねらう</button>
+          </div>
+        </section>
+
+        <div class="game-controls">
+          <button class="secondary-button" type="button" data-best-shot-reset>最初から</button>
+        </div>
+      </div>
+
+      <section class="completion" data-best-shot-completion tabindex="-1" hidden aria-labelledby="best-shot-completion-heading">
+        <h2 id="best-shot-completion-heading">撮影完了</h2>
+        <p>撮影、完了です。前転も終わりました。</p>
+        <div class="completion-actions">
+          <button class="primary-button" type="button" data-best-shot-replay>もう一度遊ぶ</button>
+          <button class="secondary-button" type="button" data-best-shot-reset>最初から</button>
+        </div>
+      </section>
+    </section>
+
+    <noscript>
+      <p>このゲームを遊ぶにはJavaScriptを有効にしてください。</p>
+    </noscript>
+  </main>
+</body>
+</html>
