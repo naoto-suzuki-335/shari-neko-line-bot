@@ -2,7 +2,7 @@
   "use strict";
 
   var ROUND_DURATIONS = [3.8, 3.3, 2.8, 2.4, 2.0];
-  var ROUND_ROTATION_MULTIPLIERS = [1.00, 1.10, 1.20, 1.30, 1.40];
+  var ROUND_ROTATION_SPEEDS = [224, 284, 365, 461, 596];
   var ROUND_MESSAGES = [
     "得意の前転、披露します。",
     "もう一度、転がります。",
@@ -18,7 +18,6 @@
   var REDUCED_MOTION_SPEED_FACTOR = 0.7;
   var MAX_DELTA_SECONDS = 0.05;
   var RESULT_BOTTOM_MARGIN = 24;
-  var DEGREES_PER_PIXEL = 360 / (Math.PI * CAT_SIZE);
   var CAT_IMAGE_PATH = "../../assets/images/games/best-shot/rolling-sharineko.png";
 
   var roundIndex = 0;
@@ -303,9 +302,9 @@
     elements.roundMessage.textContent = ROUND_MESSAGES[roundIndex];
   }
 
-  function getRoundRotationMultiplier() {
-    var multiplier = ROUND_ROTATION_MULTIPLIERS[roundIndex];
-    return Number.isFinite(multiplier) && multiplier > 0 ? multiplier : 1.0;
+  function getRoundRotationSpeed() {
+    var rotationSpeed = ROUND_ROTATION_SPEEDS[roundIndex];
+    return Number.isFinite(rotationSpeed) && rotationSpeed > 0 ? rotationSpeed : 224;
   }
 
   function calculateRoundGeometry() {
@@ -420,7 +419,7 @@
       var movedDistance = speed * deltaSeconds;
       catX += movedDistance;
       if (!reducedMotion) {
-        catAngle = (catAngle + movedDistance * DEGREES_PER_PIXEL * getRoundRotationMultiplier()) % 360;
+        catAngle = (catAngle + deltaSeconds * getRoundRotationSpeed()) % 360;
       }
       if (catX >= travelEndX) {
         catX = travelEndX;

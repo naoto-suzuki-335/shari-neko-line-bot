@@ -3823,3 +3823,54 @@ v5で確定した結果操作ボタンの位置計測、不足分だけの`windo
 - [x] 外部通信、Cookie、Storage、IndexedDB、LIFF、consoleおよび新しい依存関係を追加していない
 - [ ] v6のHTMLとJavaScriptがGitHub Pagesへ公開され、ローカル追跡版と一致する
 - [ ] iPhone実機でラウンド1～5の回転速度、操作性および目押し可能性を確認する
+
+## 45. ベストショット 回転速度の時間基準化
+
+### 45.1 調整理由と確認履歴
+
+v6はGitHub Pagesへ公開反映済みである。2026年10月12日のPC実機確認ではラウンド別の回転速度上昇を確認した一方、iPhone実機では回転しているものの、ラウンド別の増速感が弱かった。iPhoneの「視差効果を減らす」はオフであり、reduced-motionによる回転停止ではなかった。
+
+原因は、v6までの回転角が横方向の移動px数に連動し、同じ横断時間でも表示幅が狭いiPhoneでは1秒あたりの移動px数と基礎回転速度が低くなることである。v7では端末幅による回転速度差を解消する。
+
+### 45.2 ラウンド別回転速度
+
+移動距離連動の`DEGREES_PER_PIXEL`とラウンド別回転倍率を廃止し、ラウンド1～5の回転速度を度/秒で`[224, 284, 365, 461, 596]`と定義する。現在のPC版v6相当の速度を基準とし、PCを遅くせず、iPhoneの回転速度を同程度まで引き上げる。
+
+速度は現在の`roundIndex`から取得し、配列外、`undefined`、`NaN`、`Infinity`、`-Infinity`、0または負数の場合は224度/秒へフォールバックする。正の有限値だけを採用する。
+
+### 45.3 時間基準の角度更新
+
+通常時の角度は、既存の実経過時間`deltaSeconds`へ現在ラウンドの回転速度を乗じて加算し、`% 360`で正規化する。時計回りの回転方向を維持する。`deltaSeconds`の算出方法と最大0.05秒の上限を変更せず、新しいタイマーは追加しない。
+
+回転速度はviewport幅、ステージ幅、横断距離および横移動量から独立させる。横移動では従来どおり`movedDistance = speed * deltaSeconds`を求め、`catX`だけへ加算する。
+
+### 45.4 reduced-motion
+
+`prefers-reduced-motion: reduce`では従来どおり表示角度を0度に固定し、回転速度の取得と角度更新を行わない。横移動速度を通常の70%へ低下させる既存仕様、ラウンド数および判定範囲は変更しない。
+
+### 45.5 非変更対象
+
+横断時間`[3.8, 3.3, 2.8, 2.4, 2.0]`秒、横移動速度と`catX`の計算、ベスト距離14px、成功距離32px、水平距離だけを用いる撮影判定、開始・再挑戦時の`catAngle = 0`、phase、`gameGeneration`、入力ロック、`visibilitychange`、resize、第5ラウンド完了処理は変更しない。
+
+v5で確定した結果操作ボタンの位置計測と不足分スクロール、`scrollToPlayArea()`、HTML構造、CSS、表示文言、正式PNG、既存ゲーム、案内所、動画図鑑、お酒の小話、`src/`、Bot、GAS、LIFFおよびLINE Developers設定も変更しない。
+
+### 45.6 実装と公開手順
+
+変更対象は`docs/games/best-shot/best-shot-game.js`、`docs/games/best-shot/index.html`および本章だけとする。JavaScriptのキャッシュ更新のためscript参照を`./best-shot-game.js?v=7`とする。静的検証後に指定3ファイルだけを別コミットし、GitHub Pages公開反映、PC実機およびiPhone実機で確認する。
+
+### 45.7 受け入れ条件
+
+- [x] `ROUND_ROTATION_MULTIPLIERS`と`getRoundRotationMultiplier()`を廃止している
+- [x] ラウンド1～5の回転速度が`[224, 284, 365, 461, 596]`度/秒の順で定義されている
+- [x] 配列外、非有限値または正でない速度を224度/秒へフォールバックする
+- [x] 通常時の角度計算で`deltaSeconds`と現在ラウンドの回転速度を各1回だけ使用し、`% 360`で正規化する
+- [x] 回転速度がviewport幅、ステージ幅、横断距離および横移動量に依存しない
+- [x] 横断時間、横移動速度、`catX`の計算および14px／32pxの判定値を変更していない
+- [x] reduced-motion時は表示角度0度を維持し、回転速度の取得と角度更新を行わない
+- [x] v5の結果スクロール、`scrollToPlayArea()`および例外保護を変更していない
+- [x] `visibilitychange`、resize、phase、`gameGeneration`、入力ロックおよび第5ラウンド完了処理を変更していない
+- [x] 新しいタイマー、外部通信、Cookie、Storage、IndexedDB、LIFF、consoleおよびdebuggerを追加していない
+- [x] script参照が`./best-shot-game.js?v=7`で、deferを維持し、inline scriptを追加していない
+- [ ] v7のHTMLとJavaScriptがGitHub Pagesへ公開され、ローカル追跡版と一致する
+- [ ] PC実機でラウンド1～5の回転速度上昇と既存操作を確認する
+- [ ] iPhone実機でPCと同程度の回転速度、ラウンド別の増速感および既存操作を確認する
