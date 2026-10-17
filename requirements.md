@@ -3874,3 +3874,56 @@ v5で確定した結果操作ボタンの位置計測と不足分スクロール
 - [ ] v7のHTMLとJavaScriptがGitHub Pagesへ公開され、ローカル追跡版と一致する
 - [ ] PC実機でラウンド1～5の回転速度上昇と既存操作を確認する
 - [ ] iPhone実機でPCと同程度の回転速度、ラウンド別の増速感および既存操作を確認する
+
+## 46. ベストショット ラウンド別横断時間調整
+
+### 46.1 調整理由と確認履歴
+
+v7はGitHub Pagesでbuiltとなり、公開処理が完了した。v7のiPhone実機確認では時間基準化による回転速度上昇を確認したが、左右移動はv6以前と同じ横断時間であったため、ゲーム全体の目押しは比較的簡単だった。v7は回転だけの変更であり、横移動速度と判定難易度を変更していなかった。
+
+v7のPC実機確認は未実施であり、実施済みとして扱わない。
+
+### 46.2 ラウンド別横断時間
+
+全5ラウンドの横断時間を`[3.8, 3.0, 2.4, 1.9, 1.5]`秒とする。ラウンド1は3.8秒のまま維持し、ラウンド2～5だけを従来の3.3、2.8、2.4、2.0秒から段階的に短縮する。
+
+- ラウンド1：3.8秒
+- ラウンド2：3.0秒
+- ラウンド3：2.4秒
+- ラウンド4：1.9秒
+- ラウンド5：1.5秒
+
+### 46.3 横移動速度
+
+横移動速度は従来どおり、ステージ実寸と猫サイズから求めた横断距離を現在ラウンドの横断時間で除し、`speed = travelDistance / ROUND_DURATIONS[roundIndex]`で計算する。フレームごとの`movedDistance = speed * deltaSeconds`と`catX += movedDistance`も変更しない。
+
+### 46.4 回転・判定・reduced-motion
+
+v7の端末幅に依存しない時間基準回転を維持し、回転速度は`[224, 284, 365, 461, 596]`度/秒のままとする。通常時は`deltaSeconds`と現在ラウンドの回転速度から時計回りに更新し、reduced-motion時は回転角0度と横移動速度70%を維持する。
+
+ベスト距離14px、成功距離32px、猫中心と撮影枠中心の水平距離だけを用いる判定は変更しない。
+
+### 46.5 非変更対象
+
+phase、`gameGeneration`、入力ロック、`visibilitychange`、resize、第5ラウンド成功後の結果保持と完了操作、v5で確定した結果スクロールおよび`scrollToPlayArea()`は変更しない。表示文言、HTML構造、CSS、正式PNG、既存ゲーム、案内所、動画図鑑、お酒の小話、`src/`、Bot、GAS、LIFFおよびLINE Developers設定も変更しない。
+
+### 46.6 実装と公開手順
+
+変更対象は`docs/games/best-shot/best-shot-game.js`、`docs/games/best-shot/index.html`および本章だけとする。JavaScriptのキャッシュ更新のためscript参照を`./best-shot-game.js?v=8`とする。静的検証後に指定3ファイルだけを別コミットし、GitHub Pages公開反映、PC実機およびiPhone実機で確認する。
+
+### 46.7 受け入れ条件
+
+- [x] `ROUND_DURATIONS`が`[3.8, 3.0, 2.4, 1.9, 1.5]`の順で定義されている
+- [x] ラウンド1の横断時間を3.8秒のまま維持し、ラウンド2～5だけを高速化している
+- [x] 横移動速度を`speed = travelDistance / ROUND_DURATIONS[roundIndex]`で計算する
+- [x] フレームごとの`movedDistance`と`catX`の計算を変更していない
+- [x] v7の回転速度`[224, 284, 365, 461, 596]`と時間基準の角度計算を変更していない
+- [x] ベスト距離14px、成功距離32pxおよび水平距離だけを用いる判定を変更していない
+- [x] reduced-motion時の回転角0度と横移動速度70%を維持している
+- [x] phase、`gameGeneration`、入力ロック、`visibilitychange`、resizeおよび第5ラウンド完了処理を変更していない
+- [x] v5の結果スクロールと`scrollToPlayArea()`を変更していない
+- [x] 新しいタイマー、外部通信、Cookie、Storage、IndexedDB、LIFF、consoleおよびdebuggerを追加していない
+- [x] script参照が`./best-shot-game.js?v=8`で、deferを維持し、inline scriptを追加していない
+- [ ] v8のHTMLとJavaScriptがGitHub Pagesへ公開され、ローカル追跡版と一致する
+- [ ] PC実機でラウンド1～5の横移動、回転、判定および既存操作を確認する
+- [ ] iPhone実機でラウンド別の横移動高速化、目押し難易度および既存操作を確認する

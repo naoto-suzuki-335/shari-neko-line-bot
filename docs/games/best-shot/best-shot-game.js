@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var ROUND_DURATIONS = [3.8, 3.3, 2.8, 2.4, 2.0];
+  var ROUND_DURATIONS = [3.8, 3.0, 2.4, 1.9, 1.5];
   var ROUND_ROTATION_SPEEDS = [224, 284, 365, 461, 596];
   var ROUND_MESSAGES = [
     "得意の前転、披露します。",
