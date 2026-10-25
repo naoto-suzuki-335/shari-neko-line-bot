@@ -3992,3 +3992,111 @@ iPhone実機の案内所専用LIFFでも、LINE内ブラウザーに第6カー�
 - [x] GitHub Pagesへ第6カードが公開され、公開HTMLがローカル追跡版と一致する
 - [x] 通常HTTPS URLの実機表示で6カードの配置とベストショットへの遷移を確認する
 - [x] 案内所専用LIFFの実機表示で6カードの配置、ベストショットへの遷移および戻る操作を確認する
+
+## 48. 通常動画図鑑・新規3作品追加
+
+### 48.1 目的と変更範囲
+
+通常動画図鑑のWeb版へ「UFOキャッチャー」「坂道ころころ」「おいも掘り」の3作品を追加する。更新対象は新規公開MP4、新規正式サムネイル、新規個別ページ、`docs/videos/index.html`および本章だけとし、Bot、GAS、LIFF設定およびLINE Developers設定は変更しない。
+
+### 48.2 正式作品情報と掲載位置
+
+- UFOキャッチャー
+  - slug：`ufo-catcher-neko`
+  - カテゴリ：おでかけ
+  - 表示ラベル：`UFOキャッチャー`
+  - title／h1：`景品かもです。`
+  - 説明：`ゲームセンターで、UFOキャッチャーに挑戦するしゃりねこです。`
+  - 掲載位置：おでかけカテゴリ末尾、14番目
+- 坂道ころころ
+  - slug：`rolling-downhill-neko`
+  - カテゴリ：日常
+  - 表示ラベル：`坂道ころころ`
+  - title／h1：`着地はお腹から。`
+  - 説明：`坂道をくるくる回りながら、ころころ転がるしゃりねこです。`
+  - 掲載位置：日常カテゴリ末尾、14番目
+- おいも掘り
+  - slug：`sweet-potato-digging-neko`
+  - カテゴリ：秋
+  - 表示ラベル：`おいも掘り`
+  - title／h1：`芋、育ちすぎました。`
+  - 説明：`秋の畑で、大きなおいもを掘るしゃりねこです。`
+  - 掲載位置：秋カテゴリの「焼き芋」直前、秋8番目
+
+追加後の通常作品総数は63件、カテゴリ件数はおでかけ14、日常14、季節8、秋14、おしごと13とする。既存60カードの内容と順序は変更しない。
+
+### 48.3 入力MOVの保全と変換確認
+
+- `incoming-videos/game center2.mov`
+  - 容量：15,321,549 bytes
+  - 更新日時：2026年10月25日 10:37:08.7589493 +09:00
+  - SHA-256：`CAFF42C4CAACB5551A2D11270A03613817819CB457056549463853F7AE7601B1`
+- `incoming-videos/sakamichikaiten.mov`
+  - 容量：10,842,161 bytes
+  - 更新日時：2026年10月25日 10:37:00.1457719 +09:00
+  - SHA-256：`893B545C888E34B51B108DBE0F3D9A7BB0DD746C7F50848777A894F8A10A07A3`
+- `incoming-videos/imohori.mov`
+  - 容量：15,956,284 bytes
+  - 更新日時：2026年10月25日 10:36:53.0730661 +09:00
+  - SHA-256：`1A9ECC75AD55A01717ED668FFA33D3C9FE57B95DEC237A9FB151146D53C63F3A`
+
+3本ともQuickTime／MOV、H.264 High、yuv420p、1920×1080、30fps、AAC-LC、44.1kHz、stereo、回転情報なしである。ffprobeは3本とも終了コード0、変換前と変換後の全編nullデコードも終了コード0、デコードエラー0件である。
+
+最初の変換試行では、PowerShellがFFmpegの標準エラー出力`Unknown cover type: 0x1.`を停止エラーとして扱い、FFmpeg本体の終了コードを取得できず、公開MP4は生成されなかった。以後は`Start-Process -Wait -PassThru`で標準出力と標準エラーを専用ログへ分離し、FFmpeg本体のExitCodeを取得して各入力を1回ずつ正常変換した。同警告は各変換で1件記録されたが、ExitCode 0と生成物の全検証合格により非致命的警告と判定した。
+
+### 48.4 公開MP4
+
+公開MP4はlibx264 High、preset medium、CRF 20、yuv420p、30fps、AAC-LC 192kbps、44.1kHz、stereoおよびfaststartで作成し、ffprobe、全フレーム読取り、全編nullデコード、回転情報なしおよび`moov < mdat`を確認した。
+
+- `docs/assets/videos/ufo-catcher-neko.mp4`
+  - 容量：5,413,269 bytes
+  - SHA-256：`E315C8E997863CBCAE54C0CCA463C315311727FC52AACFAE6163F401AA3584E1`
+- `docs/assets/videos/rolling-downhill-neko.mp4`
+  - 容量：5,153,789 bytes
+  - SHA-256：`EFF6E672B5B73981787877F096EDB2759996CF377D8809EB9607F2613B968EA8`
+- `docs/assets/videos/sweet-potato-digging-neko.mp4`
+  - 容量：6,371,015 bytes
+  - SHA-256：`63BCF8FE230807EA9133BD6C928BA79FE8CE2AC819C32E0F2C594D80BB5B907E`
+
+### 48.5 正式サムネイル
+
+確認用静止画は各動画の再生時間に対する5％、25％、50％、75％、95％地点から作成した。正式サムネイルには、UFOキャッチャーの50％地点5.06666650秒、坂道ころころの50％地点3.06666650秒、おいも掘りの5％地点0.50031745秒を選定した。選定済みJPEGを再エンコード、リサイズ、トリミング、色補正および文字追加せず、1920×1080、16:9のまま無加工コピーする。
+
+- `docs/assets/images/ufo-catcher-neko-thumbnail.jpg`
+  - 容量：161,295 bytes
+  - SHA-256：`470E69F890A34F479019C3DD7A43E53712359383DAE03D34EF9F8ABE66897838`
+- `docs/assets/images/rolling-downhill-neko-thumbnail.jpg`
+  - 容量：110,542 bytes
+  - SHA-256：`13DA0B41179673FC8C02E447F3C173734A7F969212550F883ACCD10726D65380`
+- `docs/assets/images/sweet-potato-digging-neko-thumbnail.jpg`
+  - 容量：188,441 bytes
+  - SHA-256：`FB67327DC699367E410D656BB76EBDCC56F8345B97E3AA1031B1B9B00775EACA`
+
+### 48.6 Web実装と非変更対象
+
+`docs/videos/ufo-catcher-neko/index.html`、`docs/videos/rolling-downhill-neko/index.html`および`docs/videos/sweet-potato-digging-neko/index.html`を、既存の通常動画個別ページと同じHTML、CSS、video属性およびアクセシビリティ構造で追加する。各カードを`docs/videos/index.html`の指定位置へ追加し、総数とカテゴリ件数を正式値へ更新する。
+
+`docs/videos/gallery.js`と`docs/videos/liff-init.js`は静的カードを扱う既存処理をそのまま利用できるため変更しない。既存個別ページ、既存公開MP4、既存サムネイル、ハロウィン特集、案内所、`src/`、Bot、GAS、LIFF設定およびLINE Developers設定も変更しない。入力MOV 3本、`video-review-20261025/`の確認用素材および入力PNG `incoming-images-best-shot/rolling-sharineko.png`（839,889 bytes、SHA-256 `2D67C02950B28F6351772FC8C49BD8F0C20AAE6E1F87C477DAAB0695825DC43A`）は未追跡・未ステージのまま保全し、コミット対象に含めない。
+
+### 48.7 公開・確認手順
+
+ローカルで11件の実装対象と非変更対象を監査し、指定ファイルだけをコミットしてmainへ通常pushする。GitHub Pagesで通常図鑑、個別ページ3件、正式JPEG 3件および公開MP4 3件の反映とローカル追跡版との一致を確認する。その後、PC、iPhone通常URLおよびLINE内動画図鑑でカード表示、遷移、動画再生と戻る操作を確認する。Web版だけの変更であり、clasp push、GASデプロイ、LIFF設定変更およびLINE Developers操作は行わない。
+
+### 48.8 受け入れ条件
+
+- [x] 正式サムネイル3件が選定元JPEGと容量、SHA-256および全バイトで一致する
+- [x] 正式サムネイル3件がJPEG、1920×1080、16:9で正常にデコードできる
+- [x] 公開MP4 3件が正式な容量とSHA-256に一致し、H.264 High、yuv420p、30fps、AAC-LC、44.1kHzおよびstereoである
+- [x] 公開MP4 3件の全フレーム読取り、全編nullデコード、回転情報なしおよびfaststartを確認している
+- [x] 個別ページ3件のtitle、meta description、h1、poster、video srcおよびvideo属性が正式値と既存テンプレートに一致する
+- [x] 通常図鑑へ3カードを指定位置と正式順序で追加している
+- [x] 通常カードが63件で、カテゴリ件数が14／14／8／14／13である
+- [x] 既存60カードの内容と順序、CSS、レスポンシブ、ハロウィン特集および案内所を変更していない
+- [x] `gallery.js`、`liff-init.js`、既存個別ページ、既存公開素材および`src/`を変更していない
+- [x] Bot、GAS、LIFF設定およびLINE Developers設定を変更していない
+- [x] 入力MOV、確認用素材および入力PNG `incoming-images-best-shot/rolling-sharineko.png`をコミット対象に含めず、未追跡・未ステージのまま保全している
+- [ ] GitHub Pagesへ新規3作品が公開反映される
+- [ ] 公開HTML、個別ページ、正式JPEGおよび公開MP4がローカル追跡版と一致する
+- [ ] PC実機で3カードの表示、個別ページ遷移、動画再生および戻る操作を確認する
+- [ ] iPhone通常URLで3カードの表示、個別ページ遷移、動画再生および戻る操作を確認する
+- [ ] LINE内動画図鑑で3カードの表示、個別ページ遷移、動画再生および戻る操作を確認する
