@@ -4289,6 +4289,16 @@ LINE内の動画図鑑LIFFでは、`日常 → 坂道ころころ → ← 動画
 
 ローカルではApps Scriptコードの構文、第2階層メニューpayload、旧動画経路、非動画機能および週次配信の不変性を静的・モック検証し、本番配信関数、テスト配信関数およびトリガー関数を実行しない。監査合格後は対象ファイルだけをコミットして通常pushし、別工程で`clasp push`、ローカル`src/`とGAS側ソースの一致確認、新しいGASバージョン作成および既存固定デプロイ更新を行う。トリガーの再作成は不要とする。その後、LINE実機で正式な2回操作と同じLINE内LIFFでの表示を確認する。問題時は直前の`Code.gs`を反映し、既存固定デプロイを直前のGASデプロイ版へ戻す。
 
+対象コミット`fd6da4f6490cd155faea7fede403b369d99dfef5`（`feat: open video gallery from bot menu`）を`origin/main`へ通常pushし、HEADと`origin/main`が一致、ahead／behindが`0／0`であることを確認した。
+
+最初の通常の`clasp push`は終了コード0であったが、clasp 3.3.0の非対話環境におけるmanifest上書き確認により`Skipping push.`となり、GAS HEADへ未反映だった。GAS HEADのmanifestとローカルmanifestはJSON内容が一致していたため、push対象が`src/Code.gs`と`src/appsscript.json`の2件だけであることを再確認し、claspのmanifest上書きを許可する`clasp push --force`を1回実行した。これはGitのforce pushではない。出力は`Pushed 2 files`で、反映後のGAS HEADとローカルはCodeとmanifestの双方が全バイト一致した。
+
+GAS immutable version 75を作成した。version 75はCodeとmanifestがローカルと全バイト一致する正常な内容だが、説明の両端に引用符が文字として保存されたためdeploymentには使用していない。手動で既存固定Webアプリdeploymentを更新する際に、正式説明`Botの動画標準導線を動画図鑑LIFFへ統一`を持つversion 76を作成し、正式稼働versionとした。version 76のCodeは115,177 bytes、SHA-256は`FC470B12EBE8D1C8353B3C8A4C1012882F9A2E76FEDFC88D7B6C48D7AC496B2A`で、ローカル`src/Code.gs`と全バイト一致した。version 76のmanifestはGAS側整形後の208 bytes、SHA-256は`712DA28252DF765C2D6ECE62A5866C84CF5B011603E6853ADA3D599AAFC3C574`で、ローカル版は212 bytes、SHA-256は`09077880E66A8E188D16F0335BEDEB04CE3E96C3A6B3229008F24F89417BD8EE`である。両者はバイト列が異なるがJSON内容は一致し、version 77以降は存在しない。
+
+既存固定Webアプリdeploymentをversion 74からversion 76へ手動更新した。新規deploymentは作成せず、deployment総数5件、HEAD deployment 1件、固定version deployment 4件を維持した。更新前後でdeployment IDとWebアプリURLは同一で、version 74および75を参照するdeploymentは0件、version 76を参照するdeploymentは1件である。LINE Developers設定、Webhook URL、トリガーおよびScript Propertiesは変更していない。
+
+LINE実機では、常設リッチメニューの「メニュー」から第2階層メニューの「動画」を押すと、トーク画面へ`しゃりねこ動画`を送信せずに動画図鑑LIFFが直接開くことを確認した。互換確認として`しゃりねこ動画`を手入力すると従来の5カテゴリと「図鑑」が表示され、旧カテゴリ経路と旧図鑑経路が維持されていることも確認した。Botの標準導線だけを動画図鑑LIFF直行へ変更した実機確認は合格とする。本番broadcast、Push API、テスト配信および週次トリガー関数は実行していない。
+
 ### 51.8 受け入れ条件
 
 - [x] 第2階層メニューの「動画」がURI actionである
@@ -4303,7 +4313,7 @@ LINE内の動画図鑑LIFFでは、`日常 → 坂道ころころ → ← 動画
 - [x] Web、LIFF初期化、Apps Scriptマニフェストおよび外部設定を変更していない
 - [x] メニュー処理のReply API呼び出しが従来どおり1回だけである
 - [x] ローカルモックで第2階層メニューpayloadが正式仕様と一致する
-- [ ] GitHubへ対象コミットを通常pushし、`origin/main`と一致する
-- [ ] `clasp push`後にローカル`src/`とGAS側ソースが一致する
-- [ ] 新しいGASバージョンを作成し、既存固定デプロイを安全に更新する
-- [ ] LINE実機で`メニュー → 動画 → 動画図鑑LIFF`が正常に動作する
+- [x] GitHubへ対象コミットを通常pushし、`origin/main`と一致する
+- [x] `clasp push`後にローカル`src/`とGAS側ソースが一致する
+- [x] 新しいGASバージョンを作成し、既存固定デプロイを安全に更新する
+- [x] LINE実機で`メニュー → 動画 → 動画図鑑LIFF`が正常に動作する
