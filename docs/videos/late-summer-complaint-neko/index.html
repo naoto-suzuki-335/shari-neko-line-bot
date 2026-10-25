@@ -16,6 +16,32 @@
       margin: 0 auto;
     }
 
+    .back-link {
+      display: inline-flex;
+      min-height: 44px;
+      max-width: 100%;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
+      margin-top: 12px;
+      padding: 8px 14px;
+      border: 1px solid #ead9ca;
+      border-radius: 12px;
+      background: #fffaf3;
+      color: #8b4513;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      background: #fff0e2;
+    }
+
+    .back-link:focus-visible {
+      outline: 3px solid #b44d2d;
+      outline-offset: 3px;
+    }
+
     video {
       display: block;
       width: 100%;
@@ -35,6 +61,7 @@
       <source src="../../assets/videos/late-summer-complaint-neko.mp4" type="video/mp4">
       お使いのブラウザーは動画の再生に対応していません。
     </video>
+    <a class="back-link" href="../?category=seasonal">← 動画図鑑へ戻る</a>
   </main>
 </body>
 </html>

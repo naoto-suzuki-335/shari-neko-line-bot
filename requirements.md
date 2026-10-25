@@ -4184,3 +4184,54 @@ PCの通常HTTPS URLでは「すべて・63作品を表示中」と「おでか�
 - [x] PC通常HTTPSでカテゴリ、query、新着、おまかせ1本およびハロウィン特集を確認する
 - [x] iPhone通常HTTPSでstickyカテゴリ、横スクロール、query、カード表示および操作を確認する
 - [x] LINE内LIFFでstickyカテゴリ、横スクロール、query、カード表示、遷移および戻る操作を確認する
+
+## 50. 通常動画個別ページの図鑑戻り導線
+
+### 50.1 背景と目的
+
+動画図鑑のカテゴリから通常作品の個別ページへ進んだ利用者が、閲覧していたカテゴリへ迷わず戻れる導線を追加する。JavaScriptの履歴へ依存せず、個別ページを直接開いた場合も戻り先が明確な通常リンクとする。本章を通常動画個別ページの現行仕様として、第1～49章にある過去の個別ページ仕様より優先する。
+
+### 50.2 対象63作品とカテゴリ対応
+
+対象は`docs/videos/index.html`の通常動画図鑑63カードからリンクされる個別ページ63件だけとする。各作品の所属カテゴリは一意であり、`outing` 14件、`daily` 14件、`seasonal` 8件、`autumn` 14件、`work` 13件とする。通常63作品に含まれないハロウィン特集専用ページは対象外とする。
+
+### 50.3 正式な戻るリンク仕様
+
+各対象ページの`video`要素の直後、`main`要素の末尾へ、表示文言`← 動画図鑑へ戻る`の`a.back-link`を1件だけ置く。`href`は作品の所属カテゴリに応じて、`../?category=outing`、`../?category=daily`、`../?category=seasonal`、`../?category=autumn`または`../?category=work`のいずれかとする。`target`、`onclick`、`history.back()`および新しいJavaScriptは使用せず、同じブラウザー画面内で遷移する。PC通常ブラウザー、iPhone通常ブラウザーおよびLINE内LIFFブラウザーでは通常リンクから対応カテゴリ指定URLへ遷移し、個別ページの直接表示や参照元に左右されない戻り先を確保する。JavaScriptが無効な場合もリンク自体は機能し、図鑑トップで全63作品を閲覧できる。
+
+### 50.4 配置・CSS・アクセシビリティ
+
+戻りリンクは既存ページ内のインラインCSSだけで整え、`inline-flex`、最小高さ44px、最大幅100%、`box-sizing: border-box`、中央揃え、上余白12px、内側余白、境界線、角丸、不透明な背景、既存配色に沿う文字色および太字を指定する。`:hover`で背景を控えめに変え、`:focus-visible`で3pxのアウトラインと3pxのオフセットを表示する。固定幅、強制スクロール、アニメーション、外部CSSおよび画像は追加せず、小画面でも横スクロールを生じさせない。
+
+### 50.5 既存テンプレートと作品固有情報の保全
+
+対象63ページに存在する現行3種類のテンプレート差異を維持し、テンプレートの統一やmeta descriptionの補完は行わない。`taiyakiya-neko`の動画最大幅540px、中央配置および専用posterも変更しない。全ページの`title`、meta descriptionの有無と内容、`h1`、`video`属性、poster、MP4参照、作品固有値、既存CSS、bodyおよびmainの余白、文字コードならびに改行形式を維持する。
+
+### 50.6 非変更対象
+
+`docs/videos/index.html`、`docs/videos/gallery.js`、`docs/videos/liff-init.js`、`docs/videos/halloween/index.html`、通常63作品に含まれないハロウィン特集限定11ページ、公開JPEG・MP4、`src/`、Bot、GAS、LIFF ID・Endpoint、LINE Developers設定および外部設定は変更しない。
+
+入力MOV 3本、`video-review-20261025/`の確認用素材および`incoming-images-best-shot/rolling-sharineko.png`は未追跡・未ステージのまま保全し、本章のコミット対象に含めない。
+
+### 50.7 実装・静的検証・公開確認手順
+
+通常63カードからslugとカテゴリを抽出し、対応する63個別ページだけへ共通CSSとカテゴリ別リンクを機械的に追加する。適用後は対象ページの件数、カテゴリ別件数、リンクの位置・文言・href、CSS、HTML構文、作品固有値、対象外ページおよび非変更対象を全件検証する。ローカル監査合格後は対象63ページと本章だけを別コミットとして通常pushし、GitHub Pagesの公開反映と公開版の一致を確認する。その後、PC通常HTTPS、iPhone通常HTTPSおよびLINE内LIFFで、個別ページの動画表示と対応カテゴリへの戻り操作を実機確認する。Web公開だけの変更であり、clasp push、GASデプロイおよびLINE Developers操作は行わない。
+
+### 50.8 受け入れ条件
+
+- [x] 通常動画図鑑63カードの対応個別ページ63件すべてに戻りリンクが各1件ある
+- [x] 戻りリンクが各ページの`video`直後かつ`main`末尾にある
+- [x] 全戻りリンクの表示文言が`← 動画図鑑へ戻る`である
+- [x] 戻り先が所属カテゴリと一致し、件数が`outing` 14件、`daily` 14件、`seasonal` 8件、`autumn` 14件、`work` 13件である
+- [x] 戻りリンクに`target`、`onclick`、`history.back()`、新しいJavaScriptおよび外部依存がない
+- [x] `.back-link`が最小高さ44px、hoverおよびfocus-visibleを備える
+- [x] 固定幅、強制スクロール、外部CSS、画像およびアニメーションを追加していない
+- [x] 対象63ページの作品固有のtitle、meta description、h1、poster、MP4参照およびvideo属性を維持している
+- [x] `taiyakiya-neko`の専用レイアウトとposterを維持している
+- [x] 通常63作品に含まれないハロウィン特集専用ページを変更していない
+- [x] 図鑑トップ、`gallery.js`、`liff-init.js`、公開素材、`src/`および外部設定を変更していない
+- [x] 入力MOV 3本、確認用素材および入力PNGを未追跡・未ステージのまま保全している
+- [ ] GitHub Pagesへ対象63ページが公開反映され、公開版がローカル追跡版と一致する
+- [ ] PC通常HTTPSで動画表示と所属カテゴリへの戻り操作を確認する
+- [ ] iPhone通常HTTPSで動画表示と所属カテゴリへの戻り操作を確認する
+- [ ] LINE内LIFFで動画表示と所属カテゴリへの戻り操作を確認する
