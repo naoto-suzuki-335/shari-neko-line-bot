@@ -61,6 +61,7 @@ function handleLineEvent_(event) {
   }
 
   const receivedText = event.message.text;
+  const videoGalleryLiffUrl = 'https://liff.line.me/2011681460-ZSwLcXKw';
 
   // この4語はLINE公式アカウントの応答メッセージ機能に任せます。
   const officialAccountKeywords = [
@@ -176,9 +177,9 @@ function handleLineEvent_(event) {
       {
         type: 'action',
         action: {
-          type: 'message',
+          type: 'uri',
           label: '動画',
-          text: 'しゃりねこ動画',
+          uri: videoGalleryLiffUrl,
         },
       },
       {
@@ -385,7 +386,7 @@ function handleLineEvent_(event) {
         action: {
           type: 'uri',
           label: '図鑑',
-          uri: 'https://liff.line.me/2011681460-ZSwLcXKw',
+          uri: videoGalleryLiffUrl,
         },
       },
     ];
