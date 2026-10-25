@@ -12,6 +12,14 @@
   const randomVideoResult = document.getElementById('random-video-result');
   const randomVideoName = document.getElementById('random-video-name');
   const randomVideoLink = document.getElementById('random-video-link');
+  const categoryNames = Object.freeze({
+    all: 'すべて',
+    outing: 'おでかけ',
+    daily: '日常',
+    seasonal: '季節',
+    autumn: '秋',
+    work: 'おしごと',
+  });
   let lastRandomVideoHref = null;
 
   if (!categoryButtons.length || !categorySections.length || !galleryStatus) {
@@ -19,11 +27,10 @@
   }
 
   function showCategory(category) {
-    const isKnownCategory =
-      category === 'all' ||
-      categorySections.some(function (section) {
-        return section.dataset.galleryCategory === category;
-      });
+    const isKnownCategory = Object.prototype.hasOwnProperty.call(
+      categoryNames,
+      category
+    );
 
     if (!isKnownCategory) {
       return;
@@ -49,9 +56,56 @@
     });
 
     galleryStatus.textContent =
-      category === 'all'
-        ? '全' + visibleCount + '作品を表示中'
-        : visibleCount + '作品を表示中';
+      categoryNames[category] + '・' + visibleCount + '作品を表示中';
+  }
+
+  function getInitialCategory() {
+    try {
+      if (typeof window.URLSearchParams !== 'function') {
+        return 'all';
+      }
+
+      const parameters = new window.URLSearchParams(window.location.search);
+      const categories = parameters.getAll('category');
+
+      if (
+        categories.length !== 1 ||
+        !Object.prototype.hasOwnProperty.call(categoryNames, categories[0])
+      ) {
+        return 'all';
+      }
+
+      return categories[0];
+    } catch (error) {
+      return 'all';
+    }
+  }
+
+  function replaceCategoryInUrl(category) {
+    try {
+      if (
+        !window.history ||
+        typeof window.history.replaceState !== 'function' ||
+        typeof window.URL !== 'function' ||
+        typeof window.URLSearchParams !== 'function'
+      ) {
+        return;
+      }
+
+      const url = new window.URL(window.location.href);
+      const parameters = new window.URLSearchParams(url.search);
+
+      if (category === 'all') {
+        parameters.delete('category');
+      } else {
+        parameters.set('category', category);
+      }
+
+      url.search = parameters.toString();
+      window.history.replaceState(null, '', url.href);
+    } catch (error) {
+      // URL updates must not prevent category switching.
+    }
   }
 
   function clearRandomVideo() {
@@ -109,11 +163,16 @@
   categoryButtons.forEach(function (button) {
     button.addEventListener('click', function () {
       if (button.getAttribute('aria-pressed') === 'true') {
+        if (button.dataset.category === 'all') {
+          replaceCategoryInUrl('all');
+        }
+
         return;
       }
 
       showCategory(button.dataset.category);
       clearRandomVideo();
+      replaceCategoryInUrl(button.dataset.category);
     });
   });
 
@@ -121,5 +180,5 @@
     randomVideoButton.addEventListener('click', showRandomVideo);
   }
 
-  showCategory('all');
+  showCategory(getInitialCategory());
 })();
