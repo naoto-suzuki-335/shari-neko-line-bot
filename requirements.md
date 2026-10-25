@@ -4160,6 +4160,14 @@ PCの通常HTTPS動画図鑑、iPhoneの通常HTTPS動画図鑑およびLINE内�
 
 ローカルでHTML、CSS、JavaScript、カード実数、カテゴリ実数、queryの正常値と異常値、おまかせ1本および非変更対象を監査した後、指定3ファイルだけを別コミットしてmainへ通常pushする。GitHub PagesでHTMLと`gallery.js`の公開反映およびローカル追跡版との一致を確認し、その後PC通常HTTPS、iPhone通常HTTPSおよびLINE内LIFFでカテゴリ操作、sticky表示、横スクロール、query、カード、新着表示、おまかせ1本およびハロウィン特集を実機確認する。このWeb工程ではclasp push、GASデプロイおよびLINE Developers操作を行わない。
 
+対象コミット`f4b4235453882e5b833879f70f16c46a8238220f`について、GitHub Pagesのbuild ID `1312574048`が`built`で完了し、build commitが対象コミットと一致することを確認した。`error.message`は`null`、`created_at`は`2026-10-25T06:43:15Z`、`updated_at`は`2026-10-25T06:44:09Z`である。
+
+公開動画図鑑HTMLと公開`gallery.js`へ実HTTP GETを各1回、合計2回だけ行い、再取得、HEAD、Rangeおよびリダイレクトを行わずに検証した。両方がHTTP 200、Locationヘッダーなし、最終URLが要求URLと同一であり、対応するローカル追跡版と全バイト一致した。公開HTMLはContent-Type `text/html; charset=utf-8`、37,208 bytes、SHA-256 `783D583F97D74FBB2F56C51A2E83149554F146D8E36758A79E7D5DD021D7B4DA`、公開`gallery.js`はContent-Type `application/javascript; charset=utf-8`、4,930 bytes、SHA-256 `F08DE731613E5DEDE8779A369EF1EE0F32A5757B9D75D1804EC08E4C29732D4A`である。
+
+公開静的検証では、通常カード63件、カテゴリ件数14／14／8／14／13、新着バッジが正式3作品だけにあること、カテゴリ操作がハロウィン特集より前にあること、`category` query、`replaceState`およびURL正規化が正式仕様どおりであることを確認した。JavaScript無効時は全63作品を表示し、おまかせ処理を維持し、外部通信、Storage、consoleおよび新規タイマーがないことも確認した。
+
+PCの通常HTTPS URLでは「すべて・63作品を表示中」と「おでかけ・14作品を表示中」、カテゴリ切替、件数表示、非sticky、4列カード、新着バッジ、ハロウィン特集、おまかせ1本およびカード表示を確認し、異常なく合格とした。iPhone通常ブラウザーでは1段横スクロールですべてのカテゴリへ到達でき、stickyの高さが過剰でなく、右端・左端の見切れは利用者が意図的に横スクロールした状態で不具合ではないこと、「秋・14作品を表示中」、新着バッジ、カードおよびレイアウトが正常であることを確認し、合格とした。動画図鑑専用LIFFのLINE内ブラウザーでは1段横スクロールとsticky、「日常」の選択状態と「日常・14作品を表示中」、stickyがカードを過剰に隠さないこと、坂道ころころの新着バッジ、カードおよびレイアウトを確認し、異常なく合格とした。
+
 - [x] ファーストビューがh1、説明文、LIFF環境表示、カテゴリ操作、選択カテゴリと表示件数、おまかせ1本、ハロウィン特集、動画カード領域の順である
 - [x] カテゴリ6件の正式値、順序、ネイティブbutton、`aria-pressed`、44px以上の操作領域および`:focus-visible`を維持している
 - [x] 420px以下ではカテゴリが1段の横スクロールとsticky表示になり、safe area、背景、境界、z-indexおよびフォーカス表示を考慮している
@@ -4172,7 +4180,7 @@ PCの通常HTTPS動画図鑑、iPhoneの通常HTTPS動画図鑑およびLINE内�
 - [x] 63カード、カテゴリ件数`14／14／8／14／13`、既存順序、リンク、画像およびsectionを維持している
 - [x] `liff-init.js`、通常個別ページ63件、ハロウィン特集、公開素材、`src/`および外部設定を変更していない
 - [x] 入力MOV 3本、確認用素材および入力PNGを未追跡・未ステージのまま保全している
-- [ ] GitHub Pagesで図鑑トップと`gallery.js`が公開反映され、ローカル追跡版と一致する
-- [ ] PC通常HTTPSでカテゴリ、query、新着、おまかせ1本およびハロウィン特集を確認する
-- [ ] iPhone通常HTTPSでstickyカテゴリ、横スクロール、query、カード表示および操作を確認する
-- [ ] LINE内LIFFでstickyカテゴリ、横スクロール、query、カード表示、遷移および戻る操作を確認する
+- [x] GitHub Pagesで図鑑トップと`gallery.js`が公開反映され、ローカル追跡版と一致する
+- [x] PC通常HTTPSでカテゴリ、query、新着、おまかせ1本およびハロウィン特集を確認する
+- [x] iPhone通常HTTPSでstickyカテゴリ、横スクロール、query、カード表示および操作を確認する
+- [x] LINE内LIFFでstickyカテゴリ、横スクロール、query、カード表示、遷移および戻る操作を確認する
