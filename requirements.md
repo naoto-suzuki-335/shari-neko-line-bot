@@ -4317,3 +4317,60 @@ LINE実機では、常設リッチメニューの「メニュー」から第2階
 - [x] `clasp push`後にローカル`src/`とGAS側ソースが一致する
 - [x] 新しいGASバージョンを作成し、既存固定デプロイを安全に更新する
 - [x] LINE実機で`メニュー → 動画 → 動画図鑑LIFF`が正常に動作する
+
+## 52. 週次動画配信候補と新規3作品追加
+
+### 52.1 背景と目的
+
+Web動画図鑑には通常作品63件が公開されている一方、GASの動画作品マスター`createVideoWorks_()`と週次動画配信候補は60作品時点のままである。全件照合では差分がUFOキャッチャー、坂道ころころ、おいも掘りの新規3作品だけであったため、既存60作品と第51章の標準動画導線を維持したまま、3作品をGASの動画作品マスターと週次配信候補へ追加する。本章を週次動画配信候補の現行仕様として、第1～51章にある過去の候補件数より優先する。
+
+### 52.2 新規3作品の正式データ
+
+新規3作品の正式データは次のとおりとする。各作品は`title`、`guideText`、`pageUrl`、`thumbnailUrl`、`categoryKeyword`の5フィールドを持つ。
+
+- キーワード`しゃりねこ動画：おみせ｜UFOキャッチャー`：`title`は`景品かもです。`、`guideText`は`ゲームセンターで、UFOキャッチャーに挑戦するしゃりねこです。`、`pageUrl`は`https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/ufo-catcher-neko/`、`thumbnailUrl`は`https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/ufo-catcher-neko-thumbnail.jpg`、`categoryKeyword`は`しゃりねこ動画：おみせとおでかけ`とする。
+- キーワード`しゃりねこ動画：一日｜坂道ころころ`：`title`は`着地はお腹から。`、`guideText`は`坂道をくるくる回りながら、ころころ転がるしゃりねこです。`、`pageUrl`は`https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/rolling-downhill-neko/`、`thumbnailUrl`は`https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/rolling-downhill-neko-thumbnail.jpg`、`categoryKeyword`は`しゃりねこ動画：しゃりねこの一日`とする。
+- キーワード`しゃりねこ動画：秋｜おいも掘り`：`title`は`芋、育ちすぎました。`、`guideText`は`秋の畑で、大きなおいもを掘るしゃりねこです。`、`pageUrl`は`https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sweet-potato-digging-neko/`、`thumbnailUrl`は`https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sweet-potato-digging-neko-thumbnail.jpg`、`categoryKeyword`は`しゃりねこ動画：秋のしゃりねこ`とする。
+
+### 52.3 `createVideoWorks_()`の63作品化
+
+`createVideoWorks_()`の既存60作品は内容と順序を変更せず、オブジェクト末尾へUFOキャッチャー、坂道ころころ、おいも掘りの順で追加して63作品とする。正式キーワード、slugおよびURLの重複を認めず、Web動画図鑑の通常63作品とGAS動画作品マスターを63件すべて対応させる。Buttonsテンプレート生成、個別HTTPSページへのURI actionおよび`ほかの動画`の既存構造は変更しない。
+
+### 52.4 日曜・水曜・金曜候補の正式仕様
+
+日曜新作候補は既存20件の内容と順序を維持し、末尾へUFOキャッチャー、坂道ころころ、おいも掘りの正式キーワードをこの順で追加して23件とする。水曜候補は固定配列へ変更せず、従来どおり`Object.keys(videoWorks)`から全作品を生成し、マスターの63作品化によって60件から63件とする。金曜の9～11月候補は既存13件を維持し、`しゃりねこ動画：秋｜紅葉狩り`と`しゃりねこ動画：季節｜焼き芋`の間へ`しゃりねこ動画：秋｜おいも掘り`を1件追加して14件とする。UFOキャッチャーと坂道ころころは季節候補へ追加しない。
+
+### 52.5 旧Botカテゴリ経路と第51章導線の維持
+
+互換用の旧Botカテゴリクイックリプライは、おでかけ13件、日常13件、季節8件、秋13件、おしごと13件を維持し、新規3作品を追加しない。旧5カテゴリと「図鑑」、既存60作品のButtons payload、正式キーワードによる旧経路および第51章の第2階層「動画」URI actionを変更しない。標準動画入口は引き続き動画図鑑LIFF直行とする。
+
+### 52.6 配信安全機構と非変更対象
+
+Script Lock、JSTの曜日・時刻判定、slotと日付による重複防止、in-flight状態、直前配信除外、均等ランダム選定、候補不整合時の停止、Script Propertiesのキーと更新順、自動再送禁止、通信例外・非2xx時の停止、broadcast payloadとendpoint、トリガー識別・作成・停止、配信状況確認、所長限定Pushおよび試運転は変更しない。実装・検証を目的として本番配信、テスト配信、週次配信関数およびトリガー関数を実行しない。
+
+`src/appsscript.json`、`.clasp.json`、`docs/`、公開素材、LINE Developers設定、Official Account Manager、LIFF、トリガーおよびScript Propertiesは変更しない。入力MOV 3本、`video-review-20261025/`および`incoming-images-best-shot/rolling-sharineko.png`は未追跡・未ステージのまま保全する。明日のハロウィン入口クローズは本章へ含めず、第53章の別タスクへ分離する。
+
+### 52.7 静的・モック検証およびGAS反映手順
+
+ローカルではApps Script／JavaScript構文、動画作品マスター63件、Web通常63作品との対応、曜日別候補件数、候補の存在と重複、直前配信除外、payload生成、異常時停止、旧カテゴリpayloadおよび第51章導線の不変性を、GASサービスと外部通信を隔離モックへ置き換えて確認する。モック検証で本番fetch、Reply、Push、broadcastおよびトリガー操作を発生させない。
+
+監査合格後は対象2ファイルだけを別コミットとして通常pushする。別工程で`clasp push`後のGAS HEAD一致を確認し、immutable versionを1件作成して既存固定deploymentを更新する。LINE内で標準導線と旧互換経路を確認するが、検証目的の本番配信やトリガー再作成は行わない。配信候補の実動作は次回の通常週次配信で確認し、異常時は既存の停止機構に従って自動再送しない。
+
+### 52.8 受け入れ条件
+
+- [x] `createVideoWorks_()`が既存60作品を維持し、末尾へ正式な新規3作品を指定順で追加した63作品である
+- [x] 動画マスターの正式キーワードとslugに重複がなく、Web通常63作品と63件すべて対応する
+- [x] 新規3作品のキーワード、`title`、`guideText`、`pageUrl`、`thumbnailUrl`および`categoryKeyword`が正式値と一致する
+- [x] 日曜新作候補が既存20件を維持し、末尾へ新規3件を指定順で追加した23件である
+- [x] 水曜候補が`Object.keys(videoWorks)`を維持し、全63作品を候補とする
+- [x] 金曜9～11月候補が紅葉狩りと焼き芋の間へおいも掘りだけを追加した14件である
+- [x] 全候補が動画マスターに存在し、曜日別候補配列に重複がない
+- [x] 直前配信除外、候補1件と直前一致時の安全停止、payload生成および異常時停止をモックで確認する
+- [x] 旧カテゴリ件数13／13／8／13／13と既存payloadを維持し、新規3作品を旧カテゴリへ追加していない
+- [x] 第51章の標準動画LIFF導線および配信安全機構がHEAD版と一致する
+- [x] 本番fetch、Reply、Push、broadcast、配信関数およびトリガー操作を実行していない
+- [ ] GitHubへ対象コミットを通常pushする
+- [ ] `clasp push`後にローカル`src/`とGAS HEADが一致する
+- [ ] immutable versionを作成し、既存固定deploymentを安全に更新する
+- [ ] LINE内で標準動画導線と旧互換経路を確認する
+- [ ] 次回の通常週次配信で新しい候補群からの配信結果を確認する

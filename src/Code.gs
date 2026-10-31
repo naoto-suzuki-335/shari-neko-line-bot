@@ -2174,6 +2174,35 @@ function createVideoWorks_() {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/movie-theater-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
     },
+    'しゃりねこ動画：おみせ｜UFOキャッチャー': {
+      title: '景品かもです。',
+      guideText:
+        'ゲームセンターで、UFOキャッチャーに挑戦するしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/ufo-catcher-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/ufo-catcher-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：おみせとおでかけ',
+    },
+    'しゃりねこ動画：一日｜坂道ころころ': {
+      title: '着地はお腹から。',
+      guideText:
+        '坂道をくるくる回りながら、ころころ転がるしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/rolling-downhill-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/rolling-downhill-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
+    'しゃりねこ動画：秋｜おいも掘り': {
+      title: '芋、育ちすぎました。',
+      guideText: '秋の畑で、大きなおいもを掘るしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/sweet-potato-digging-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sweet-potato-digging-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
+    },
   };
 }
 
@@ -2821,6 +2850,9 @@ function getWeeklyVideoBroadcastCandidateKeywords_(
       'しゃりねこ動画：季節｜釣り',
       'しゃりねこ動画：季節｜おさかな散歩',
       'しゃりねこ動画：季節｜シュノーケリング',
+      'しゃりねこ動画：おみせ｜UFOキャッチャー',
+      'しゃりねこ動画：一日｜坂道ころころ',
+      'しゃりねこ動画：秋｜おいも掘り',
     ];
   } else if (scheduleType === 'WEDNESDAY_RANDOM') {
     candidateKeywords = Object.keys(videoWorks);
@@ -2889,6 +2921,7 @@ function getSeasonalVideoBroadcastCandidateKeywords_(month) {
       'しゃりねこ動画：季節｜縁側',
       'しゃりねこ動画：季節｜さんま',
       'しゃりねこ動画：季節｜紅葉狩り',
+      'しゃりねこ動画：秋｜おいも掘り',
       'しゃりねこ動画：季節｜焼き芋',
       'しゃりねこ動画：秋｜栗拾い',
       'しゃりねこ動画：秋｜秋の日の出',
