@@ -4356,6 +4356,16 @@ Script Lock、JSTの曜日・時刻判定、slotと日付による重複防止�
 
 監査合格後は対象2ファイルだけを別コミットとして通常pushする。別工程で`clasp push`後のGAS HEAD一致を確認し、immutable versionを1件作成して既存固定deploymentを更新する。LINE内で標準導線と旧互換経路を確認するが、検証目的の本番配信やトリガー再作成は行わない。配信候補の実動作は次回の通常週次配信で確認し、異常時は既存の停止機構に従って自動再送しない。
 
+対象コミット`4ed818f88f6e7a3ed5b6d0b5372124b9f223befd`（`feat: add three videos to weekly broadcasts`）はorigin/mainへ通常push済みで、HEADとorigin/mainは一致している。Gitのforce pushは使用していない。
+
+GAS HEADへは、送信対象が`src/Code.gs`と`src/appsscript.json`の2件だけであることを確認したうえで、`clasp push --force`を1回実行した。この`--force`はclaspによるGAS HEAD反映であり、Gitのforce pushではない。反映直後のGAS HEADでは、Codeがローカルと全バイト一致し、117,022 bytes、SHA-256 `C71444D851F5B621491455E65158DB8EF26978F2356C841530AA0AE61D29FA16`であることを確認した。manifestも反映直後はローカルと全バイト一致した。実通信、配信、トリガー関数は実行していない。
+
+正式稼働versionは77で、説明は`週次動画配信候補と新規3作品追加`、余分な引用符はなく、version 78以降は存在しない。既存固定Webアプリdeploymentをversion 76から77へ更新し、deployment総数5件を維持した。参照数はversion 77が1件、version 76と75が各0件で、新規deploymentの純増はない。既存deploymentを編集した手動操作と一覧結果は、既存固定deploymentの更新と整合する。
+
+clasp 3.3.0対応の位置引数構文でversion 77を1回取得して比較した。Codeは117,022 bytes、SHA-256 `C71444D851F5B621491455E65158DB8EF26978F2356C841530AA0AE61D29FA16`でローカルと全バイト一致した。manifestはGAS側208 bytes、SHA-256 `712DA28252DF765C2D6ECE62A5866C84CF5B011603E6853ADA3D599AAFC3C574`、ローカル212 bytes、SHA-256 `09077880E66A8E188D16F0335BEDEB04CE3E96C3A6B3229008F24F89417BD8EE`で、整形差により全バイトは一致しないがJSON内容は一致した。version 77で、動画マスター63件、日曜23件、水曜63件、金曜9～11月14件、旧カテゴリ13／13／8／13／13件、および第51章の導線維持を確認した。
+
+LINE実機では、常設リッチメニューの「メニュー」から第2階層の「動画」を押すと動画図鑑LIFFへ直接遷移し、`しゃりねこ動画`がチャットへ自動送信されないことを確認した。`しゃりねこ動画`の手入力では旧5カテゴリと「図鑑」が表示され、旧カテゴリ経路と図鑑LIFF遷移は正常だった。新規3作品の正式キーワードを個別に手入力し、各カードの返信、タイトル、サムネイル、個別ページ遷移、LINE内動画再生が正常で、作品間の取り違えがないことを確認した。本番broadcast関数の強制実行、テスト配信、週次トリガー関数の実行、トリガーの再作成・削除、Script Properties変更、LINE Developers設定変更は行っていない。次回の通常週次配信結果は未確認である。
+
 ### 52.8 受け入れ条件
 
 - [x] `createVideoWorks_()`が既存60作品を維持し、末尾へ正式な新規3作品を指定順で追加した63作品である
@@ -4369,8 +4379,8 @@ Script Lock、JSTの曜日・時刻判定、slotと日付による重複防止�
 - [x] 旧カテゴリ件数13／13／8／13／13と既存payloadを維持し、新規3作品を旧カテゴリへ追加していない
 - [x] 第51章の標準動画LIFF導線および配信安全機構がHEAD版と一致する
 - [x] 本番fetch、Reply、Push、broadcast、配信関数およびトリガー操作を実行していない
-- [ ] GitHubへ対象コミットを通常pushする
-- [ ] `clasp push`後にローカル`src/`とGAS HEADが一致する
-- [ ] immutable versionを作成し、既存固定deploymentを安全に更新する
-- [ ] LINE内で標準動画導線と旧互換経路を確認する
+- [x] GitHubへ対象コミットを通常pushする
+- [x] `clasp push`後にローカル`src/`とGAS HEADが一致する
+- [x] immutable versionを作成し、既存固定deploymentを安全に更新する
+- [x] LINE内で標準動画導線と旧互換経路を確認する
 - [ ] 次回の通常週次配信で新しい候補群からの配信結果を確認する
