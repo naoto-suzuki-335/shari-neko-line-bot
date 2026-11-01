@@ -2203,6 +2203,15 @@ function createVideoWorks_() {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/sweet-potato-digging-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：秋のしゃりねこ',
     },
+    'しゃりねこ動画：一日｜ナウなヤング': {
+      title: 'ナウじゃないの？',
+      guideText: 'ナウなヤングになりきるしゃりねこです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/now-na-young-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/now-na-young-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
+    },
   };
 }
 
@@ -2853,6 +2862,7 @@ function getWeeklyVideoBroadcastCandidateKeywords_(
       'しゃりねこ動画：おみせ｜UFOキャッチャー',
       'しゃりねこ動画：一日｜坂道ころころ',
       'しゃりねこ動画：秋｜おいも掘り',
+      'しゃりねこ動画：一日｜ナウなヤング',
     ];
   } else if (scheduleType === 'WEDNESDAY_RANDOM') {
     candidateKeywords = Object.keys(videoWorks);
