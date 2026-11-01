@@ -4561,8 +4561,18 @@ PC通常HTTPSでは、新文言が正常に表示され、旧「55作品」表�
 ### 55.7 非変更対象と公開手順
 
 - `gallery.js`、`liff-init.js`、案内所、既存個別ページ、既存公開素材、`src/appsscript.json`、ハロウィン特集および外部設定は変更しない。
-- 第52～54章の完了状態を維持し、公開・GAS反映・実機確認は実装コミット後の別工程で行う。
+- 実装コミットは `5285b09c81749aef280b35389ae7264f26c2e296`（親 `bfbdb118485a43a1d95ebb486c8d2b2f75c2a50b`、件名 `feat: add now na young video`）とし、通常pushを1回、終了コード0、force pushなしで実施してHEAD／origin/mainの一致とahead／behind 0／0を確認した（出力要旨 `bfbdb11..5285b09  main -> main`）。
+- GitHub Pages build APIは累計2回確認を試み、1回目はCodex Web取得機能の内部エラー、2回目は未認証curl GETのHTTP 404で、3回目は実施していない。build ID、status、対象commit、created_at、updated_atは確認不能であり、Pages設定変更・再ビルドは行っていない。これはPagesビルド失敗を意味せず、公開反映は公開ファイルの全バイト一致によって確認した。
+- 公開GETは動画図鑑、個別ページ、JPEG、MP4へ各1回の計4回だけ実施し、再取得・再試行、リダイレクト追跡、HEAD、Range、他URL取得は行っていない。全4件がHTTP 200、0 byteではなく、Locationヘッダーなし、最終URLは要求URLと同一だった。
+- 公開動画図鑑は37,069 bytes、SHA-256 `80B2AB193E48840BBE72401FD4BEF0337493449F4260F4F9976BE83D9562CE9A`、個別ページは1,624 bytes、SHA-256 `CDD345B3737137CD6227B18FEFB93DDC611356759C80FF4E25434FF624BA6A98`で、いずれもContent-Type `text/html; charset=utf-8`かつローカル追跡版と全バイト一致した。
+- 公開JPEGは205,349 bytes、SHA-256 `1812C96EAFD0E20867C6929688502A526E623ABA2E29D7F84EEB8BB48D62B0BF`、Content-Type `image/jpeg`、1280×720、16:9、公開MP4は3,804,204 bytes、SHA-256 `200660B7C378735489B36106E2BC41930D0328BB72517AACD044AD21E76E0260`、Content-Type `video/mp4`で、双方ともローカル追跡版と全バイト一致した。
+- 公開図鑑は通常64件、カテゴリ14／15／8／14／13、日常先頭がナウなヤング、新着3件がナウなヤング・おいも掘り・坂道ころころで、UFOキャッチャーに新着バッジがないことを確認した。個別ページはtitle／h1「ナウじゃないの？」、正式meta、poster／source、最大幅540px、日常カテゴリへの戻るリンクが一致し、target、script、外部参照がないことを確認した。
+- `clasp.cmd push --force`は1回、終了コード0で実施し、`Pushed 2 files`として `src/appsscript.json` と `src/Code.gs` だけを送信した。これはGitのforce pushではなく、再pushは行っていない。GAS HEADのCodeは117,584 bytes、SHA-256 `94BD80B9A3C989AA7DBB570722A390BEA5207B6C700520ABAE89E625162D15C8`、manifestは212 bytes、SHA-256 `09077880E66A8E188D16F0335BEDEB04CE3E96C3A6B3229008F24F89417BD8EE`で、ローカル版と全バイトおよびJSON内容が一致した。
+- version 78は説明「通常動画図鑑・ナウなヤング追加」でCodeとmanifestがローカル版と全バイト一致した内容正常な未使用versionであり、deployment参照0件のまま削除・修正していない。正式稼働version 79も同じ正式説明で余分な引用符・空白がなく、Codeとmanifestの容量・SHA-256・全バイトおよびJSON内容がローカル版と一致し、version 80以降は存在しない。
+- deploymentは総数5件（HEAD 1件、固定version 4件）を維持し、version 77参照0件、version 78参照0件、version 79参照1件で、新規deploymentの純増はない。利用者による既存固定deploymentの手動更新と一覧結果は現行固定Webアプリがversion 79を参照する状態と整合するが、更新前後のdeployment IDおよびWebアプリURLを直接比較したとは断定しない。LINE Developers、Webhook URL、トリガー、Script Propertiesは変更していない。
+- 利用者確認では、PC通常HTTPSで64作品、日常15作品、日常先頭、新着3件、個別ページ、3カットサムネイル、縦動画の表示・再生・音声、戻るリンクが合格し、iPhone通常ブラウザーでも不要な横スクロールや見切れがなく、画面幅内の再生・音声・戻るリンクが合格した。LINE内では「メニュー → 動画」のLIFF導線、日常先頭、個別ページ、縦動画再生・音声、戻る操作、および正式キーワード手入力によるButtonsカードと「動画を見る」導線が合格した。旧カテゴリ一覧へナウなヤングを追加しない仕様も維持し、全64ページを実機操作したとは記録しない。
 - 本番配信、テスト配信、トリガー操作およびScript Properties変更は検証目的で実行せず、週次配信は次回の通常実行結果を確認する。
+- 本番broadcast関数、週次トリガー関数の手動実行、トリガーの作成・削除・再作成、Script Propertiesの手動変更、LINE DevelopersおよびOfficial Account Managerの設定変更は行っていない。
 
 ### 55.8 受け入れ条件
 
@@ -4576,9 +4586,9 @@ PC通常HTTPSでは、新文言が正常に表示され、旧「55作品」表�
 - [x] 金曜候補、旧カテゴリ13／13／8／13／13、第51章導線および配信安全機構がHEAD版と一致している
 - [x] 全64作品のButtons payloadがJSON化可能で、全候補が動画マスターに存在し、候補に重複がない
 - [x] 本番fetch、Reply API、Push API、broadcast、トリガーおよびScript Propertiesの実操作なしで静的・モック検証に合格している
-- [ ] GitHubへ通常pushし、対象コミットがorigin/mainへ反映されたことを確認する
-- [ ] GitHub Pagesへ公開反映し、公開ファイルがローカル追跡版と一致することを確認する
-- [ ] `clasp push`後のGAS HEADがローカル`src/`と一致することを確認する
-- [ ] immutable versionを作成し、既存固定deploymentをそのversionへ更新する
-- [ ] PC、iPhoneおよびLINE内で公開表示、再生、導線と旧互換経路を確認する
+- [x] GitHubへ通常pushし、対象コミットがorigin/mainへ反映されたことを確認する
+- [x] GitHub Pagesへ公開反映し、公開ファイルがローカル追跡版と一致することを確認する
+- [x] `clasp push`後のGAS HEADがローカル`src/`と一致することを確認する
+- [x] immutable versionを作成し、既存固定deploymentをそのversionへ更新する
+- [x] PC、iPhoneおよびLINE内で公開表示、再生、導線と旧互換経路を確認する
 - [ ] 次回の通常週次配信が問題なく実施されたことを確認する
