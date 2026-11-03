@@ -38,6 +38,9 @@
   var reducedMotion = false;
   var motionQuery = null;
   var elements = null;
+  var validShotCount = 0;
+  var successfulShotCount = 0;
+  var isExcellentClearEligible = true;
 
   function cancelAnimation() {
     if (animationFrameId !== null) {
@@ -210,6 +213,7 @@
       retryButton: document.querySelector("[data-best-shot-retry]"),
       resetButtons: Array.prototype.slice.call(document.querySelectorAll("[data-best-shot-reset]")),
       completion: document.querySelector("[data-best-shot-completion]"),
+      reward: document.querySelector("[data-best-shot-reward]"),
       replayButton: document.querySelector("[data-best-shot-replay]")
     };
   }
@@ -235,6 +239,7 @@
       !elements.retryButton ||
       elements.resetButtons.length !== 2 ||
       !elements.completion ||
+      !elements.reward ||
       !elements.replayButton
     ) {
       return false;
@@ -269,7 +274,8 @@
       !elements.shootButton.disabled ||
       !elements.gamePanel.hidden ||
       !elements.result.hidden ||
-      !elements.completion.hidden
+      !elements.completion.hidden ||
+      !elements.reward.hidden
     ) {
       return false;
     }
@@ -290,6 +296,16 @@
 
   function hideCompletion() {
     elements.completion.hidden = true;
+    elements.reward.hidden = true;
+  }
+
+  function resetGameProgress() {
+    validShotCount = 0;
+    successfulShotCount = 0;
+    isExcellentClearEligible = true;
+    if (elements && elements.reward) {
+      elements.reward.hidden = true;
+    }
   }
 
   function renderCat() {
@@ -363,6 +379,7 @@
 
   function showRoundFailure(message, result) {
     cancelAnimation();
+    isExcellentClearEligible = false;
     phase = "round-failed";
     isLocked = true;
     shotResult = result;
@@ -384,6 +401,11 @@
     elements.stage.setAttribute("aria-busy", "false");
     elements.shootButton.disabled = true;
     elements.playArea.hidden = true;
+    elements.reward.hidden = !(
+      validShotCount === ROUND_DURATIONS.length &&
+      successfulShotCount === ROUND_DURATIONS.length &&
+      isExcellentClearEligible
+    );
     elements.completion.hidden = false;
     setStatus("撮影、完了です。前転も終わりました。");
     elements.completion.focus();
@@ -468,6 +490,7 @@
 
   function startFromRoundOne() {
     invalidatePendingWork();
+    resetGameProgress();
     roundIndex = 0;
     phase = "idle";
     isLocked = true;
@@ -491,14 +514,17 @@
     }
     isLocked = true;
     phase = "judged";
+    validShotCount += 1;
     cancelAnimation();
     elements.stage.setAttribute("aria-busy", "false");
     elements.shootButton.disabled = true;
     var frameCenterX = stageWidth / 2;
     var distance = Math.abs(catX - frameCenterX);
     if (distance <= BEST_SHOT_DISTANCE) {
+      successfulShotCount += 1;
       showRoundSuccess("ベストショットです。", "best");
     } else if (distance <= SUCCESS_DISTANCE) {
+      successfulShotCount += 1;
       showRoundSuccess("きれいに撮れました。", "success");
     } else if (catX < frameCenterX) {
       showRoundFailure("少し早かったようです。", "early");
@@ -523,6 +549,7 @@
     if (!isInitialized || phase !== "round-failed" || !isLocked) {
       return;
     }
+    isExcellentClearEligible = false;
     beginRound(true);
   }
 
@@ -538,6 +565,7 @@
       return;
     }
     invalidatePendingWork();
+    resetGameProgress();
     roundIndex = 0;
     phase = "idle";
     catX = 0;

@@ -267,6 +267,37 @@
       font-weight: 800;
     }
 
+    .completion-reward {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #ffffff;
+    }
+
+    .completion-reward p {
+      margin-bottom: 12px;
+      color: var(--accent-dark);
+    }
+
+    .reward-link {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border: 2px solid var(--accent);
+      border-radius: 999px;
+      color: #ffffff;
+      background: var(--accent);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .reward-link:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
     .result-actions,
     .game-controls,
     .completion-actions {
@@ -313,7 +344,7 @@
       }
     }
   </style>
-  <script src="./best-shot-game.js?v=8" defer></script>
+  <script src="./best-shot-game.js?v=9" defer></script>
 </head>
 <body>
   <main class="page">
@@ -383,6 +414,10 @@
       <section class="completion" data-best-shot-completion tabindex="-1" hidden aria-labelledby="best-shot-completion-heading">
         <h2 id="best-shot-completion-heading">撮影完了</h2>
         <p>撮影、完了です。前転も終わりました。</p>
+        <div class="completion-reward" data-best-shot-reward hidden>
+          <p>ベストショットを見つけました！</p>
+          <a class="reward-link" href="../../videos/rolling-downhill-neko/">坂道ころころを見る</a>
+        </div>
         <div class="completion-actions">
           <button class="primary-button" type="button" data-best-shot-replay>もう一度遊ぶ</button>
           <button class="secondary-button" type="button" data-best-shot-reset>最初から</button>
