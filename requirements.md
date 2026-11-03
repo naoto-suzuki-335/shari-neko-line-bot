@@ -4765,6 +4765,12 @@ GitHub Pagesの案内所はHTTP 200、`text/html; charset=utf-8`、Locationな�
 
 `docs/home/index.html`へ天気枠と最小CSSを追加し、新規`docs/home/weather.js`を`./weather.js?v=1`として`defer`読込みする。外部通信なしの静的・モック検証でStorage、正常・異常レスポンス、WMO区分、欠落値、キャッシュ、timeout、abort、generation、連打、地域競合および必須DOM欠落を確認する。指定3ファイルだけを別コミットしてGitHub Pagesへ公開後、公開HTML・JavaScript一致と、PC、iPhone SafariおよびLINE内ブラウザーで実API、CORS、地域変更と再試行を確認する。
 
+- 実装コミットは`fd9566dc63bbe1a2c39b1f129952995cd9544cf0`、親コミットは`5a192712f1ae03a349ab8f8bc2d0695937ec96ef`、件名は`feat: add sharineko weather forecast`とする。対象は`docs/home/index.html`（185行追加・2行削除）、`docs/home/weather.js`（437行追加）および`requirements.md`（61行追加）の3件で、合計683行追加・2行削除とする。通常pushは1回成功し、force push、再pushおよび再試行は行っていない。
+- GitHub Pagesの案内所HTMLはHTTP 200、`Content-Type: text/html; charset=utf-8`、Locationなし、最終URL一致、公開・ローカル各10,687 bytes、SHA-256 `87D97DCF2023F0544F99EE32487E582AFF202A0A52B04CA5741DD103B9FDDBDE`で全バイト一致を確認した。天気JavaScriptはHTTP 200、`Content-Type: application/javascript; charset=utf-8`、Locationなし、最終URL一致、公開・ローカル各14,898 bytes、SHA-256 `51EAAF30161210E7158AD4819FA057DC6061B836E47612CB9AA80841DEFCEFDB`で全バイト一致し、JavaScript構文も正常と確認した。
+- 公開確認のGETは案内所HTMLと天気JavaScriptを各1回、合計2回だけ実施し、再取得、再試行、他URL取得およびPages API取得は行っていない。
+- 実機確認はPC、iPhone SafariおよびLINE内ブラウザーの3環境で天気表示と地域選択を確認し、いずれも合格とした。PCでは湘南の実データ取得、CORS、天気、現在・最高・最低気温、最大降水確率、風速およびOpen-Meteo出典表示を確認した。仙台で「晴れ」と「最大降水確率71％」が同時表示された事実は、Open-Meteoの当日24時間における最大値仕様として許容し、コード変更は行わない判断とした。全地域、全通信障害または全端末・OS・ブラウザーを網羅確認したものではない。
+- ニュース機能は実装せず、GAS、clasp、LIFF、LINE設定、配信、トリガー、Script Propertiesおよび外部設定は操作していない。
+
 ### 58.8 受け入れ条件
 
 - [x] 「しゃりねこ案内所」のtitle、h1、URLおよび既存6カードの内容と相互順序を維持している
@@ -4779,7 +4785,7 @@ GitHub Pagesの案内所はHTTP 200、`text/html; charset=utf-8`、Locationな�
 - [x] 検証済み表示データだけをページ滞在中に5分間メモリキャッシュしている
 - [x] 取得障害および必須DOM欠落時も既存6カードを表示・操作できる
 - [x] 出典、アクセシビリティ、ニュース非実装、新規素材なしおよび外部設定非変更を確認している
-- [ ] GitHub Pagesへ公開反映し、公開HTML・JavaScriptがローカル追跡版と一致することを確認する
-- [ ] PCで実API、CORS、10地域および再試行を確認する
-- [ ] iPhone Safariで実APIおよび地域変更を確認する
-- [ ] LINE内ブラウザーで実APIおよび地域変更を確認する
+- [x] GitHub Pagesへ公開反映し、公開HTML・JavaScriptがローカル追跡版と一致することを確認する
+- [x] PCで実API、CORS、10地域および再試行を確認する
+- [x] iPhone Safariで実APIおよび地域変更を確認する
+- [x] LINE内ブラウザーで実APIおよび地域変更を確認する
