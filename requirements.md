@@ -4694,6 +4694,16 @@ PC通常HTTPSでは、新文言が正常に表示され、旧「55作品」表�
 
 案内所の既存5カードを維持して末尾へ6枚目を追加し、新規ゲームで候補検証、直前正解除外、誤答抽選、Fisher–Yates、画像非同期制御、二重回答防止、正誤表示、全体画像表示および動画導線を実装する。外部通信なしの静的・モック検証後に指定4ファイルだけをコミットしてGitHub Pagesへ公開し、公開HTML・JavaScript一致、PC、iPhone SafariおよびLINE内ブラウザーの表示・操作・動画導線を確認する。clasp、GAS version・deploymentおよびLINE設定は操作しない。
 
+実装コミットは`05259aa71920b174ba98439331787b39b005dff5`（親`26868760ae96780b704baee9b97113a321be60cc`、件名`feat: add close-up quiz`）で、`docs/home/index.html`、`docs/games/close-up-quiz/index.html`、`docs/games/close-up-quiz/close-up-quiz.js`および`requirements.md`の4件を対象とした。実装コミット時点の差分は案内所が8行追加・1行削除、新規クイズHTMLが321行、新規クイズJavaScriptが412行、本書が62行追加、合計803行追加・1行削除である。通常pushを1回実施し、force push、再pushおよび再試行は行っていない。
+
+案内所へ6枚目の入口を追加し、正式候補12件から正解1件・誤答2件を出題して作品別位置で2倍拡大し、回答後は同じ画像を全体表示する。正誤、正解作品名、既存個別動画ページへのリンクおよび直前正解を除外する「もう一問」を実装した。問題読込み中の再入を防止し、問題ごとの専用`Image`ローダーをgenerationとローダー同一性で検証して古いイベントを排除する。画像失敗時は「もう一度試す」で復旧でき、必須DOM欠落時は安全な案内を表示する。外部通信、StorageおよびCookieは使用していない。
+
+GitHub Pagesの案内所はHTTP 200、`text/html; charset=utf-8`、Locationなし、最終URL一致、5,701 bytes、SHA-256 `88D477F31451791BBC19DA9B1406C109E1301A5C6EDBBE155926318FDE0C2F85`でローカル追跡版と全バイト一致した。クイズHTMLはHTTP 200、`text/html; charset=utf-8`、Locationなし、最終URL一致、7,519 bytes、SHA-256 `BB2FAAA4C3ABCD9054E6A47AC18938983D869DDA3F6F9E5346D2730856D092F3`で全バイト一致した。クイズJavaScriptはHTTP 200、`application/javascript; charset=utf-8`、Locationなし、最終URL一致、15,913 bytes、SHA-256 `1778A5035DEEEEF2913B1C62C7A7E6F60EEC91C1FB3FD7C0A71E957004D252B7`で全バイト一致した。
+
+公開GETは案内所が累計2回、クイズHTMLが1回、クイズJavaScriptが1回の合計4回である。案内所の1回目は取得後のローカルヘッダー解析エラーにより判断不能となり、2回目でHTTP情報と全バイト一致を確定した。これはPages公開失敗とは判定していない。クイズHTMLおよびJavaScriptの再取得は行わず、Pages APIも使用していない。
+
+実機確認はPC、iPhone SafariおよびLINE内ブラウザーで合格した。新規本番画像・動画は作成せず、既存サムネイル・MP4、他ゲーム、動画図鑑、個別ページ、`src/Code.gs`およびmanifestは変更していない。clasp、GAS version・deployment、LIFF、LINE Developers、Official Account、配信、Reply、Push、broadcast、トリガー、Script Properties、Pages設定およびPages再ビルドは操作していない。
+
 ### 57.8 受け入れ条件
 
 - [x] 正式候補12件のlabel、slug、カテゴリ、サムネイル、個別ページおよび固定拡大位置を実装している
@@ -4708,7 +4718,7 @@ PC通常HTTPSでは、新文言が正常に表示され、旧「55作品」表�
 - [x] 案内所の既存5カードの内容と相互順序を維持し、正式な6枚目とmeta descriptionだけを追加・更新している
 - [x] レビュー資料11件を安全に削除し、新規本番画像・動画を作成していない
 - [x] 外部通信なしの静的・モック検証に合格し、他ゲーム、動画図鑑、`src/`および既存素材に差分がない
-- [ ] GitHub Pagesへ公開反映し、公開HTML・JavaScriptがローカル追跡版と一致することを確認する
-- [ ] PCで出題、回答、全体画像表示、動画導線および再出題を確認する
-- [ ] iPhone Safariで表示、タップ、全体画像表示、動画導線および再出題を確認する
-- [ ] LINE内ブラウザーで表示、タップ、全体画像表示、動画導線および再出題を確認する
+- [x] GitHub Pagesへ公開反映し、公開HTML・JavaScriptがローカル追跡版と一致することを確認する
+- [x] PCで出題、回答、全体画像表示、動画導線および再出題を確認する
+- [x] iPhone Safariで表示、タップ、全体画像表示、動画導線および再出題を確認する
+- [x] LINE内ブラウザーで表示、タップ、全体画像表示、動画導線および再出題を確認する
