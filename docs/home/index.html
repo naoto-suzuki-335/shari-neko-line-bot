@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="しゃりねこ動画図鑑、お酒の小話、神経衰弱、注文おぼえ、ベストショット、どアップクイズへ進める案内所です。">
+  <meta name="description" content="地域を選べるしゃりねこ天気予報と、動画図鑑やゲームを楽しめるしゃりねこ案内所です。">
   <title>しゃりねこ案内所</title>
   <style>
     :root {
@@ -55,6 +55,142 @@
       margin: 12px 0 0;
       color: var(--muted);
       font-size: 1rem;
+    }
+
+    .weather-panel {
+      margin: 0 0 28px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .weather-title {
+      margin: 0;
+      color: var(--accent);
+      font-size: 1.45rem;
+      line-height: 1.4;
+    }
+
+    .weather-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .weather-label {
+      font-weight: 700;
+    }
+
+    .weather-select {
+      min-height: 44px;
+      max-width: 100%;
+      padding: 8px 36px 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+    }
+
+    .weather-select:focus-visible,
+    .weather-retry:focus-visible,
+    .weather-source a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .weather-status {
+      min-height: 1.7em;
+      margin: 16px 0 0;
+      color: var(--muted);
+    }
+
+    .weather-result[hidden],
+    .weather-retry[hidden] {
+      display: none;
+    }
+
+    .weather-summary {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .weather-location,
+    .weather-condition {
+      font-weight: 700;
+    }
+
+    .weather-icon {
+      font-size: 1.75rem;
+      line-height: 1;
+    }
+
+    .weather-values {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 18px;
+      margin: 18px 0 0;
+    }
+
+    .weather-values div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 4px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .weather-values dt {
+      color: var(--muted);
+    }
+
+    .weather-values dd {
+      margin: 0;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .weather-comment {
+      margin: 18px 0 0;
+    }
+
+    .weather-retry {
+      min-height: 44px;
+      margin-top: 14px;
+      padding: 9px 18px;
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .weather-retry:disabled {
+      cursor: default;
+      opacity: 0.6;
+    }
+
+    .weather-source {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .weather-source a {
+      color: var(--accent);
+    }
+
+    .weather-noscript {
+      margin: 14px 0 0;
+      color: var(--muted);
     }
 
     .guide-list {
@@ -128,6 +264,14 @@
         margin-bottom: 24px;
       }
 
+      .weather-panel {
+        padding: 20px;
+      }
+
+      .weather-values {
+        grid-template-columns: 1fr;
+      }
+
       .guide-list {
         grid-template-columns: 1fr;
         gap: 14px;
@@ -150,8 +294,46 @@
   <main>
     <header>
       <h1>しゃりねこ案内所</h1>
-      <p class="intro">今日は、どの棚をのぞきますか？🐱</p>
+      <p class="intro">天気を確認して、今日も気になる棚をのぞいてください。🐱</p>
     </header>
+
+    <section class="weather-panel" id="weather-panel" aria-labelledby="weather-title">
+      <h2 class="weather-title" id="weather-title">しゃりねこ天気予報</h2>
+      <div class="weather-controls">
+        <label class="weather-label" for="weather-area">地域を選ぶ</label>
+        <select class="weather-select" id="weather-area">
+          <option value="sapporo">札幌</option>
+          <option value="sendai">仙台</option>
+          <option value="tokyo">東京</option>
+          <option value="yokohama">横浜</option>
+          <option value="kawasaki">川崎</option>
+          <option value="shonan" selected>湘南</option>
+          <option value="nagoya">名古屋</option>
+          <option value="osaka">大阪</option>
+          <option value="fukuoka">福岡</option>
+          <option value="naha">那覇</option>
+        </select>
+      </div>
+      <p class="weather-status" id="weather-status" aria-live="polite">天気予報を確認しています…</p>
+      <div class="weather-result" id="weather-result" hidden>
+        <div class="weather-summary">
+          <span class="weather-location" id="weather-location"></span>
+          <span class="weather-icon" id="weather-icon" aria-hidden="true"></span>
+          <span class="weather-condition" id="weather-condition"></span>
+        </div>
+        <dl class="weather-values">
+          <div><dt>現在</dt><dd id="weather-current-temp">—</dd></div>
+          <div><dt>最高</dt><dd id="weather-high-temp">—</dd></div>
+          <div><dt>最低</dt><dd id="weather-low-temp">—</dd></div>
+          <div><dt>最大降水確率</dt><dd id="weather-precipitation">—</dd></div>
+          <div><dt>風</dt><dd id="weather-wind">—</dd></div>
+        </dl>
+        <p class="weather-comment" id="weather-comment"></p>
+      </div>
+      <button class="weather-retry" id="weather-retry" type="button" hidden disabled>もう一度</button>
+      <p class="weather-source" id="weather-attribution">Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></p>
+      <noscript><p class="weather-noscript">天気予報の表示にはJavaScriptが必要です。</p></noscript>
+    </section>
 
     <nav aria-label="しゃりねこのコンテンツ案内">
       <ul class="guide-list">
@@ -200,5 +382,6 @@
       </ul>
     </nav>
   </main>
+  <script src="./weather.js?v=1" defer></script>
 </body>
 </html>
