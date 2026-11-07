@@ -4830,6 +4830,17 @@ The Metropolitan Museum of ArtのOpen Access作品から、人物が一切描か
 
 案内所の既存6カードを維持して末尾へ7枚目を追加し、`docs/museum/index.html`と`docs/museum/museum.js`を新設する。外部通信を置換した静的・モック検証で日付境界、11件の循環、通常要求1回、API・JSON・画像障害、timeout、abort、古い応答、古い画像イベント、二重初期化、必須DOM欠落およびアクセシビリティを確認する。指定4ファイルだけを別コミットしてGitHub Pagesへ公開後、公開HTML・JavaScript一致と、PC、iPhone SafariおよびLINE内ブラウザーで表示と公式リンクを確認する。レビュー資料は未追跡のまま実装コミットへ含めない。
 
+- 実装コミットは`688913563c996b30a6d8e3f65846eca909e94079`（親`4a5982859409735de5f7a53ecc14ae52626c5520`、件名`feat: add sharineko museum`）で、対象は`docs/home/index.html`、`docs/museum/index.html`、`docs/museum/museum.js`および`requirements.md`の4件である。
+- 実装差分は案内所HTMLが8行追加・1行削除、美術館HTMLが233行追加、美術館JavaScriptが278行追加、要件書が59行追加、合計578行追加・1行削除である。
+- `git push origin main`による通常pushを1回実施し、終了コード0、`4a59828..6889135  main -> main`を確認した。force push、再pushおよび再試行は行っていない。
+- GitHub Pagesの案内所HTML、美術館HTMLおよび美術館JavaScriptを各1回、合計3回GETし、再取得、自動再試行、HEAD、Range、リダイレクト追跡、Pages API、The Met APIおよび作品画像の直接取得は行っていない。3件ともHTTP 200、Locationなし、最終URLは要求URLと同一である。
+- 案内所HTMLは`text/html; charset=utf-8`、11,077 bytes、SHA-256 `D3827D384D0ED61B96FBA5F86E5CA0FF65A332CBF5BB5C9FA75AC569B518CB42`で、ローカル追跡版と全バイト一致した。
+- 美術館HTMLは`text/html; charset=utf-8`、5,808 bytes、SHA-256 `475090CB137A5919864CA4AEA500DA9234DE3BB4B92EB9A30F6C6B5A07637602`で、ローカル追跡版と全バイト一致した。
+- 美術館JavaScriptは`application/javascript; charset=utf-8`、9,992 bytes、SHA-256 `E4FFB6521584E39AD1012BA76596890F83FCED2CB6A87111049A1C8FEC060164`で、ローカル追跡版と全バイト一致し、JavaScript構文も正常である。
+- 公開確認は3 URLを各1回、合計3回GETし、いずれもHTTP 200、Locationなし、最終URLは要求URLと同一であった。再取得、自動再試行、HEAD、Range、リダイレクト追跡、Pages API、The Met APIおよび作品画像の直接取得は行っていない。
+- PC、iPhone SafariおよびLINE Bot経由のLINE内ブラウザーで合格した。PCでは2026年11月7日の展示として「青緑の猫像」、公式作品名「Cat figurine」、作者「作者不詳」、制作年「ca. 1981–1802 B.C.」、コメント「二名体制で営業しています。」を確認し、The Met APIから作品情報と画像を取得するブラウザー直接fetchが実環境で機能した。全11作品、全日付、全端末および全障害復旧を網羅確認したものではない。
+- ニュース、天気予報、他ゲーム、動画図鑑、`src/`、GAS、clasp、LIFF・LINE設定、配信、トリガーおよびScript Propertiesは変更していない。`museum-selection-review-20261107/`の22件は未追跡のまま変更・削除・ステージせず、レビュー画像は本番から参照していない。
+
 ### 59.8 受け入れ条件
 
 - [x] 人物を含まない猫専門の正式11作品だけを重複なく固定候補としている
@@ -4844,7 +4855,7 @@ The Metropolitan Museum of ArtのOpen Access作品から、人物が一切描か
 - [x] alt、`aria-live`、44px以上、`focus-visible`、safe-areaおよびreduced-motionを実装している
 - [x] 既存6カードの内容と相互順序を維持して末尾へ正式な7枚目を追加している
 - [x] 外部通信なしの静的・モック検証に合格し、レビュー資料を本番参照・実装対象にしていない
-- [ ] GitHub Pagesへ公開反映し、公開HTML・JavaScriptがローカル追跡版と一致することを確認する
-- [ ] PCで日替わり展示、作品情報、画像および公式リンクを確認する
-- [ ] iPhone Safariで表示、画像、リンクおよび戻る操作を確認する
-- [ ] LINE内ブラウザーで表示、画像、リンクおよび戻る操作を確認する
+- [x] GitHub Pagesへ公開反映し、公開HTML・JavaScriptがローカル追跡版と一致することを確認する
+- [x] PCで日替わり展示、作品情報、画像および公式リンクを確認する
+- [x] iPhone Safariで表示、画像、リンクおよび戻る操作を確認する
+- [x] LINE内ブラウザーで表示、画像、リンクおよび戻る操作を確認する
