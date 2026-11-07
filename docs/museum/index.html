@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="The Metropolitan Museum of Artの猫作品を、日替わりで1点紹介するしゃりねこ美術館です。">
+  <title>しゃりねこ美術館</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      color: #312821;
+      background: #f6f0e7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 0;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.92), transparent 34rem),
+        #f6f0e7;
+    }
+
+    main {
+      width: min(100% - 32px, 860px);
+      margin: 0 auto;
+      padding: max(28px, env(safe-area-inset-top)) 0 max(40px, env(safe-area-inset-bottom));
+    }
+
+    .back-link,
+    .object-link {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      color: #66451f;
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .back-link:focus-visible,
+    .object-link:focus-visible,
+    .source-link:focus-visible {
+      outline: 3px solid #b66b20;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    header {
+      margin: 20px 0 24px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 7vw, 2.8rem);
+      letter-spacing: 0.04em;
+    }
+
+    .intro {
+      margin: 12px auto 0;
+      max-width: 38rem;
+      line-height: 1.8;
+    }
+
+    .museum-panel {
+      overflow: hidden;
+      border: 1px solid #d8c5ad;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 14px 34px rgba(83, 57, 29, 0.12);
+    }
+
+    .museum-status {
+      margin: 0;
+      padding: 28px 24px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .museum-display[hidden],
+    .museum-image[hidden] {
+      display: none;
+    }
+
+    .image-frame {
+      display: grid;
+      min-height: 280px;
+      place-items: center;
+      padding: clamp(14px, 4vw, 28px);
+      background: #2f2a26;
+    }
+
+    .museum-image {
+      display: block;
+      max-width: 100%;
+      max-height: min(68vh, 720px);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      box-shadow: 0 7px 24px rgba(0, 0, 0, 0.32);
+    }
+
+    .artwork-info {
+      padding: clamp(22px, 5vw, 36px);
+    }
+
+    .today-label {
+      margin: 0 0 8px;
+      color: #795b3e;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .artwork-short-name {
+      margin: 0;
+      font-size: clamp(1.45rem, 5vw, 2rem);
+    }
+
+    .artwork-title {
+      margin: 8px 0 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .artwork-meta {
+      display: grid;
+      gap: 6px;
+      margin: 18px 0 0;
+    }
+
+    .artwork-meta p {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .museum-comment {
+      margin: 22px 0 0;
+      padding: 16px 18px;
+      border-left: 5px solid #b66b20;
+      border-radius: 0 12px 12px 0;
+      background: #fff6e8;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .object-link {
+      margin-top: 18px;
+    }
+
+    .museum-source {
+      margin: 20px 0 0;
+      color: #62564c;
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    .source-link {
+      color: inherit;
+      text-underline-offset: 3px;
+    }
+
+    .museum-noscript {
+      margin: 0;
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 420px) {
+      main {
+        width: min(100% - 20px, 860px);
+      }
+
+      .museum-panel {
+        border-radius: 18px;
+      }
+
+      .image-frame {
+        min-height: 220px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back-link" href="../home/">← 案内所へ戻る</a>
+
+    <header>
+      <h1>しゃりねこ美術館</h1>
+      <p class="intro">人物のいない猫専門展示です。日本時間の日付に合わせて、毎日1点だけご案内します。</p>
+    </header>
+
+    <section class="museum-panel" id="museum-panel" aria-label="本日の展示">
+      <p class="museum-status" id="museum-status" role="status" aria-live="polite">本日の展示を準備しています…</p>
+      <article class="museum-display" id="museum-display" hidden>
+        <div class="image-frame">
+          <img class="museum-image" id="museum-image" alt="" hidden>
+        </div>
+        <div class="artwork-info">
+          <p class="today-label" id="museum-date"></p>
+          <h2 class="artwork-short-name" id="museum-short-name"></h2>
+          <p class="artwork-title" id="museum-title"></p>
+          <div class="artwork-meta">
+            <p><strong>作者：</strong><span id="museum-artist"></span></p>
+            <p><strong>制作年：</strong><span id="museum-object-date"></span></p>
+          </div>
+          <p class="museum-comment" id="museum-comment"></p>
+          <a class="object-link" id="museum-object-link" href="">The Met公式ページで見る</a>
+          <p class="museum-source" id="museum-attribution">
+            Collection data and image: The Metropolitan Museum of Art / Open Access (CC0)<br>
+            <a class="source-link" href="https://www.metmuseum.org/about-the-met/policies-and-documents/open-access">The Met Open Access</a>
+          </p>
+        </div>
+      </article>
+      <noscript><p class="museum-noscript">本日の展示を見るにはJavaScriptが必要です。</p></noscript>
+    </section>
+  </main>
+  <script src="./museum.js?v=1" defer></script>
+</body>
+</html>
