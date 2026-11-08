@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="世界のどこかからランダムな猫を一匹呼んで、のんびり眺める世界のねこ休憩室です。">
+  <title>世界のねこ休憩室</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      color: #352b27;
+      background: #f5eee6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 0;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.96), transparent 34rem),
+        #f5eee6;
+    }
+
+    main {
+      width: min(100% - 32px, 860px);
+      margin: 0 auto;
+      padding: max(28px, env(safe-area-inset-top)) 0 max(40px, env(safe-area-inset-bottom));
+    }
+
+    .back-link,
+    .source-link {
+      color: #754a35;
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+    }
+
+    .back-link:focus-visible,
+    .source-link:focus-visible,
+    .cat-lounge-button:focus-visible {
+      outline: 3px solid #b85e3e;
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    header {
+      margin: 20px 0 24px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 7vw, 2.8rem);
+      letter-spacing: 0.04em;
+    }
+
+    .intro {
+      margin: 12px auto 0;
+      max-width: 38rem;
+      line-height: 1.8;
+    }
+
+    .cat-lounge-panel {
+      overflow: hidden;
+      border: 1px solid #dcc6b7;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 14px 34px rgba(83, 48, 32, 0.13);
+    }
+
+    .cat-lounge-status {
+      margin: 0;
+      padding: 22px 24px;
+      text-align: center;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .cat-image-slot {
+      display: grid;
+      min-height: 300px;
+      place-items: center;
+      padding: clamp(14px, 4vw, 28px);
+      background: #312c29;
+    }
+
+    .cat-image-slot:empty {
+      min-height: 220px;
+      background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.09), transparent 55%),
+        #312c29;
+    }
+
+    .cat-lounge-image {
+      display: block;
+      max-width: 100%;
+      max-height: min(68vh, 720px);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 7px 24px rgba(0, 0, 0, 0.34);
+    }
+
+    .cat-lounge-controls {
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+      padding: 22px clamp(18px, 5vw, 34px) 28px;
+    }
+
+    .cat-lounge-button {
+      min-height: 48px;
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 24px;
+      background: #a84f34;
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cat-lounge-button:hover:not(:disabled) {
+      background: #8e3f29;
+    }
+
+    .cat-lounge-button:disabled {
+      cursor: wait;
+      opacity: 0.58;
+    }
+
+    .cat-lounge-source {
+      margin: 0;
+      color: #675950;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .cat-lounge-noscript {
+      margin: 0;
+      padding: 0 24px 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .cat-image-slot {
+        min-height: 260px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      main {
+        width: min(100% - 20px, 860px);
+      }
+
+      .cat-lounge-panel {
+        border-radius: 18px;
+      }
+
+      .cat-image-slot,
+      .cat-image-slot:empty {
+        min-height: 210px;
+      }
+
+      .cat-lounge-button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back-link" href="../home/">← 案内所へ戻る</a>
+
+    <header>
+      <h1>世界のねこ休憩室</h1>
+      <p class="intro">世界のどこかから、ねこが来ています。</p>
+    </header>
+
+    <section class="cat-lounge-panel" id="cat-lounge-panel" aria-label="世界のねこ休憩室">
+      <p class="cat-lounge-status" id="cat-lounge-status" role="status" aria-live="polite">ただいま猫を呼んでいます…</p>
+      <div class="cat-image-slot" id="cat-image-slot" aria-label="猫の写真表示領域"></div>
+      <div class="cat-lounge-controls">
+        <button class="cat-lounge-button" id="cat-lounge-button" type="button" disabled>もう一匹呼ぶ</button>
+        <p class="cat-lounge-source" id="cat-lounge-attribution">
+          Cat image provided by
+          <a class="source-link" href="https://cataas.com/" target="_blank" rel="noopener noreferrer">CATAAS</a>
+        </p>
+      </div>
+      <noscript><p class="cat-lounge-noscript">ねこ休憩室の表示にはJavaScriptが必要です。</p></noscript>
+    </section>
+  </main>
+  <script src="./cat-lounge.js?v=1" defer></script>
+</body>
+</html>
