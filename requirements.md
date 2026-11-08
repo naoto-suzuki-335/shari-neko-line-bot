@@ -4964,9 +4964,18 @@ CATAASはAPIキーなしで利用し、GIF、文字入れ、アップロード�
 
 正式10地域、Open-Meteo接続先とAPIパラメータ、WMOコード判定、Storage、5分キャッシュ、10秒timeout、AbortController、generation、再試行、必須DOM不足処理、出典、HTMLレイアウトおよび既存8カードを変更しない。美術館、世界のねこ休憩室、既存ゲーム、動画図鑑、お酒の小話、`src/`、GAS、clasp、LIFF・LINE設定、配信、トリガーおよびScript Propertiesも変更しない。
 
+新しい指数、点数、表示欄および外部通信は追加していない。美術館レビュー資料22件、動画レビュー資料74件およびその他の未追跡素材は変更・ステージせず維持した。
+
 ### 61.7 実装・公開・確認手順
 
 `docs/home/weather.js`の既存コメントだけを正式文言へ置換し、`docs/home/index.html`の参照queryを`weather.js?v=2`へ更新する。外部通信なしの隔離モックで既知WMO区分、境界値、未知・不正値、天気名・アイコン、数値表示、正常・障害応答、非同期競合、再試行、キャッシュ、Storage、必須DOM不足および既存カードを確認する。指定3ファイルだけを別コミットしてGitHub Pagesへ公開後、公開HTML・JavaScript一致と、PC、iPhone SafariおよびLINE内ブラウザーで表示を確認する。
+
+- 実装コミットは`939be6f0df24625e42d38cf9778b63e1fa9c2252`、親コミットは`c5a72e7067e87a87d71af9d4de8e93da6f69cbf4`、件名は`feat: refine sharineko weather comments`である。対象は`docs/home/index.html`、`docs/home/weather.js`および`requirements.md`の3件で、差分は順に1行追加・1行削除、13行追加・13行削除、58行追加、合計72行追加・14行削除である。
+- `git push origin main`による通常pushを1回実施し、終了コード0、出力は`c5a72e7..939be6f  main -> main`であった。force push、再pushおよび自動再試行は行っていない。push前にPID 6808／27664の継続を検出して一度安全停止し、自然終了後に関連プロセス0件を3回連続およびpush直前に確認した。強制終了、権限変更およびGitロック削除は行っていない。
+- 公開静的ファイルは案内所HTMLと天気JavaScriptの2URLを各1回、合計2回GETした。再取得、自動再試行、HEAD、Range、リダイレクト追跡およびPages APIは使用せず、curl確認ではOpen-Meteo、CATAAS、ページ内リンクおよび画像を取得していない。
+- 案内所HTMLはHTTP 200、Content-Type `text/html; charset=utf-8`、Content-Length 11,470 bytes、Locationなし、最終URL一致で、SHA-256は`A5121FB11BC3A19E8E0ABD2ACC83C524B3AB8A797E535BFAA9F9D92F1B00D484`、ローカル追跡版と全バイト一致し、`weather.js?v=2`を確認した。
+- 天気JavaScriptはHTTP 200、Content-Type `application/javascript; charset=utf-8`、Content-Length 14,988 bytes、Locationなし、最終URL一致で、SHA-256は`139DE7ABD14CE52B11C464C768080E8A20CE7AEEA96CE49E5FC716BC3FE269B5`、ローカル追跡版と全バイト一致した。JavaScript構文および正式勤務コメント12区分も正常であった。
+- PC、iPhone SafariおよびLINE内ブラウザーで、天気データ、新しい勤務コメント、既存操作および明白な表示崩れがないことを確認し、3環境とも合格とした。curlによる静的確認ではOpen-Meteoへアクセスしていないが、実機ブラウザーでは既存天気機能からOpen-Meteoデータを正常取得した。全コメント区分と障害経路は隔離モックで確認しており、全12コメント、全地域、全端末、全OS、全ブラウザーおよび全障害経路を実機で網羅確認したものではない。
 
 ### 61.8 受け入れ条件
 
@@ -4982,7 +4991,7 @@ CATAASはAPIキーなしで利用し、GIF、文字入れ、アップロード�
 - [x] 案内所のJavaScript参照を`weather.js?v=2`へ更新している
 - [x] 既存8カードと天気以外の既存機能を変更していない
 - [x] 外部通信なしの静的・モック検証に合格している
-- [ ] GitHub Pages公開版とローカル追跡版が一致することを確認する
-- [ ] PCで天気表示と正式コメントを確認する
-- [ ] iPhone Safariで天気表示と正式コメントを確認する
-- [ ] LINE内ブラウザーで天気表示と正式コメントを確認する
+- [x] GitHub Pages公開版とローカル追跡版が一致することを確認する
+- [x] PCで天気表示と正式コメントを確認する
+- [x] iPhone Safariで天気表示と正式コメントを確認する
+- [x] LINE内ブラウザーで天気表示と正式コメントを確認する
