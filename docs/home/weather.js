@@ -114,42 +114,42 @@
 
   function weatherDetails(code) {
     if (typeof code !== "number" || !Number.isFinite(code) || !Number.isInteger(code)) {
-      return { label: "天気情報あり", icon: "", comment: "空を見ながら考えています。" };
+      return { label: "天気情報あり", icon: "", comment: "本日の勤務形態を確認中です。" };
     }
     if (code === 0) {
-      return { label: "晴れ", icon: "☀️", comment: "今日は窓辺で業務します。" };
+      return { label: "晴れ", icon: "☀️", comment: "今日は窓辺で日向ぼっこ勤務です。" };
     }
     if (code === 1) {
-      return { label: "おおむね晴れ", icon: "🌤️", comment: "今日は窓辺で業務します。" };
+      return { label: "おおむね晴れ", icon: "🌤️", comment: "日当たりのよい席で営業します。" };
     }
     if (code === 2) {
-      return { label: "一部くもり", icon: "⛅", comment: "今日は窓辺で業務します。" };
+      return { label: "一部くもり", icon: "⛅", comment: "日差しを探しながら営業します。" };
     }
     if (code === 3) {
-      return { label: "くもり", icon: "☁️", comment: "雲の様子を監視しています。" };
+      return { label: "くもり", icon: "☁️", comment: "日差し待ちで通常営業です。" };
     }
     if (code === 45 || code === 48) {
-      return { label: "霧", icon: "🌫️", comment: "前が見えないので待機します。" };
+      return { label: "霧", icon: "🌫️", comment: "見通し確認のため、窓辺で待機します。" };
     }
     if (code >= 51 && code <= 57) {
-      return { label: "霧雨", icon: "🌦️", comment: "濡れない場所で勤務します。" };
+      return { label: "霧雨", icon: "🌦️", comment: "小雨のため、室内勤務です。" };
     }
     if (code >= 61 && code <= 67) {
-      return { label: "雨", icon: "🌧️", comment: "濡れない場所で勤務します。" };
+      return { label: "雨", icon: "🌧️", comment: "本日は室内で毛づくろい中心です。" };
     }
     if (code >= 71 && code <= 77) {
-      return { label: "雪", icon: "🌨️", comment: "肉球が冷たいです。" };
+      return { label: "雪", icon: "🌨️", comment: "暖房付近へ配置転換されました。" };
     }
     if (code >= 80 && code <= 82) {
-      return { label: "にわか雨", icon: "🌦️", comment: "濡れない場所で勤務します。" };
+      return { label: "にわか雨", icon: "🌦️", comment: "雨の合間に窓辺を確認します。" };
     }
     if (code === 85 || code === 86) {
-      return { label: "にわか雪", icon: "🌨️", comment: "肉球が冷たいです。" };
+      return { label: "にわか雪", icon: "🌨️", comment: "暖房付近で待機します。" };
     }
     if (code >= 95 && code <= 99) {
-      return { label: "雷雨", icon: "⛈️", comment: "本日の外回りは中止です。" };
+      return { label: "雷雨", icon: "⛈️", comment: "本日は安全確保を優先します。" };
     }
-    return { label: "天気情報あり", icon: "", comment: "空を見ながら考えています。" };
+    return { label: "天気情報あり", icon: "", comment: "本日の勤務形態を確認中です。" };
   }
 
   function validDatePart(value, pattern) {
