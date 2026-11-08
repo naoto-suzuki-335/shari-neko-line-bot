@@ -4900,6 +4900,16 @@ APIキー不要のCATAASから世界の猫の静止画をランダムに1枚表�
 
 案内所の既存7カードの内容と相互順序を維持して末尾へ8枚目を追加し、`docs/cat-lounge/index.html`と`docs/cat-lounge/cat-lounge.js`を新設する。外部通信を発生させない隔離モックで初回要求、連打防止、猫の交代、初回・2匹目の失敗、timeout、古い画像イベント、必須DOM欠落およびアクセシビリティを確認する。指定4ファイルだけを別コミットしてGitHub Pagesへ公開後、公開HTML・JavaScript一致と、PC、iPhone SafariおよびLINE内ブラウザーで表示と更新操作を確認する。
 
+実装コミットは`54be621d444bd18b4bcb4c3dc32db2bd95cd2821`、親コミットは`6d1ea0b7f6b2c4a6c70da974dec128c64fe721fa`、件名は`feat: add world cat lounge`とする。対象は`docs/home/index.html`、`docs/cat-lounge/index.html`、`docs/cat-lounge/cat-lounge.js`および`requirements.md`の4件で、実装差分は順に8行追加・1行削除、216行追加、154行追加、59行追加、合計437行追加・1行削除である。
+
+`git push origin main`による通常pushを1回実施し、終了コード0、出力は`6d1ea0b..54be621 main -> main`であった。force push、再pushおよび自動再試行は行っていない。push前に継続中のGitプロセスを検出して一度安全停止し、PID 15400および42180の自然終了後、関連プロセス0件を3回連続かつpush直前にも確認した。プロセスの強制終了およびGitロック削除は行っていない。
+
+GitHub Pagesの案内所HTML、休憩室HTMLおよび休憩室JavaScriptを各1回、合計3回GETし、いずれもHTTP 200、Locationなし、最終URL一致およびローカル追跡版との全バイト一致を確認した。案内所HTMLは`text/html; charset=utf-8`、11,470 bytes、SHA-256 `58A62D63011548738EE44279A419D0C82F8988BE0CA1BF90B8954CC84CDCEB67`、休憩室HTMLは`text/html; charset=utf-8`、5,226 bytes、SHA-256 `3F954DB9BB23C21E317A32B8EEEC9800B6EE0E1CF60682C259BFB5C94B812560`、休憩室JavaScriptは`application/javascript; charset=utf-8`、4,424 bytes、SHA-256 `C0A255F043AE6265FB390E94440ED697497671A6728D9996F6C13EA8D4A347CD`で、JavaScript構文も正常であった。再取得、自動再試行、HEAD、Range、リダイレクト追跡およびPages APIは使用せず、このcurl確認ではCATAAS、画像およびページ内リンクを取得していない。
+
+PC、iPhone SafariおよびLINE内ブラウザーで合格した。PCではCATAASの猫画像、状態文、画像、ボタン、出典およびレイアウトを確認し、iPhone Safariでは初回表示と操作を確認した。LINE内ブラウザーでは猫画像、モバイルレイアウト、状態文、ボタンおよび出典を確認し、「もう一匹呼ぶ」による画像更新に成功した。静的curl確認とは別に、これらの実機ブラウザーからCATAAS画像を正常に読み込めたことを確認したものであり、全画像、全端末、全OS、全ブラウザーまたは全障害経路の網羅確認を意味しない。
+
+CATAASはAPIキーなしで利用し、GIF、文字入れ、アップロード、JSON API、自動更新および自動再試行は使用していない。GAS、clasp、LIFF・LINE設定、配信およびトリガーは変更していない。美術館レビュー資料22件、動画レビュー資料74件およびその他の未追跡素材は変更・ステージせず維持した。
+
 ### 60.8 受け入れ条件
 
 - [x] 案内所の既存7カードを維持し、末尾へ正式な8枚目を追加している
@@ -4914,7 +4924,7 @@ APIキー不要のCATAASから世界の猫の静止画をランダムに1枚表�
 - [x] 必須DOM不足時に画像要求、`Image`およびタイマー生成前に案内付きで安全停止する
 - [x] `aria-live`、正式な`alt`、44px以上、`focus-visible`、レスポンシブ、safe-areaおよびreduced-motionを実装している
 - [x] 外部通信なしの静的・モック検証に合格し、既存機能と未追跡素材を変更していない
-- [ ] GitHub Pages公開版とローカルHTML・JavaScriptが一致することを確認する
-- [ ] PCで初回表示、更新、失敗時動作および出典リンクを確認する
-- [ ] iPhone Safariで表示、更新操作および戻る操作を確認する
-- [ ] LINE内ブラウザーで表示、更新操作および戻る操作を確認する
+- [x] GitHub Pages公開版とローカルHTML・JavaScriptが一致することを確認する
+- [x] PCで初回表示、更新、失敗時動作および出典リンクを確認する
+- [x] iPhone Safariで表示、更新操作および戻る操作を確認する
+- [x] LINE内ブラウザーで表示、更新操作および戻る操作を確認する
