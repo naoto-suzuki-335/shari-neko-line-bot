@@ -5044,6 +5044,14 @@ CATAASはAPIキーなしで利用し、GIF、文字入れ、アップロード�
 - 外部通信を完全置換した隔離モックでAPI、URL、画像、決裁、競合、障害およびDOM欠落を検証する。
 - 指定4ファイルだけを別コミットし、通常push後に公開HTML・JavaScriptをローカル追跡版と全バイト比較する。
 - PC、iPhone SafariおよびLINE内ブラウザーを、提示された確認範囲で実機確認する。
+- 実装コミットは`0d828b94a5e66978eb9b4a1bee3e14bf0a27f196`、親コミットは`d6461ec599c6bce8682107856490280b56dd4c6c`、件名は`feat: add sharineko food meeting`で、コミット回数は1回である。対象は`docs/home/index.html`、`docs/food-meeting/index.html`、`docs/food-meeting/food-meeting.js`および`requirements.md`の4件で、差分は順に8行追加・1行削除、119行追加、1,086行追加、68行追加、合計1,281行追加・1行削除である。
+- `git push origin main`による通常pushを1回実施し、終了コード0、push範囲は`d6461ec..0d828b9  main -> main`であった。force push、再pushおよび自動再試行は行っていない。
+- 公開静的ファイルは案内所HTML、食前経営会議HTMLおよびJavaScriptの3URLを各1回、合計3回GETした。再取得、自動再試行、HEAD、Range、リダイレクト追跡およびPages APIは使用せず、curl確認ではCommons API、画像およびページ内リンクを取得していない。
+- 案内所HTMLはHTTP 200、Content-Type `text/html; charset=utf-8`、Content-Length 11,866 bytes、Locationなし、最終URL一致で、公開・ローカル容量は11,866 bytes、SHA-256は`8FAB350C85B6BE5FDB8D84D42B43E7EF8974DD41C1CACA61B9F7DF70A414EC4E`、ローカル追跡版と全バイト一致した。
+- 食前経営会議HTMLはHTTP 200、Content-Type `text/html; charset=utf-8`、Content-Length 6,569 bytes、Locationなし、最終URL一致で、公開・ローカル容量は6,569 bytes、SHA-256は`3BC16DF49973D3181F5F748B4B9E26296EDFC92C969FAFFA112E91C49F604534`、ローカル追跡版と全バイト一致した。
+- 食前経営会議JavaScriptはHTTP 200、Content-Type `application/javascript; charset=utf-8`、Content-Length 51,679 bytes、Locationなし、最終URL一致で、公開・ローカル容量は51,679 bytes、SHA-256は`04BF15A1521E3F3C1731605E264DB8010587BE5607FCA71A48F5CF31B9B68F88`、ローカル追跡版と全バイト一致し、JavaScript構文も正常であった。
+- PC、iPhone SafariおよびLINE内ブラウザーで、公開ページ、Commons APIからの候補情報、料理画像、作者・Credit・ライセンス・Commons公式ページ等の帰属、テーマ選択、決裁、再審議および明白な表示崩れがないことを確認し、3環境とも基本操作に問題なく合格とした。curlによる静的確認ではCommons APIと画像を取得していないが、実機ブラウザーではページJavaScriptを通じて取得できた。全24画像、全テーマの全候補、全端末、全OS、全ブラウザーおよび全障害経路を網羅確認したものではない。
+- Foodishは保留のままとし、Commons正式24候補、実装コードおよび公開HTML・JavaScriptは変更していない。GAS、clasp、LIFF・LINE設定、配信、トリガーおよびPages設定を変更せず、レビュー資料を本番へ追加していない。
 
 ### 62.8 受け入れ条件
 
@@ -5059,7 +5067,7 @@ CATAASはAPIキーなしで利用し、GIF、文字入れ、アップロード�
 - [x] 必須DOM不足時に候補選択、通信、Image、timerおよびAbortControllerを開始せず安全案内を表示する
 - [x] 自動更新、自動再試行、プリフェッチ、Storage、Cookieおよび位置情報を使用していない
 - [x] 外部通信なしの静的・隔離モック検証に合格し、指定4ファイル以外を変更していない
-- [ ] GitHub Pages公開版とローカル追跡版が一致することを確認する
-- [ ] PC実機確認に合格する
-- [ ] iPhone Safari実機確認に合格する
-- [ ] LINE内ブラウザー実機確認に合格する
+- [x] GitHub Pages公開版とローカル追跡版が一致することを確認する
+- [x] PC実機確認に合格する
+- [x] iPhone Safari実機確認に合格する
+- [x] LINE内ブラウザー実機確認に合格する
