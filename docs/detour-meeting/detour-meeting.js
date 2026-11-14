@@ -5,6 +5,7 @@
   const REQUEST_TIMEOUT_MS = 15000;
   const STORAGE_KEY = "sharineko-detour-last-shop-id";
   const HOTPEPPER_URL_PREFIX = "https://www.hotpepper.jp/";
+  const AGAIN_BUTTON_LABEL = "もう一度相談する";
   const AREA_KEYS = new Set([
     "chigasaki", "fujisawa", "yokohama", "kannai-sakuragicho",
     "kawasaki", "shinagawa", "tokyo-nihombashi"
@@ -35,11 +36,23 @@
   let activeController = null;
 
   dom.form.addEventListener("submit", handleSubmit);
-  dom.againButton.addEventListener("click", () => {
-    if (candidates.length > 0) {
-      displayRandomCandidate();
+  dom.againButton.addEventListener("click", handleAgain);
+
+  function handleAgain() {
+    if (candidates.length === 0 || dom.againButton.disabled) {
+      return;
     }
-  });
+
+    dom.againButton.disabled = true;
+    dom.againButton.textContent = "選んでいます…";
+    try {
+      displayRandomCandidate();
+    } catch (error) {
+      showStatus(FRIENDLY_ERROR);
+    } finally {
+      restoreAgainButton();
+    }
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -86,6 +99,7 @@
       if (activeController === controller) {
         activeController = null;
         setLoading(false);
+        restoreAgainButton();
       }
     }
   }
@@ -209,6 +223,11 @@
     dom.form.querySelectorAll("input").forEach((input) => {
       input.disabled = isLoading;
     });
+  }
+
+  function restoreAgainButton() {
+    dom.againButton.disabled = false;
+    dom.againButton.textContent = AGAIN_BUTTON_LABEL;
   }
 
   function showStatus(message) {
