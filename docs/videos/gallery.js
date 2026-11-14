@@ -7,6 +7,7 @@
   const categorySections = Array.from(
     document.querySelectorAll('[data-gallery-category]')
   );
+  const categoryNav = document.querySelector('.category-nav');
   const galleryStatus = document.getElementById('gallery-status');
   const randomVideoButton = document.getElementById('random-video-button');
   const randomVideoResult = document.getElementById('random-video-result');
@@ -14,11 +15,14 @@
   const randomVideoLink = document.getElementById('random-video-link');
   const categoryNames = Object.freeze({
     all: 'すべて',
+    new: '新着',
+    winter: '冬',
+    christmas: 'クリスマス',
     outing: 'おでかけ',
     daily: '日常',
+    work: 'おしごと',
     seasonal: '季節',
     autumn: '秋',
-    work: 'おしごと',
   });
   let lastRandomVideoHref = null;
 
@@ -39,13 +43,23 @@
     let visibleCount = 0;
 
     categorySections.forEach(function (section) {
-      const isVisible =
-        category === 'all' || section.dataset.galleryCategory === category;
-      section.hidden = !isVisible;
+      const cardItems = Array.from(section.querySelectorAll('.cards > li'));
+      let sectionVisibleCount = 0;
 
-      if (isVisible) {
-        visibleCount += section.querySelectorAll('.card-link').length;
-      }
+      cardItems.forEach(function (item) {
+        const categories = item.dataset.categories
+          ? item.dataset.categories.split(/\s+/)
+          : [section.dataset.galleryCategory];
+        const isVisible = category === 'all' || categories.indexOf(category) !== -1;
+
+        item.hidden = !isVisible;
+        if (isVisible) {
+          sectionVisibleCount += 1;
+        }
+      });
+
+      section.hidden = sectionVisibleCount === 0;
+      visibleCount += sectionVisibleCount;
     });
 
     categoryButtons.forEach(function (button) {
@@ -57,6 +71,28 @@
 
     galleryStatus.textContent =
       categoryNames[category] + '・' + visibleCount + '作品を表示中';
+  }
+
+  function keepSelectedCategoryVisible(button) {
+    if (!categoryNav || !button) {
+      return;
+    }
+
+    const item = button.parentElement;
+    if (!item) {
+      return;
+    }
+
+    const itemLeft = item.offsetLeft;
+    const itemRight = itemLeft + item.offsetWidth;
+    const visibleLeft = categoryNav.scrollLeft;
+    const visibleRight = visibleLeft + categoryNav.clientWidth;
+
+    if (itemLeft < visibleLeft) {
+      categoryNav.scrollLeft = itemLeft;
+    } else if (itemRight > visibleRight) {
+      categoryNav.scrollLeft = itemRight - categoryNav.clientWidth;
+    }
   }
 
   function getInitialCategory() {
@@ -121,7 +157,13 @@
   function getVisibleVideoCards() {
     return categorySections.reduce(function (cards, section) {
       if (!section.hidden) {
-        return cards.concat(Array.from(section.querySelectorAll('.card-link')));
+        return cards.concat(
+          Array.from(
+            section.querySelectorAll(
+              '.cards > li:not([hidden]) .card-link'
+            )
+          )
+        );
       }
 
       return cards;
@@ -171,6 +213,7 @@
       }
 
       showCategory(button.dataset.category);
+      keepSelectedCategoryVisible(button);
       clearRandomVideo();
       replaceCategoryInUrl(button.dataset.category);
     });
@@ -180,5 +223,14 @@
     randomVideoButton.addEventListener('click', showRandomVideo);
   }
 
-  showCategory(getInitialCategory());
+  const initialCategory = getInitialCategory();
+  if (categoryNav) {
+    categoryNav.scrollLeft = 0;
+  }
+  showCategory(initialCategory);
+  keepSelectedCategoryVisible(
+    categoryButtons.find(function (button) {
+      return button.dataset.category === initialCategory;
+    })
+  );
 })();

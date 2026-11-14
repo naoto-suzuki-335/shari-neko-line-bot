@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="しゃりねこの動画64作品を、5つのカテゴリから楽しめる動画図鑑です。">
+  <meta name="description" content="しゃりねこの動画70作品を、カテゴリから楽しめる動画図鑑です。">
   <title>しゃりねこ動画図鑑</title>
   <style>
     :root {
@@ -198,11 +198,6 @@
       transition: transform 150ms ease, box-shadow 150ms ease;
     }
 
-    .card-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(72, 45, 27, 0.14);
-    }
-
     a:focus-visible,
     button:focus-visible {
       outline: 3px solid var(--accent);
@@ -251,6 +246,13 @@
       margin: 8px 0 0;
       color: var(--muted);
       font-size: 0.94rem;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .card-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(72, 45, 27, 0.14);
+      }
     }
 
     @media (max-width: 420px) {
@@ -326,21 +328,24 @@
   <main>
     <header>
       <h1>しゃりねこ動画図鑑</h1>
-      <p class="intro">64作品のしゃりねこを、カテゴリから選んでのぞいてみませんか？🐱</p>
+      <p class="intro">70作品のしゃりねこを、カテゴリから選んでのぞいてみませんか？🐱</p>
       <p id="liff-status" class="liff-status" role="status" aria-live="polite" hidden></p>
     </header>
     <div class="category-controls">
       <nav aria-label="動画カテゴリ">
         <ul class="category-nav">
           <li><button type="button" data-category="all" aria-pressed="true">すべて</button></li>
+          <li><button type="button" data-category="new" aria-pressed="false">新着</button></li>
+          <li><button type="button" data-category="winter" aria-pressed="false">冬</button></li>
+          <li><button type="button" data-category="christmas" aria-pressed="false">クリスマス</button></li>
           <li><button type="button" data-category="outing" aria-pressed="false">おでかけ</button></li>
           <li><button type="button" data-category="daily" aria-pressed="false">日常</button></li>
+          <li><button type="button" data-category="work" aria-pressed="false">おしごと</button></li>
           <li><button type="button" data-category="seasonal" aria-pressed="false">季節</button></li>
           <li><button type="button" data-category="autumn" aria-pressed="false">秋</button></li>
-          <li><button type="button" data-category="work" aria-pressed="false">おしごと</button></li>
         </ul>
       </nav>
-      <p id="gallery-status" class="gallery-status" aria-live="polite">すべて・64作品を表示中</p>
+      <p id="gallery-status" class="gallery-status" aria-live="polite">すべて・70作品を表示中</p>
     </div>
     <div class="random-picker">
       <button id="random-video-button" type="button">おまかせ1本</button>
@@ -349,6 +354,18 @@
         <a id="random-video-link" href="">動画を見る</a>
       </div>
     </div>
+    <section id="new" data-gallery-category="new" aria-labelledby="new-heading">
+      <h2 id="new-heading">新着<span class="count">6作品</span></h2>
+      <ol class="cards">
+        <li data-categories="new winter seasonal"><a class="card-link" href="./snowman-neko/"><img src="../assets/images/snowman-neko-thumbnail.jpg" alt="雪だるまを作るしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="new-badge">新着</span><span class="label">雪だるまねこ</span><h3>雪だるまねこ</h3><p class="description">雪だるま作りは、順調なはずでした。</p></div></a></li>
+        <li data-categories="new winter seasonal"><a class="card-link" href="./oden-neko/"><img src="../assets/images/oden-neko-thumbnail.jpg" alt="おでんを煮込むしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="new-badge">新着</span><span class="label">おでんねこ</span><h3>おでんねこ</h3><p class="description">熱々のおでんを、ことこと煮込みます。</p></div></a></li>
+        <li data-categories="new winter seasonal"><a class="card-link" href="./kotatsu-neko/"><img src="../assets/images/kotatsu-neko-thumbnail.jpg" alt="こたつでみかんと過ごすしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="new-badge">新着</span><span class="label">こたつみかんねこ</span><h3>こたつみかんねこ</h3><p class="description">こたつとみかんで、冬ごもりです。</p></div></a></li>
+        <li data-categories="new christmas seasonal"><a class="card-link" href="./santa-apprentice-neko/"><img src="../assets/images/santa-apprentice-neko-thumbnail.jpg" alt="プレゼントを配達するサンタ見習いのしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="new-badge">新着</span><span class="label">サンタ見習いねこ</span><h3>サンタ見習いねこ</h3><p class="description">プレゼント配達に挑戦します。</p></div></a></li>
+        <li data-categories="new christmas seasonal"><a class="card-link" href="./christmas-decorating-neko/"><img src="../assets/images/christmas-decorating-neko-thumbnail.jpg" alt="クリスマスの飾りつけをするしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="new-badge">新着</span><span class="label">クリスマス飾りつけねこ</span><h3>クリスマス飾りつけねこ</h3><p class="description">飾りつけ中、電飾に絡まります。</p></div></a></li>
+        <li data-categories="new christmas seasonal work"><a class="card-link" href="./cake-shop-neko/"><img src="../assets/images/cake-shop-neko-thumbnail.jpg" alt="クリスマスケーキを仕上げるしゃりねこ" loading="lazy" decoding="async"><div class="card-body"><span class="new-badge">新着</span><span class="label">ケーキ職人ねこ</span><h3>ケーキ職人ねこ</h3><p class="description">クリスマスケーキを仕上げます。</p></div></a></li>
+      </ol>
+    </section>
+
     <section id="outing" data-gallery-category="outing" aria-labelledby="outing-heading">
       <h2 id="outing-heading">おでかけ<span class="count">14作品</span></h2>
       <ol class="cards">
