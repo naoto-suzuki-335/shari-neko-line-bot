@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="エリアとジャンルを選び、しゃりねこと寄り道先を相談するページです。">
+  <title>しゃりねこ寄り道会議</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #fff8ef;
+      --surface: #fffdf9;
+      --text: #382b24;
+      --muted: #705f55;
+      --accent: #9b432d;
+      --accent-dark: #76301f;
+      --border: #ead5c1;
+    }
+
+    * { box-sizing: border-box; }
+    html { overflow-wrap: anywhere; }
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.7;
+    }
+    main {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      padding: max(28px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) calc(48px + env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+    }
+    a { color: var(--accent-dark); }
+    .back-link { display: inline-flex; min-height: 44px; align-items: center; font-weight: 700; }
+    a:focus-visible, input:focus-visible, button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+    header { margin: 20px 0 26px; text-align: center; }
+    h1 { margin: 0; color: var(--accent); font-size: clamp(1.8rem, 7vw, 2.7rem); line-height: 1.35; }
+    .intro { margin: 10px 0 0; color: var(--muted); }
+    .panel {
+      padding: clamp(18px, 5vw, 28px);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: 0 12px 30px rgba(77, 46, 29, 0.11);
+    }
+    fieldset { margin: 0; padding: 0; border: 0; }
+    fieldset + fieldset { margin-top: 24px; }
+    legend { margin-bottom: 10px; font-weight: 700; }
+    .choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .choice { position: relative; }
+    .choice input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .choice label {
+      display: flex;
+      min-height: 46px;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .choice input:checked + label { border-color: var(--accent); background: #f8e8dc; font-weight: 700; }
+    .choice input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 3px; }
+    button {
+      min-height: 48px;
+      padding: 10px 18px;
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:hover:not(:disabled) { background: var(--accent-dark); }
+    button:disabled { cursor: wait; opacity: 0.55; }
+    .consult-button { width: 100%; margin-top: 26px; }
+    .status { min-height: 1.7em; margin: 18px 0 0; color: var(--muted); text-align: center; }
+    .result[hidden] { display: none; }
+    .result { margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--border); }
+    .shop-name { margin: 0 0 16px; color: var(--accent); font-size: clamp(1.35rem, 5vw, 1.8rem); }
+    .details { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px 14px; margin: 0; }
+    .details dt { color: var(--muted); }
+    .details dd { margin: 0; }
+    .result-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 22px; }
+    .shop-link { display: flex; min-height: 48px; align-items: center; justify-content: center; border: 1px solid var(--accent); border-radius: 10px; background: var(--accent); color: #fff; font-weight: 700; text-decoration: none; }
+    .again-button { background: #fff; color: var(--accent-dark); }
+    .credit { margin: 22px 0 0; color: var(--muted); font-size: 0.9rem; text-align: center; }
+    .noscript { color: var(--muted); text-align: center; }
+    @media (max-width: 560px) {
+      .choices, .result-actions { grid-template-columns: 1fr; }
+      .panel { border-radius: 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back-link" href="../home/">← しゃりねこ案内所へ戻る</a>
+    <header>
+      <h1>しゃりねこ寄り道会議</h1>
+      <p class="intro">今日の寄り道先を、しゃりねこと相談します。</p>
+    </header>
+
+    <section class="panel" aria-label="寄り道会議">
+      <form id="detour-form">
+        <fieldset>
+          <legend>エリアを選ぶ</legend>
+          <div class="choices">
+            <div class="choice"><input id="area-chigasaki" type="radio" name="area" value="chigasaki" required><label for="area-chigasaki">茅ヶ崎駅周辺</label></div>
+            <div class="choice"><input id="area-fujisawa" type="radio" name="area" value="fujisawa"><label for="area-fujisawa">藤沢駅周辺</label></div>
+            <div class="choice"><input id="area-yokohama" type="radio" name="area" value="yokohama"><label for="area-yokohama">横浜駅周辺</label></div>
+            <div class="choice"><input id="area-kannai" type="radio" name="area" value="kannai-sakuragicho"><label for="area-kannai">関内・桜木町周辺</label></div>
+            <div class="choice"><input id="area-kawasaki" type="radio" name="area" value="kawasaki"><label for="area-kawasaki">川崎駅周辺</label></div>
+            <div class="choice"><input id="area-shinagawa" type="radio" name="area" value="shinagawa"><label for="area-shinagawa">品川駅周辺</label></div>
+            <div class="choice"><input id="area-tokyo" type="radio" name="area" value="tokyo-nihombashi"><label for="area-tokyo">東京・日本橋周辺</label></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>ジャンルを選ぶ</legend>
+          <div class="choices">
+            <div class="choice"><input id="genre-meal" type="radio" name="genre" value="meal" required><label for="genre-meal">ごはん</label></div>
+            <div class="choice"><input id="genre-cafe" type="radio" name="genre" value="cafe"><label for="genre-cafe">カフェ</label></div>
+            <div class="choice"><input id="genre-drinks" type="radio" name="genre" value="drinks"><label for="genre-drinks">居酒屋・バー</label></div>
+            <div class="choice"><input id="genre-omakase" type="radio" name="genre" value="omakase"><label for="genre-omakase">おまかせ</label></div>
+          </div>
+        </fieldset>
+
+        <button class="consult-button" id="consult-button" type="submit">しゃりねこに相談する</button>
+      </form>
+
+      <p class="status" id="detour-status" role="status" aria-live="polite"></p>
+
+      <section class="result" id="detour-result" aria-labelledby="shop-name" hidden>
+        <h2 class="shop-name" id="shop-name"></h2>
+        <dl class="details">
+          <dt>ジャンル</dt><dd id="shop-genre"></dd>
+          <dt>距離</dt><dd id="shop-distance"></dd>
+          <dt>予算</dt><dd id="shop-budget"></dd>
+          <dt>住所</dt><dd id="shop-address"></dd>
+        </dl>
+        <div class="result-actions">
+          <a class="shop-link" id="shop-link" target="_blank" rel="noopener noreferrer">お店を見る</a>
+          <button class="again-button" id="again-button" type="button">もう一度相談する</button>
+        </div>
+      </section>
+
+      <p class="credit">Powered by <a href="https://webservice.recruit.co.jp/" target="_blank" rel="noopener noreferrer">ホットペッパーグルメ Webサービス</a></p>
+      <noscript><p class="noscript">寄り道会議を利用するにはJavaScriptが必要です。</p></noscript>
+    </section>
+  </main>
+  <script src="./detour-meeting.js?v=1" defer></script>
+</body>
+</html>
