@@ -34,23 +34,23 @@
   let candidates = [];
   let lastShopId = readLastShopId();
   let activeController = null;
+  let isAgainBusy = false;
 
   dom.form.addEventListener("submit", handleSubmit);
   dom.againButton.addEventListener("click", handleAgain);
 
   function handleAgain() {
-    if (candidates.length === 0 || dom.againButton.disabled) {
+    if (candidates.length === 0 || isAgainBusy) {
       return;
     }
 
-    dom.againButton.disabled = true;
-    dom.againButton.textContent = "選んでいます…";
+    setAgainButtonBusy(true);
     try {
       displayRandomCandidate();
     } catch (error) {
       showStatus(FRIENDLY_ERROR);
     } finally {
-      restoreAgainButton();
+      setAgainButtonBusy(false);
     }
   }
 
@@ -99,7 +99,7 @@
       if (activeController === controller) {
         activeController = null;
         setLoading(false);
-        restoreAgainButton();
+        setAgainButtonBusy(false);
       }
     }
   }
@@ -219,14 +219,20 @@
 
   function setLoading(isLoading) {
     dom.consultButton.disabled = isLoading;
-    dom.againButton.disabled = isLoading;
     dom.form.querySelectorAll("input").forEach((input) => {
       input.disabled = isLoading;
     });
   }
 
-  function restoreAgainButton() {
-    dom.againButton.disabled = false;
+  function setAgainButtonBusy(isBusy) {
+    isAgainBusy = isBusy;
+    dom.againButton.classList.toggle("is-busy", isBusy);
+    if (isBusy) {
+      dom.againButton.setAttribute("aria-disabled", "true");
+      dom.againButton.textContent = "選んでいます…";
+      return;
+    }
+    dom.againButton.removeAttribute("aria-disabled");
     dom.againButton.textContent = AGAIN_BUTTON_LABEL;
   }
 

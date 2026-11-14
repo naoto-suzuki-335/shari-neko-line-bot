@@ -88,7 +88,8 @@
     .details dd { margin: 0; }
     .result-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 22px; }
     .shop-link { display: flex; min-height: 48px; align-items: center; justify-content: center; border: 1px solid var(--accent); border-radius: 10px; background: var(--accent); color: #fff; font-weight: 700; text-decoration: none; }
-    .again-button { background: #fff; color: var(--accent-dark); }
+    .again-button { background: #fff; color: var(--accent-dark); -webkit-text-fill-color: var(--accent-dark); }
+    .again-button.is-busy { background: #fff; color: var(--accent-dark); -webkit-text-fill-color: var(--accent-dark); cursor: wait; opacity: 0.55; }
     .credit { margin: 22px 0 0; color: var(--muted); font-size: 0.9rem; text-align: center; }
     .noscript { color: var(--muted); text-align: center; }
     @media (max-width: 560px) {
@@ -156,6 +157,6 @@
       <noscript><p class="noscript">寄り道会議を利用するにはJavaScriptが必要です。</p></noscript>
     </section>
   </main>
-  <script src="./detour-meeting.js?v=2" defer></script>
+  <script src="./detour-meeting.js?v=3" defer></script>
 </body>
 </html>
