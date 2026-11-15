@@ -2212,6 +2212,33 @@ function createVideoWorks_() {
         'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/now-na-young-neko-thumbnail.jpg',
       categoryKeyword: 'しゃりねこ動画：しゃりねこの一日',
     },
+    'しゃりねこ動画：季節｜雪だるま': {
+      title: '雪だるまねこ',
+      guideText: '雪だるま作りは、順調なはずでした。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/snowman-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/snowman-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：季節｜おでん': {
+      title: 'おでんねこ',
+      guideText: '熱々のおでんを、ことこと煮込みます。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/oden-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/oden-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
+    'しゃりねこ動画：季節｜こたつみかん': {
+      title: 'こたつみかんねこ',
+      guideText: 'こたつとみかんで、冬ごもりです。',
+      pageUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/videos/kotatsu-neko/',
+      thumbnailUrl:
+        'https://naoto-suzuki-335.github.io/shari-neko-line-bot/assets/images/kotatsu-neko-thumbnail.jpg',
+      categoryKeyword: 'しゃりねこ動画：季節のしゃりねこ',
+    },
   };
 }
 
@@ -2839,7 +2866,6 @@ function getWeeklyVideoBroadcastCandidateKeywords_(
 
   if (scheduleType === 'SUNDAY_NEW') {
     candidateKeywords = [
-      'しゃりねこ動画：仕事｜陶芸家',
       'しゃりねこ動画：仕事｜寿司屋',
       'しゃりねこ動画：仕事｜寿司職人',
       'しゃりねこ動画：仕事｜蕎麦職人',
@@ -2851,8 +2877,6 @@ function getWeeklyVideoBroadcastCandidateKeywords_(
       'しゃりねこ動画：一日｜角ロック',
       'しゃりねこ動画：一日｜ホッピー',
       'しゃりねこ動画：秋｜秋の日の出',
-      'しゃりねこ動画：秋｜魔女見習い',
-      'しゃりねこ動画：秋｜おばけかぼちゃ',
       'しゃりねこ動画：秋｜映画鑑賞',
       'しゃりねこ動画：仕事｜美容院',
       'しゃりねこ動画：仕事｜現場監督',
@@ -2863,6 +2887,9 @@ function getWeeklyVideoBroadcastCandidateKeywords_(
       'しゃりねこ動画：一日｜坂道ころころ',
       'しゃりねこ動画：秋｜おいも掘り',
       'しゃりねこ動画：一日｜ナウなヤング',
+      'しゃりねこ動画：季節｜雪だるま',
+      'しゃりねこ動画：季節｜おでん',
+      'しゃりねこ動画：季節｜こたつみかん',
     ];
   } else if (scheduleType === 'WEDNESDAY_RANDOM') {
     candidateKeywords = Object.keys(videoWorks);
@@ -2922,7 +2949,7 @@ function getSeasonalVideoBroadcastCandidateKeywords_(month) {
     ];
   }
 
-  if (month >= 9 && month <= 11) {
+  if (month === 9 || month === 10) {
     return [
       'しゃりねこ動画：一日｜落ち葉',
       'しゃりねこ動画：一日｜どんぐり',
@@ -2938,6 +2965,26 @@ function getSeasonalVideoBroadcastCandidateKeywords_(month) {
       'しゃりねこ動画：秋｜魔女見習い',
       'しゃりねこ動画：秋｜おばけかぼちゃ',
       'しゃりねこ動画：秋｜映画鑑賞',
+    ];
+  }
+
+  if (month === 11) {
+    return [
+      'しゃりねこ動画：一日｜落ち葉',
+      'しゃりねこ動画：一日｜どんぐり',
+      'しゃりねこ動画：おみせ｜落ち葉掃除',
+      'しゃりねこ動画：季節｜お月見',
+      'しゃりねこ動画：季節｜縁側',
+      'しゃりねこ動画：季節｜さんま',
+      'しゃりねこ動画：季節｜紅葉狩り',
+      'しゃりねこ動画：秋｜おいも掘り',
+      'しゃりねこ動画：季節｜焼き芋',
+      'しゃりねこ動画：秋｜栗拾い',
+      'しゃりねこ動画：秋｜秋の日の出',
+      'しゃりねこ動画：秋｜映画鑑賞',
+      'しゃりねこ動画：季節｜雪だるま',
+      'しゃりねこ動画：季節｜おでん',
+      'しゃりねこ動画：季節｜こたつみかん',
     ];
   }
 
