@@ -82,6 +82,12 @@
     .result[hidden] { display: none; }
     .result { margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--border); }
     .shop-name { margin: 0 0 16px; color: var(--accent); font-size: clamp(1.35rem, 5vw, 1.8rem); }
+    .cat-comment { margin: 0 0 12px; padding: 9px 12px; border-left: 3px solid var(--accent); border-radius: 5px; background: var(--background); }
+    .cat-comment[hidden], .feature-tags[hidden] { display: none; }
+    .cat-comment-label { display: block; margin-bottom: 2px; color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .cat-comment-text { font-weight: 400; }
+    .feature-tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 16px; padding: 0; list-style: none; }
+    .feature-tag { padding: 3px 9px; border: 1px solid var(--border); border-radius: 5px; background: #fff; color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
     .details { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px 14px; margin: 0; }
     .details dt { color: var(--muted); }
     .details dd { margin: 0; }
@@ -143,6 +149,11 @@
 
       <section class="result" id="detour-result" aria-labelledby="shop-name" hidden>
         <h2 class="shop-name" id="shop-name"></h2>
+        <p class="cat-comment" id="cat-comment" hidden>
+          <span class="cat-comment-label">しゃりねこのひと言</span>
+          <span class="cat-comment-text" id="cat-comment-text"></span>
+        </p>
+        <ul class="feature-tags" id="feature-tags" aria-label="お店の特徴" hidden></ul>
         <dl class="details">
           <dt>ジャンル</dt><dd id="shop-genre"></dd>
           <dt>距離</dt><dd id="shop-distance"></dd>
@@ -159,6 +170,6 @@
       <noscript><p class="noscript">寄り道会議を利用するにはJavaScriptが必要です。</p></noscript>
     </section>
   </main>
-  <script src="./detour-meeting.js?v=4" defer></script>
+  <script src="./detour-meeting.js?v=5" defer></script>
 </body>
 </html>

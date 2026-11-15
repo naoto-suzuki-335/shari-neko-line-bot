@@ -19,6 +19,9 @@
     status: document.getElementById("detour-status"),
     result: document.getElementById("detour-result"),
     name: document.getElementById("shop-name"),
+    comment: document.getElementById("cat-comment"),
+    commentText: document.getElementById("cat-comment-text"),
+    tags: document.getElementById("feature-tags"),
     genre: document.getElementById("shop-genre"),
     distance: document.getElementById("shop-distance"),
     budget: document.getElementById("shop-budget"),
@@ -131,10 +134,11 @@
       throw new Error("Invalid candidate details");
     }
 
-    requiredText(candidate.genre.code);
+    const genreCode = requiredText(candidate.genre.code);
     const genreName = requiredText(candidate.genre.name);
     const budgetName = optionalText(candidate.budget.name);
     const budgetAverage = optionalText(candidate.budget.average);
+    const budget = budgetName || budgetAverage || "予算情報なし";
     if (typeof candidate.distanceMeters !== "number" ||
         !Number.isFinite(candidate.distanceMeters) || candidate.distanceMeters < 0) {
       throw new Error("Invalid distance");
@@ -143,9 +147,10 @@
     const normalized = {
       id: requiredText(candidate.id),
       name: requiredText(candidate.name),
-      genre: genreName,
-      distance: `${candidate.distanceMeters}m`,
-      budget: budgetName || budgetAverage || "予算情報なし",
+      genre: Object.freeze({ code: genreCode, name: genreName }),
+      distanceMeters: candidate.distanceMeters,
+      budget,
+      hasBudget: budgetName !== "" || budgetAverage !== "",
       address: requiredText(candidate.address),
       url: requiredText(candidate.url)
     };
@@ -153,6 +158,65 @@
       throw new Error("Invalid shop URL");
     }
     return Object.freeze(normalized);
+  }
+
+  function buildFeatureTags(candidate) {
+    let distanceTag;
+    if (candidate.distanceMeters <= 300) {
+      distanceTag = "300m以内";
+    } else if (candidate.distanceMeters <= 500) {
+      distanceTag = "500m以内";
+    } else if (candidate.distanceMeters <= 1000) {
+      distanceTag = "1km以内";
+    } else {
+      distanceTag = "少し歩きます";
+    }
+
+    const tags = [distanceTag];
+    const genreName = candidate.genre.name.trim();
+    if (genreName.length <= 20) {
+      tags.push(genreName);
+    }
+    if (candidate.hasBudget) {
+      tags.push("予算目安あり");
+    }
+    return Array.from(new Set(tags)).slice(0, 3);
+  }
+
+  function buildCatComment(candidate) {
+    let templates;
+    if (candidate.distanceMeters <= 300 && candidate.hasBudget) {
+      templates = [
+        "近めで予算の目安もあり。話が早めです。",
+        "すぐそこ寄りです。お財布とも相談できます。"
+      ];
+    } else if (candidate.distanceMeters <= 300) {
+      templates = [
+        "近めです。寄り道の足どりも軽めです。",
+        "すぐそこ寄りです。ふらりと向かえそうです。"
+      ];
+    } else if (candidate.distanceMeters <= 500) {
+      templates = [
+        "ほどよく近めです。するっと向かえそうです。",
+        "軽く歩いて、寄り道会議の続きです。"
+      ];
+    } else if (candidate.distanceMeters <= 1000) {
+      templates = [
+        "少し歩けば到着です。寄り道向きかもです。",
+        "歩ける距離です。のんびり向かいますか。"
+      ];
+    } else {
+      templates = [
+        "少し歩きます。のんびり向かう寄り道です。",
+        "足をのばして、ゆるりと向かう候補です。"
+      ];
+    }
+
+    let stableNumber = 0;
+    for (const character of candidate.id) {
+      stableNumber = (stableNumber * 31 + character.codePointAt(0)) >>> 0;
+    }
+    return templates[stableNumber % templates.length];
   }
 
   function requiredText(value) {
@@ -196,11 +260,23 @@
     }
 
     dom.name.textContent = candidate.name;
-    dom.genre.textContent = candidate.genre;
-    dom.distance.textContent = candidate.distance;
+    dom.genre.textContent = candidate.genre.name;
+    dom.distance.textContent = `${candidate.distanceMeters}m`;
     dom.budget.textContent = candidate.budget;
     dom.address.textContent = candidate.address;
     dom.link.href = candidate.url;
+    dom.commentText.textContent = buildCatComment(candidate);
+    dom.comment.hidden = false;
+    dom.tags.replaceChildren();
+    const fragment = document.createDocumentFragment();
+    buildFeatureTags(candidate).forEach((tag) => {
+      const item = document.createElement("li");
+      item.className = "feature-tag";
+      item.textContent = tag;
+      fragment.appendChild(item);
+    });
+    dom.tags.appendChild(fragment);
+    dom.tags.hidden = dom.tags.childElementCount === 0;
     dom.result.hidden = false;
     lastShopId = candidate.id;
     writeLastShopId(lastShopId);
@@ -210,6 +286,10 @@
   function hideResult() {
     dom.result.hidden = true;
     dom.name.textContent = "";
+    dom.commentText.textContent = "";
+    dom.comment.hidden = true;
+    dom.tags.replaceChildren();
+    dom.tags.hidden = true;
     dom.genre.textContent = "";
     dom.distance.textContent = "";
     dom.budget.textContent = "";
