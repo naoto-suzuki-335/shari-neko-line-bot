@@ -6,7 +6,7 @@
   const STORAGE_KEY = "sharineko-detour-last-shop-id";
   const HOTPEPPER_URL_PREFIX = "https://www.hotpepper.jp/";
   const AGAIN_BUTTON_LABEL = "もう一度相談する";
-  const SELECTION_BOTTOM_GAP = 12;
+  const LOADING_STATUS = "しゃりねこが寄り道先を探しています…";
   const AREA_KEYS = new Set([
     "chigasaki", "fujisawa", "yokohama", "kannai-sakuragicho",
     "kawasaki", "shinagawa", "tokyo-nihombashi"
@@ -43,6 +43,7 @@
   let selectedGenreKey = "";
   let activeController = null;
   let isAgainBusy = false;
+  let requestGeneration = 0;
 
   dom.form.addEventListener("submit", handleSubmit);
   dom.form.addEventListener("change", handleFormChange);
@@ -53,7 +54,7 @@
     if (input instanceof HTMLInputElement && input.name === "area" && input.checked) {
       scheduleAreaSelectionScroll();
     } else if (input instanceof HTMLInputElement && input.name === "genre" && input.checked) {
-      scheduleScrollIfNeeded(dom.consultButton, SELECTION_BOTTOM_GAP);
+      scheduleSelectionEndScroll();
     }
   }
 
@@ -85,13 +86,15 @@
     }
 
     selectedGenreKey = genreKey;
-    setLoading(true);
-    hideResult();
-    showStatus("しゃりねこが寄り道先を探しています…");
-    candidates = [];
-
+    const generation = ++requestGeneration;
     const controller = new AbortController();
     activeController = controller;
+    setLoading(true);
+    hideResult();
+    showStatus(LOADING_STATUS);
+    scheduleStatusScroll(controller, generation, LOADING_STATUS);
+    candidates = [];
+
     const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
     try {
@@ -114,6 +117,7 @@
       candidates = [];
       hideResult();
       showStatus(FRIENDLY_ERROR);
+      scheduleStatusScroll(controller, generation, FRIENDLY_ERROR);
     } finally {
       window.clearTimeout(timeoutId);
       if (activeController === controller) {
@@ -326,13 +330,24 @@
     return value !== null && typeof value === "object" && !Array.isArray(value);
   }
 
-  function scheduleScrollIfNeeded(target, bottomGap = 0) {
-    const scroll = () => scrollIfNeeded(target, bottomGap);
-    scheduleScroll(scroll);
-  }
-
   function scheduleAreaSelectionScroll() {
     scheduleScroll(scrollAreaSelectionIfNeeded);
+  }
+
+  function scheduleSelectionEndScroll() {
+    scheduleScroll(scrollSelectionEndIfNeeded);
+  }
+
+  function scheduleStatusScroll(controller, generation, message) {
+    scheduleScroll(() => {
+      if (generation !== requestGeneration || dom.status.textContent !== message) {
+        return;
+      }
+      if (message === LOADING_STATUS && activeController !== controller) {
+        return;
+      }
+      scrollSelectionEndIfNeeded();
+    });
   }
 
   function scheduleResultScroll() {
@@ -349,7 +364,7 @@
 
   function scrollAreaSelectionIfNeeded() {
     const genreRect = dom.genreSelection.getBoundingClientRect();
-    const buttonRect = dom.consultButton.getBoundingClientRect();
+    const statusRect = dom.status.getBoundingClientRect();
     const viewport = getViewportBounds();
     if (!viewport) {
       return;
@@ -357,14 +372,29 @@
 
     const controlsRect = {
       top: genreRect.top,
-      bottom: buttonRect.bottom + SELECTION_BOTTOM_GAP,
-      height: buttonRect.bottom + SELECTION_BOTTOM_GAP - genreRect.top
+      bottom: statusRect.bottom,
+      height: statusRect.bottom - genreRect.top
     };
     if (controlsRect.height <= viewport.height) {
       scrollRectIfNeeded(controlsRect, viewport);
       return;
     }
     scrollIfNeeded(dom.genreSelection);
+  }
+
+  function scrollSelectionEndIfNeeded() {
+    const buttonRect = dom.consultButton.getBoundingClientRect();
+    const statusRect = dom.status.getBoundingClientRect();
+    const viewport = getViewportBounds();
+    if (!viewport) {
+      return;
+    }
+
+    scrollRectIfNeeded({
+      top: buttonRect.top,
+      bottom: statusRect.bottom,
+      height: statusRect.bottom - buttonRect.top
+    }, viewport);
   }
 
   function scrollResultIfNeeded() {
