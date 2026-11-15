@@ -6,6 +6,7 @@
   const STORAGE_KEY = "sharineko-detour-last-shop-id";
   const HOTPEPPER_URL_PREFIX = "https://www.hotpepper.jp/";
   const AGAIN_BUTTON_LABEL = "もう一度相談する";
+  const SELECTION_BOTTOM_GAP = 12;
   const AREA_KEYS = new Set([
     "chigasaki", "fujisawa", "yokohama", "kannai-sakuragicho",
     "kawasaki", "shinagawa", "tokyo-nihombashi"
@@ -51,7 +52,7 @@
     if (input instanceof HTMLInputElement && input.name === "area" && input.checked) {
       scheduleAreaSelectionScroll();
     } else if (input instanceof HTMLInputElement && input.name === "genre" && input.checked) {
-      scheduleScrollIfNeeded(dom.consultButton);
+      scheduleScrollIfNeeded(dom.consultButton, SELECTION_BOTTOM_GAP);
     }
   }
 
@@ -324,8 +325,8 @@
     return value !== null && typeof value === "object" && !Array.isArray(value);
   }
 
-  function scheduleScrollIfNeeded(target) {
-    const scroll = () => scrollIfNeeded(target);
+  function scheduleScrollIfNeeded(target, bottomGap = 0) {
+    const scroll = () => scrollIfNeeded(target, bottomGap);
     scheduleScroll(scroll);
   }
 
@@ -351,8 +352,8 @@
 
     const controlsRect = {
       top: genreRect.top,
-      bottom: buttonRect.bottom,
-      height: buttonRect.bottom - genreRect.top
+      bottom: buttonRect.bottom + SELECTION_BOTTOM_GAP,
+      height: buttonRect.bottom + SELECTION_BOTTOM_GAP - genreRect.top
     };
     if (controlsRect.height <= viewport.height) {
       scrollRectIfNeeded(controlsRect, viewport);
@@ -361,12 +362,19 @@
     scrollIfNeeded(dom.genreSelection);
   }
 
-  function scrollIfNeeded(target) {
+  function scrollIfNeeded(target, bottomGap = 0) {
     if (!target || target.hidden || typeof target.getBoundingClientRect !== "function") {
       return;
     }
 
-    const rect = target.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const rect = bottomGap > 0
+      ? {
+          top: targetRect.top,
+          bottom: targetRect.bottom + bottomGap,
+          height: targetRect.height + bottomGap
+        }
+      : targetRect;
     const viewport = getViewportBounds();
     if (!viewport) {
       return;
