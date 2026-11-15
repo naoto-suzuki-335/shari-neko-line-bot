@@ -15,6 +15,7 @@
 
   const dom = {
     form: document.getElementById("detour-form"),
+    genreSelection: document.getElementById("genre-selection"),
     consultButton: document.getElementById("consult-button"),
     status: document.getElementById("detour-status"),
     result: document.getElementById("detour-result"),
@@ -42,7 +43,15 @@
   let isAgainBusy = false;
 
   dom.form.addEventListener("submit", handleSubmit);
+  dom.form.addEventListener("change", handleFormChange);
   dom.againButton.addEventListener("click", handleAgain);
+
+  function handleFormChange(event) {
+    const input = event.target;
+    if (input instanceof HTMLInputElement && input.name === "area" && input.checked) {
+      scheduleScrollIfNeeded(dom.genreSelection);
+    }
+  }
 
   function handleAgain() {
     if (candidates.length === 0 || isAgainBusy) {
@@ -96,6 +105,7 @@
       const payload = await response.json();
       candidates = validateResponse(payload, areaKey, genreKey);
       displayRandomCandidate();
+      scheduleScrollIfNeeded(dom.result);
     } catch (error) {
       candidates = [];
       hideResult();
@@ -310,6 +320,62 @@
 
   function isPlainObject(value) {
     return value !== null && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function scheduleScrollIfNeeded(target) {
+    const scroll = () => scrollIfNeeded(target);
+    if (typeof window.requestAnimationFrame === "function") {
+      window.requestAnimationFrame(scroll);
+      return;
+    }
+    scroll();
+  }
+
+  function scrollIfNeeded(target) {
+    if (!target || target.hidden || typeof target.getBoundingClientRect !== "function") {
+      return;
+    }
+
+    const rect = target.getBoundingClientRect();
+    const viewport = window.visualViewport;
+    const viewportTop = viewport && Number.isFinite(viewport.offsetTop) ? viewport.offsetTop : 0;
+    const viewportHeight = viewport && Number.isFinite(viewport.height)
+      ? viewport.height
+      : window.innerHeight;
+    if (!Number.isFinite(viewportHeight) || viewportHeight <= 0) {
+      return;
+    }
+
+    const visibleTop = viewportTop;
+    const visibleBottom = viewportTop + viewportHeight;
+    let distance = 0;
+    if (rect.height > visibleBottom - visibleTop) {
+      distance = rect.top - visibleTop;
+    } else if (rect.top < visibleTop) {
+      distance = rect.top - visibleTop;
+    } else if (rect.bottom > visibleBottom) {
+      distance = rect.bottom - visibleBottom;
+    }
+    if (!Number.isFinite(distance) || Math.abs(distance) < 1) {
+      return;
+    }
+
+    const reduceMotion = typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const behavior = reduceMotion ? "auto" : "smooth";
+    try {
+      window.scrollBy({ top: distance, left: 0, behavior });
+    } catch (error) {
+      try {
+        window.scrollBy(0, distance);
+      } catch (fallbackError) {
+        try {
+          window.scrollTo(window.scrollX, window.scrollY + distance);
+        } catch (ignoredError) {
+          // 自動スクロールだけを中止し、既存処理は継続する。
+        }
+      }
+    }
   }
 
   function displayRandomCandidate() {
