@@ -384,11 +384,11 @@
       ) {
         return;
       }
-      scrollAnswerIntoView();
+      scrollAnswerIntoView(questionGeneration);
     });
   }
 
-  function scrollAnswerIntoView() {
+  function scrollAnswerIntoView(questionGeneration) {
     const gameRect = gameContainerElement.getBoundingClientRect();
     const resultRect = resultElement.getBoundingClientRect();
     const viewport = getConservativeViewportBounds();
@@ -413,7 +413,7 @@
       return;
     }
 
-    scrollByDistance(distance);
+    scrollByDistance(distance, questionGeneration);
   }
 
   function getConservativeViewportBounds() {
@@ -438,7 +438,16 @@
     };
   }
 
-  function scrollByDistance(distance) {
+  function scrollByDistance(distance, questionGeneration) {
+    if (!isAnswerScrollCurrent(questionGeneration)) {
+      return;
+    }
+
+    const startPosition = getScrollPosition();
+    if (startPosition === null) {
+      return;
+    }
+    const targetPosition = Math.max(0, startPosition + distance);
     const reduceMotion = typeof window.matchMedia === "function" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     try {
@@ -448,8 +457,104 @@
         behavior: reduceMotion ? "auto" : "smooth"
       });
     } catch (error) {
+      scrollByNumeric(distance, targetPosition, questionGeneration);
+      return;
+    }
+
+    scheduleScrollCheck(() => {
+      if (!isAnswerScrollCurrent(questionGeneration)) {
+        return;
+      }
+      const currentPosition = getScrollPosition();
+      if (hasMovedInDirection(startPosition, currentPosition, distance)) {
+        return;
+      }
+      scrollByNumeric(distance, targetPosition, questionGeneration);
+    });
+  }
+
+  function scrollByNumeric(distance, targetPosition, questionGeneration) {
+    if (!isAnswerScrollCurrent(questionGeneration)) {
+      return;
+    }
+
+    const startPosition = getScrollPosition();
+    if (startPosition === null) {
+      scrollToAbsolute(targetPosition, questionGeneration);
+      return;
+    }
+    try {
+      window.scrollBy(0, distance);
+    } catch (error) {
+      scrollToAbsolute(targetPosition, questionGeneration);
+      return;
+    }
+
+    scheduleScrollCheck(() => {
+      if (!isAnswerScrollCurrent(questionGeneration)) {
+        return;
+      }
+      const currentPosition = getScrollPosition();
+      if (hasMovedInDirection(startPosition, currentPosition, distance)) {
+        return;
+      }
+      scrollToAbsolute(targetPosition, questionGeneration);
+    });
+  }
+
+  function scrollToAbsolute(targetPosition, questionGeneration) {
+    if (!isAnswerScrollCurrent(questionGeneration)) {
+      return;
+    }
+
+    const scrollingElement = document.scrollingElement;
+    if (scrollingElement && Number.isFinite(scrollingElement.scrollTop)) {
+      try {
+        scrollingElement.scrollTop = targetPosition;
+        return;
+      } catch (error) {
+        // 数値形式のscrollToへ続ける。
+      }
+    }
+    try {
+      window.scrollTo(0, targetPosition);
+    } catch (error) {
       // 自動スクロールだけを中止し、クイズ処理は継続する。
     }
+  }
+
+  function scheduleScrollCheck(callback) {
+    if (typeof window.requestAnimationFrame === "function") {
+      window.requestAnimationFrame(callback);
+      return;
+    }
+    callback();
+  }
+
+  function isAnswerScrollCurrent(questionGeneration) {
+    return questionGeneration === generation && isAnswered && !resultElement.hidden;
+  }
+
+  function getScrollPosition() {
+    const scrollingElement = document.scrollingElement;
+    if (scrollingElement && Number.isFinite(scrollingElement.scrollTop)) {
+      return scrollingElement.scrollTop;
+    }
+    if (Number.isFinite(window.scrollY)) {
+      return window.scrollY;
+    }
+    if (Number.isFinite(window.pageYOffset)) {
+      return window.pageYOffset;
+    }
+    return null;
+  }
+
+  function hasMovedInDirection(startPosition, currentPosition, distance) {
+    if (!Number.isFinite(currentPosition)) {
+      return false;
+    }
+    const moved = currentPosition - startPosition;
+    return distance > 0 ? moved >= 1 : moved <= -1;
   }
 
   function requestNextQuestion() {
