@@ -63,6 +63,8 @@
       background: #fff;
       cursor: pointer;
     }
+    .genre-choice-icon { flex: 0 0 auto; margin-right: 0.35em; font-size: 1.05em; }
+    .genre-choice-text { white-space: nowrap; }
     .choice input:checked + label { border-color: var(--accent); background: #f8e8dc; font-weight: 700; }
     .choice input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 3px; }
     button {
@@ -84,7 +86,8 @@
     .shop-name { margin: 0 0 16px; color: var(--accent); font-size: clamp(1.35rem, 5vw, 1.8rem); }
     .cat-comment { margin: 0 0 12px; padding: 9px 12px; border-left: 3px solid var(--accent); border-radius: 5px; background: var(--background); }
     .cat-comment[hidden], .feature-tags[hidden] { display: none; }
-    .cat-comment-label { display: block; margin-bottom: 2px; color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .cat-comment-label { display: block; margin-bottom: 2px; color: var(--muted); font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+    .cat-comment-emoji { display: inline-block; margin-right: 0.35em; font-size: 1.05em; }
     .cat-comment-text { font-weight: 400; }
     .feature-tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 16px; padding: 0; list-style: none; }
     .feature-tag { padding: 3px 9px; border: 1px solid var(--border); border-radius: 5px; background: #fff; color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
@@ -135,10 +138,10 @@
         <fieldset>
           <legend>ジャンルを選ぶ</legend>
           <div class="choices">
-            <div class="choice"><input id="genre-meal" type="radio" name="genre" value="meal" required><label for="genre-meal">ごはん</label></div>
-            <div class="choice"><input id="genre-cafe" type="radio" name="genre" value="cafe"><label for="genre-cafe">カフェ</label></div>
-            <div class="choice"><input id="genre-drinks" type="radio" name="genre" value="drinks"><label for="genre-drinks">居酒屋・バー</label></div>
-            <div class="choice"><input id="genre-omakase" type="radio" name="genre" value="omakase"><label for="genre-omakase">おまかせ</label></div>
+            <div class="choice"><input id="genre-meal" type="radio" name="genre" value="meal" required><label for="genre-meal"><span class="genre-choice-icon" aria-hidden="true">🍚</span><span class="genre-choice-text">ごはん</span></label></div>
+            <div class="choice"><input id="genre-cafe" type="radio" name="genre" value="cafe"><label for="genre-cafe"><span class="genre-choice-icon" aria-hidden="true">☕</span><span class="genre-choice-text">カフェ</span></label></div>
+            <div class="choice"><input id="genre-drinks" type="radio" name="genre" value="drinks"><label for="genre-drinks"><span class="genre-choice-icon" aria-hidden="true">🍺</span><span class="genre-choice-text">居酒屋・バー</span></label></div>
+            <div class="choice"><input id="genre-omakase" type="radio" name="genre" value="omakase"><label for="genre-omakase"><span class="genre-choice-icon" aria-hidden="true">🐈</span><span class="genre-choice-text">おまかせ</span></label></div>
           </div>
         </fieldset>
 
@@ -150,7 +153,7 @@
       <section class="result" id="detour-result" aria-labelledby="shop-name" hidden>
         <h2 class="shop-name" id="shop-name"></h2>
         <p class="cat-comment" id="cat-comment" hidden>
-          <span class="cat-comment-label">しゃりねこのひと言</span>
+          <span class="cat-comment-label"><span class="cat-comment-emoji" id="cat-comment-emoji" aria-hidden="true"></span><span>しゃりねこのひと言</span></span>
           <span class="cat-comment-text" id="cat-comment-text"></span>
         </p>
         <ul class="feature-tags" id="feature-tags" aria-label="お店の特徴" hidden></ul>
@@ -170,6 +173,6 @@
       <noscript><p class="noscript">寄り道会議を利用するにはJavaScriptが必要です。</p></noscript>
     </section>
   </main>
-  <script src="./detour-meeting.js?v=5" defer></script>
+  <script src="./detour-meeting.js?v=6" defer></script>
 </body>
 </html>

@@ -20,6 +20,7 @@
     result: document.getElementById("detour-result"),
     name: document.getElementById("shop-name"),
     comment: document.getElementById("cat-comment"),
+    commentEmoji: document.getElementById("cat-comment-emoji"),
     commentText: document.getElementById("cat-comment-text"),
     tags: document.getElementById("feature-tags"),
     genre: document.getElementById("shop-genre"),
@@ -36,6 +37,7 @@
 
   let candidates = [];
   let lastShopId = readLastShopId();
+  let selectedGenreKey = "";
   let activeController = null;
   let isAgainBusy = false;
 
@@ -69,6 +71,7 @@
       return;
     }
 
+    selectedGenreKey = genreKey;
     setLoading(true);
     hideResult();
     showStatus("しゃりねこが寄り道先を探しています…");
@@ -183,40 +186,102 @@
     return Array.from(new Set(tags)).slice(0, 3);
   }
 
-  function buildCatComment(candidate) {
-    let templates;
-    if (candidate.distanceMeters <= 300 && candidate.hasBudget) {
-      templates = [
-        "近めで予算の目安もあり。話が早めです。",
-        "すぐそこ寄りです。お財布とも相談できます。"
-      ];
-    } else if (candidate.distanceMeters <= 300) {
-      templates = [
+  function stableHash(value) {
+    let hash = 2166136261;
+    for (let index = 0; index < value.length; index += 1) {
+      hash ^= value.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
+
+  function buildCatComment(candidate, genreKey) {
+    const pool = [];
+    if (candidate.distanceMeters <= 300) {
+      pool.push(
         "近めです。寄り道の足どりも軽めです。",
-        "すぐそこ寄りです。ふらりと向かえそうです。"
-      ];
+        "すぐそこ寄りです。ふらりと向かえそうです。",
+        "近さは十分です。あとは気分の会議です。",
+        "この距離なら、寄り道も軽やかです。"
+      );
     } else if (candidate.distanceMeters <= 500) {
-      templates = [
+      pool.push(
         "ほどよく近めです。するっと向かえそうです。",
-        "軽く歩いて、寄り道会議の続きです。"
-      ];
+        "軽く歩いて、寄り道会議の続きです。",
+        "遠すぎません。ゆるりと向かえる距離です。",
+        "ほどよい距離です。気分が向けば出発です。"
+      );
     } else if (candidate.distanceMeters <= 1000) {
-      templates = [
+      pool.push(
         "少し歩けば到着です。寄り道向きかもです。",
-        "歩ける距離です。のんびり向かいますか。"
-      ];
+        "歩ける距離です。のんびり向かいますか。",
+        "少し足をのばして、寄り道してみますか。",
+        "散歩を兼ねるなら、ちょうどよさそうです。"
+      );
     } else {
-      templates = [
+      pool.push(
         "少し歩きます。のんびり向かう寄り道です。",
-        "足をのばして、ゆるりと向かう候補です。"
-      ];
+        "足をのばして、ゆるりと向かう候補です。",
+        "ちょっと遠めです。時間とも相談しましょう。",
+        "小さな遠足気分で、候補に残しておきます。"
+      );
     }
 
-    let stableNumber = 0;
-    for (const character of candidate.id) {
-      stableNumber = (stableNumber * 31 + character.codePointAt(0)) >>> 0;
+    const genreComments = {
+      meal: [
+        "お腹の会議は、こちらを推しています。",
+        "今日はしっかり食べる方向でどうでしょう。",
+        "ごはんの気分なら、候補に残します。"
+      ],
+      cafe: [
+        "ひと息候補として、そっと置いておきます。",
+        "少し休む会議なら、こちらも候補です。",
+        "カフェ時間の候補に、そっと加えておきます。"
+      ],
+      drinks: [
+        "一杯寄る余白、残っていますか。",
+        "帰る前に少しだけ、という案です。",
+        "今夜の寄り道候補に、そっと入れます。"
+      ],
+      omakase: [
+        "今日は幅広めに、候補を出しました。",
+        "しゃりねこ裁量で、こちらを選びました。",
+        "おまかせ会議の候補は、こちらです。"
+      ]
+    };
+    if (Object.prototype.hasOwnProperty.call(genreComments, genreKey)) {
+      pool.push(...genreComments[genreKey]);
     }
-    return templates[stableNumber % templates.length];
+
+    if (candidate.hasBudget) {
+      pool.push(
+        "予算の目安ありです。お財布と小さく相談です。",
+        "予算を眺めつつ、ゆっくり決めますか。"
+      );
+    }
+
+    pool.push(
+      "今日の候補はこちらです。ひとまず眺めます。",
+      "寄り道会議、こちらも議題に入れます。",
+      "決めきれない時間も、寄り道のうちです。"
+    );
+    const key = `${candidate.id}|${genreKey}`;
+    return pool[stableHash(key) % pool.length];
+  }
+
+  function buildCatCommentEmoji(candidate, genreKey) {
+    if (genreKey === "meal") {
+      return "🍚";
+    }
+    if (genreKey === "cafe") {
+      return "☕";
+    }
+    if (genreKey === "drinks") {
+      const drinksEmoji = ["🍺", "🍷"];
+      const key = `${candidate.id}|${genreKey}|emoji`;
+      return drinksEmoji[stableHash(key) % drinksEmoji.length];
+    }
+    return "🐈";
   }
 
   function requiredText(value) {
@@ -265,7 +330,8 @@
     dom.budget.textContent = candidate.budget;
     dom.address.textContent = candidate.address;
     dom.link.href = candidate.url;
-    dom.commentText.textContent = buildCatComment(candidate);
+    dom.commentEmoji.textContent = buildCatCommentEmoji(candidate, selectedGenreKey);
+    dom.commentText.textContent = buildCatComment(candidate, selectedGenreKey);
     dom.comment.hidden = false;
     dom.tags.replaceChildren();
     const fragment = document.createDocumentFragment();
@@ -286,6 +352,7 @@
   function hideResult() {
     dom.result.hidden = true;
     dom.name.textContent = "";
+    dom.commentEmoji.textContent = "";
     dom.commentText.textContent = "";
     dom.comment.hidden = true;
     dom.tags.replaceChildren();
