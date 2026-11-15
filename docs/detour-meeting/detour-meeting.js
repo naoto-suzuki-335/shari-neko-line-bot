@@ -20,6 +20,7 @@
     consultButton: document.getElementById("consult-button"),
     status: document.getElementById("detour-status"),
     result: document.getElementById("detour-result"),
+    credit: document.getElementById("hotpepper-credit"),
     name: document.getElementById("shop-name"),
     comment: document.getElementById("cat-comment"),
     commentEmoji: document.getElementById("cat-comment-emoji"),
@@ -108,7 +109,7 @@
       const payload = await response.json();
       candidates = validateResponse(payload, areaKey, genreKey);
       displayRandomCandidate();
-      scheduleScrollIfNeeded(dom.result);
+      scheduleResultScroll();
     } catch (error) {
       candidates = [];
       hideResult();
@@ -334,6 +335,10 @@
     scheduleScroll(scrollAreaSelectionIfNeeded);
   }
 
+  function scheduleResultScroll() {
+    scheduleScroll(scrollResultIfNeeded);
+  }
+
   function scheduleScroll(scroll) {
     if (typeof window.requestAnimationFrame === "function") {
       window.requestAnimationFrame(scroll);
@@ -360,6 +365,26 @@
       return;
     }
     scrollIfNeeded(dom.genreSelection);
+  }
+
+  function scrollResultIfNeeded() {
+    const resultRect = dom.result.getBoundingClientRect();
+    const creditRect = dom.credit.getBoundingClientRect();
+    const viewport = getViewportBounds();
+    if (!viewport) {
+      return;
+    }
+
+    const resultAndCreditRect = {
+      top: resultRect.top,
+      bottom: creditRect.bottom,
+      height: creditRect.bottom - resultRect.top
+    };
+    if (resultAndCreditRect.height <= viewport.height) {
+      scrollRectIfNeeded(resultAndCreditRect, viewport);
+      return;
+    }
+    scrollIfNeeded(dom.result);
   }
 
   function scrollIfNeeded(target, bottomGap = 0) {
