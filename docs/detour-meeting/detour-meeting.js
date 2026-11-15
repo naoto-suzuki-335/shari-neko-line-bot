@@ -7,6 +7,7 @@
   const HOTPEPPER_URL_PREFIX = "https://www.hotpepper.jp/";
   const AGAIN_BUTTON_LABEL = "もう一度相談する";
   const LOADING_STATUS = "しゃりねこが寄り道先を探しています…";
+  const STATUS_BOTTOM_GAP = 48;
   const AREA_KEYS = new Set([
     "chigasaki", "fujisawa", "yokohama", "kannai-sakuragicho",
     "kawasaki", "shinagawa", "tokyo-nihombashi"
@@ -346,7 +347,7 @@
       if (message === LOADING_STATUS && activeController !== controller) {
         return;
       }
-      scrollSelectionEndIfNeeded();
+      scrollStatusIfNeeded();
     });
   }
 
@@ -395,6 +396,19 @@
       bottom: statusRect.bottom,
       height: statusRect.bottom - buttonRect.top
     }, viewport);
+  }
+
+  function scrollStatusIfNeeded() {
+    const statusRect = dom.status.getBoundingClientRect();
+    const viewport = getConservativeViewportBounds();
+    if (!viewport) {
+      return;
+    }
+
+    const distance = statusRect.bottom + STATUS_BOTTOM_GAP - viewport.bottom;
+    if (Number.isFinite(distance) && distance >= 1) {
+      scrollByDistance(distance);
+    }
   }
 
   function scrollResultIfNeeded() {
@@ -453,6 +467,28 @@
     };
   }
 
+  function getConservativeViewportBounds() {
+    const viewport = window.visualViewport;
+    const viewportTop = viewport && Number.isFinite(viewport.offsetTop) ? viewport.offsetTop : 0;
+    const heights = [];
+    if (viewport && Number.isFinite(viewport.height) && viewport.height > 0) {
+      heights.push(viewport.height);
+    }
+    if (Number.isFinite(window.innerHeight) && window.innerHeight > 0) {
+      heights.push(window.innerHeight);
+    }
+    if (heights.length === 0) {
+      return null;
+    }
+
+    const viewportHeight = Math.min(...heights);
+    return {
+      top: viewportTop,
+      bottom: viewportTop + viewportHeight,
+      height: viewportHeight
+    };
+  }
+
   function scrollRectIfNeeded(rect, viewport) {
     let distance = 0;
     if (rect.height > viewport.height) {
@@ -466,6 +502,10 @@
       return;
     }
 
+    scrollByDistance(distance);
+  }
+
+  function scrollByDistance(distance) {
     const reduceMotion = typeof window.matchMedia === "function" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const behavior = reduceMotion ? "auto" : "smooth";
