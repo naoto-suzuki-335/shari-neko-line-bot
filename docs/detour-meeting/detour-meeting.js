@@ -49,7 +49,9 @@
   function handleFormChange(event) {
     const input = event.target;
     if (input instanceof HTMLInputElement && input.name === "area" && input.checked) {
-      scheduleScrollIfNeeded(dom.genreSelection);
+      scheduleAreaSelectionScroll();
+    } else if (input instanceof HTMLInputElement && input.name === "genre" && input.checked) {
+      scheduleScrollIfNeeded(dom.consultButton);
     }
   }
 
@@ -324,11 +326,39 @@
 
   function scheduleScrollIfNeeded(target) {
     const scroll = () => scrollIfNeeded(target);
+    scheduleScroll(scroll);
+  }
+
+  function scheduleAreaSelectionScroll() {
+    scheduleScroll(scrollAreaSelectionIfNeeded);
+  }
+
+  function scheduleScroll(scroll) {
     if (typeof window.requestAnimationFrame === "function") {
       window.requestAnimationFrame(scroll);
       return;
     }
     scroll();
+  }
+
+  function scrollAreaSelectionIfNeeded() {
+    const genreRect = dom.genreSelection.getBoundingClientRect();
+    const buttonRect = dom.consultButton.getBoundingClientRect();
+    const viewport = getViewportBounds();
+    if (!viewport) {
+      return;
+    }
+
+    const controlsRect = {
+      top: genreRect.top,
+      bottom: buttonRect.bottom,
+      height: buttonRect.bottom - genreRect.top
+    };
+    if (controlsRect.height <= viewport.height) {
+      scrollRectIfNeeded(controlsRect, viewport);
+      return;
+    }
+    scrollIfNeeded(dom.genreSelection);
   }
 
   function scrollIfNeeded(target) {
@@ -337,24 +367,37 @@
     }
 
     const rect = target.getBoundingClientRect();
+    const viewport = getViewportBounds();
+    if (!viewport) {
+      return;
+    }
+    scrollRectIfNeeded(rect, viewport);
+  }
+
+  function getViewportBounds() {
     const viewport = window.visualViewport;
     const viewportTop = viewport && Number.isFinite(viewport.offsetTop) ? viewport.offsetTop : 0;
     const viewportHeight = viewport && Number.isFinite(viewport.height)
       ? viewport.height
       : window.innerHeight;
     if (!Number.isFinite(viewportHeight) || viewportHeight <= 0) {
-      return;
+      return null;
     }
+    return {
+      top: viewportTop,
+      bottom: viewportTop + viewportHeight,
+      height: viewportHeight
+    };
+  }
 
-    const visibleTop = viewportTop;
-    const visibleBottom = viewportTop + viewportHeight;
+  function scrollRectIfNeeded(rect, viewport) {
     let distance = 0;
-    if (rect.height > visibleBottom - visibleTop) {
-      distance = rect.top - visibleTop;
-    } else if (rect.top < visibleTop) {
-      distance = rect.top - visibleTop;
-    } else if (rect.bottom > visibleBottom) {
-      distance = rect.bottom - visibleBottom;
+    if (rect.height > viewport.height) {
+      distance = rect.top - viewport.top;
+    } else if (rect.top < viewport.top) {
+      distance = rect.top - viewport.top;
+    } else if (rect.bottom > viewport.bottom) {
+      distance = rect.bottom - viewport.bottom;
     }
     if (!Number.isFinite(distance) || Math.abs(distance) < 1) {
       return;
