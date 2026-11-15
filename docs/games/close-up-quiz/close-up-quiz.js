@@ -53,6 +53,7 @@
   let isImageReady = false;
   let isQuestionLoading = false;
   let activeImageLoader = null;
+  const RESULT_BOTTOM_GAP = 12;
 
   function validateWorks(items) {
     if (!Array.isArray(items) || items.length < 3) {
@@ -366,7 +367,89 @@
     retryButtonElement.disabled = true;
     statusElement.textContent = "回答結果を表示しました。";
     previousCorrectSlug = currentQuestion.correct.slug;
-    resultHeadingElement.focus({ preventScroll: false });
+    resultHeadingElement.focus({ preventScroll: true });
+    scheduleAnswerScroll(questionGeneration);
+  }
+
+  function scheduleAnswerScroll(questionGeneration) {
+    if (typeof window.requestAnimationFrame !== "function") {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      if (
+        questionGeneration !== generation ||
+        !isAnswered ||
+        resultElement.hidden
+      ) {
+        return;
+      }
+      scrollAnswerIntoView();
+    });
+  }
+
+  function scrollAnswerIntoView() {
+    const gameRect = gameContainerElement.getBoundingClientRect();
+    const resultRect = resultElement.getBoundingClientRect();
+    const viewport = getConservativeViewportBounds();
+    if (!viewport) {
+      return;
+    }
+
+    const answerRect = {
+      top: gameRect.top,
+      bottom: resultRect.bottom + RESULT_BOTTOM_GAP,
+      height: resultRect.bottom + RESULT_BOTTOM_GAP - gameRect.top
+    };
+    let distance = 0;
+    if (answerRect.height > viewport.height) {
+      distance = resultRect.top - viewport.top;
+    } else if (answerRect.top < viewport.top) {
+      distance = answerRect.top - viewport.top;
+    } else if (answerRect.bottom > viewport.bottom) {
+      distance = answerRect.bottom - viewport.bottom;
+    }
+    if (!Number.isFinite(distance) || Math.abs(distance) < 1) {
+      return;
+    }
+
+    scrollByDistance(distance);
+  }
+
+  function getConservativeViewportBounds() {
+    const viewport = window.visualViewport;
+    const viewportTop = viewport && Number.isFinite(viewport.offsetTop) ? viewport.offsetTop : 0;
+    const heights = [];
+    if (viewport && Number.isFinite(viewport.height) && viewport.height > 0) {
+      heights.push(viewport.height);
+    }
+    if (Number.isFinite(window.innerHeight) && window.innerHeight > 0) {
+      heights.push(window.innerHeight);
+    }
+    if (heights.length === 0) {
+      return null;
+    }
+
+    const viewportHeight = Math.min(...heights);
+    return {
+      top: viewportTop,
+      bottom: viewportTop + viewportHeight,
+      height: viewportHeight
+    };
+  }
+
+  function scrollByDistance(distance) {
+    const reduceMotion = typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    try {
+      window.scrollBy({
+        top: distance,
+        left: 0,
+        behavior: reduceMotion ? "auto" : "smooth"
+      });
+    } catch (error) {
+      // 自動スクロールだけを中止し、クイズ処理は継続する。
+    }
   }
 
   function requestNextQuestion() {
