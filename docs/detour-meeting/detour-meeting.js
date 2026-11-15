@@ -7,6 +7,12 @@
   const HOTPEPPER_URL_PREFIX = "https://www.hotpepper.jp/";
   const AGAIN_BUTTON_LABEL = "もう一度相談する";
   const LOADING_STATUS = "しゃりねこが寄り道先を探しています…";
+  const LOADING_STATUS_BY_GENRE = new Map([
+    ["meal", "ごはんの候補を見ています…"],
+    ["cafe", "ひと休みの候補を見ています…"],
+    ["drinks", "一杯の候補を見ています…"],
+    ["omakase", "しゃりねこ、気まぐれに選んでいます…"]
+  ]);
   const STATUS_BOTTOM_GAP = 48;
   const AREA_KEYS = new Set([
     "chigasaki", "fujisawa", "yokohama", "kannai-sakuragicho",
@@ -92,8 +98,9 @@
     activeController = controller;
     setLoading(true);
     hideResult();
-    showStatus(LOADING_STATUS);
-    scheduleStatusScroll(controller, generation, LOADING_STATUS);
+    const loadingStatus = getLoadingStatus(genreKey);
+    showStatus(loadingStatus);
+    scheduleStatusScroll(controller, generation, loadingStatus, true);
     candidates = [];
 
     const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -339,12 +346,12 @@
     scheduleScroll(scrollSelectionEndIfNeeded);
   }
 
-  function scheduleStatusScroll(controller, generation, message) {
+  function scheduleStatusScroll(controller, generation, message, requireActiveRequest = false) {
     scheduleScroll(() => {
       if (generation !== requestGeneration || dom.status.textContent !== message) {
         return;
       }
-      if (message === LOADING_STATUS && activeController !== controller) {
+      if (requireActiveRequest && activeController !== controller) {
         return;
       }
       scrollStatusIfNeeded();
@@ -522,6 +529,10 @@
         }
       }
     }
+  }
+
+  function getLoadingStatus(genreKey) {
+    return LOADING_STATUS_BY_GENRE.get(genreKey) || LOADING_STATUS;
   }
 
   function displayRandomCandidate() {
