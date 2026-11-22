@@ -21,6 +21,7 @@
   ]);
   const GENRE_KEYS = new Set(["meal", "cafe", "drinks", "omakase"]);
   const FRIENDLY_ERROR = "うまく相談できませんでした。少し待ってから、もう一度お試しください。";
+  const REROLL_TOP_GAP = 16;
 
   const dom = {
     form: document.getElementById("detour-form"),
@@ -65,6 +66,7 @@
   let activeController = null;
   let isAgainBusy = false;
   let requestGeneration = 0;
+  let rerollGeneration = 0;
 
   dom.form.addEventListener("submit", handleSubmit);
   dom.form.addEventListener("change", handleFormChange);
@@ -85,8 +87,12 @@
     }
 
     setAgainButtonBusy(true);
+    const generation = ++rerollGeneration;
     try {
-      displayRandomCandidate();
+      const candidateId = displayRandomCandidate();
+      if (candidateId) {
+        scheduleRerollResultScroll(generation, candidateId);
+      }
     } catch (error) {
       showStatus(FRIENDLY_ERROR);
     } finally {
@@ -110,6 +116,7 @@
 
     const prefersSolo = soloPreference === "counter";
     selectedGenreKey = genreKey;
+    rerollGeneration += 1;
     const generation = ++requestGeneration;
     const controller = new AbortController();
     activeController = controller;
@@ -446,6 +453,16 @@
     scheduleScroll(scrollResultIfNeeded);
   }
 
+  function scheduleRerollResultScroll(generation, candidateId) {
+    scheduleScroll(() => {
+      if (generation !== rerollGeneration || dom.result.hidden ||
+          lastShopId !== candidateId) {
+        return;
+      }
+      scrollRerollResultIfNeeded();
+    });
+  }
+
   function scheduleScroll(scroll) {
     if (typeof window.requestAnimationFrame === "function") {
       window.requestAnimationFrame(scroll);
@@ -520,6 +537,24 @@
       return;
     }
     scrollIfNeeded(dom.result);
+  }
+
+  function scrollRerollResultIfNeeded() {
+    const nameRect = dom.name.getBoundingClientRect();
+    const viewport = getConservativeViewportBounds();
+    if (!viewport) {
+      return;
+    }
+
+    const preferredTop = viewport.top + REROLL_TOP_GAP;
+    if (nameRect.top >= preferredTop && nameRect.bottom <= viewport.bottom) {
+      return;
+    }
+
+    const distance = nameRect.top - preferredTop;
+    if (Number.isFinite(distance) && Math.abs(distance) >= 1) {
+      scrollByDistance(distance);
+    }
   }
 
   function scrollIfNeeded(target, bottomGap = 0) {
@@ -631,7 +666,7 @@
     if (!candidate) {
       hideResult();
       showStatus(FRIENDLY_ERROR);
-      return;
+      return "";
     }
 
     dom.name.textContent = candidate.name;
@@ -672,6 +707,7 @@
     lastShopId = candidate.id;
     writeLastShopId(lastShopId);
     showStatus("このお店はいかがでしょうか。");
+    return candidate.id;
   }
 
   function getPreferenceNote(preference) {
