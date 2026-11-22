@@ -67,6 +67,11 @@
     .genre-choice-text { white-space: nowrap; }
     .choice input:checked + label { border-color: var(--accent); background: #f8e8dc; font-weight: 700; }
     .choice input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .seat-preference { margin-top: 24px; }
+    .preference-choice { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 10px; align-items: start; }
+    .preference-choice input { width: 1.15em; height: 1.15em; margin: 0.3em 0 0; accent-color: var(--accent); }
+    .preference-choice label { font-weight: 700; }
+    .preference-help { grid-column: 2; margin: 0; color: var(--muted); font-size: 0.9rem; }
     button {
       min-height: 48px;
       padding: 10px 18px;
@@ -91,9 +96,12 @@
     .cat-comment-text { font-weight: 400; }
     .feature-tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 16px; padding: 0; list-style: none; }
     .feature-tag { padding: 3px 9px; border: 1px solid var(--border); border-radius: 5px; background: #fff; color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+    .preference-note { margin: -4px 0 14px; color: var(--muted); font-size: 0.9rem; }
+    .preference-note[hidden], .optional-detail[hidden] { display: none; }
     .details { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px 14px; margin: 0; }
     .details dt { color: var(--muted); }
-    .details dd { margin: 0; }
+    .details dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+    .information-note { margin: 12px 0 0; color: var(--muted); font-size: 0.82rem; }
     .result-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 22px; }
     .shop-link { display: flex; min-height: 48px; align-items: center; justify-content: center; border: 1px solid var(--accent); border-radius: 10px; background: var(--accent); color: #fff; font-weight: 700; text-decoration: none; }
     .again-button { background: #fff; color: var(--accent-dark); -webkit-text-fill-color: var(--accent-dark); }
@@ -145,6 +153,15 @@
           </div>
         </fieldset>
 
+        <fieldset class="seat-preference" id="seat-preference">
+          <legend>席の希望</legend>
+          <div class="preference-choice">
+            <input id="solo-preference" type="checkbox" name="soloPreference" value="counter" aria-describedby="solo-preference-help" autocomplete="off">
+            <label for="solo-preference">ひとりで寄りやすそう</label>
+            <p class="preference-help" id="solo-preference-help">カウンター席の記載があるお店を優先します。</p>
+          </div>
+        </fieldset>
+
         <button class="consult-button" id="consult-button" type="submit">しゃりねこに相談する</button>
       </form>
 
@@ -157,12 +174,18 @@
           <span class="cat-comment-text" id="cat-comment-text"></span>
         </p>
         <ul class="feature-tags" id="feature-tags" aria-label="お店の特徴" hidden></ul>
+        <p class="preference-note" id="preference-note" hidden></p>
+        <ul class="feature-tags" id="facility-tags" aria-label="設備などの特徴" hidden></ul>
         <dl class="details">
           <dt>ジャンル</dt><dd id="shop-genre"></dd>
           <dt>距離</dt><dd id="shop-distance"></dd>
           <dt>予算</dt><dd id="shop-budget"></dd>
           <dt>住所</dt><dd id="shop-address"></dd>
+          <dt class="optional-detail" id="shop-hours-label" hidden>営業時間</dt><dd class="optional-detail" id="shop-hours" hidden></dd>
+          <dt class="optional-detail" id="shop-closed-label" hidden>定休日</dt><dd class="optional-detail" id="shop-closed" hidden></dd>
+          <dt class="optional-detail" id="shop-access-label" hidden>アクセス</dt><dd class="optional-detail" id="shop-access" hidden></dd>
         </dl>
+        <p class="information-note">営業時間などの最新情報は、お店のページでご確認ください。</p>
         <div class="result-actions">
           <a class="shop-link" id="shop-link" target="_blank" rel="noopener noreferrer">お店を見る</a>
           <button class="again-button" id="again-button" type="button">もう一度相談する</button>
@@ -173,6 +196,6 @@
       <noscript><p class="noscript">寄り道会議を利用するにはJavaScriptが必要です。</p></noscript>
     </section>
   </main>
-  <script src="./detour-meeting.js?v=13" defer></script>
+  <script src="./detour-meeting.js?v=14" defer></script>
 </body>
 </html>

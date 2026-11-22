@@ -7,6 +7,7 @@
   const HOTPEPPER_URL_PREFIX = "https://www.hotpepper.jp/";
   const AGAIN_BUTTON_LABEL = "もう一度相談する";
   const LOADING_STATUS = "しゃりねこが寄り道先を探しています…";
+  const SOLO_LOADING_STATUS = "ひとりで寄りやすそうな候補を見ています…";
   const LOADING_STATUS_BY_GENRE = new Map([
     ["meal", "ごはんの候補を見ています…"],
     ["cafe", "ひと休みの候補を見ています…"],
@@ -24,6 +25,8 @@
   const dom = {
     form: document.getElementById("detour-form"),
     genreSelection: document.getElementById("genre-selection"),
+    seatPreference: document.getElementById("seat-preference"),
+    soloPreference: document.getElementById("solo-preference"),
     consultButton: document.getElementById("consult-button"),
     status: document.getElementById("detour-status"),
     result: document.getElementById("detour-result"),
@@ -33,10 +36,18 @@
     commentEmoji: document.getElementById("cat-comment-emoji"),
     commentText: document.getElementById("cat-comment-text"),
     tags: document.getElementById("feature-tags"),
+    preferenceNote: document.getElementById("preference-note"),
+    facilityTags: document.getElementById("facility-tags"),
     genre: document.getElementById("shop-genre"),
     distance: document.getElementById("shop-distance"),
     budget: document.getElementById("shop-budget"),
     address: document.getElementById("shop-address"),
+    hoursLabel: document.getElementById("shop-hours-label"),
+    hours: document.getElementById("shop-hours"),
+    closedLabel: document.getElementById("shop-closed-label"),
+    closed: document.getElementById("shop-closed"),
+    accessLabel: document.getElementById("shop-access-label"),
+    access: document.getElementById("shop-access"),
     link: document.getElementById("shop-link"),
     againButton: document.getElementById("again-button")
   };
@@ -45,9 +56,12 @@
     return;
   }
 
+  dom.soloPreference.checked = false;
+
   let candidates = [];
   let lastShopId = readLastShopId();
   let selectedGenreKey = "";
+  let searchPreference = Object.freeze({ requested: false, expanded: false, known: false });
   let activeController = null;
   let isAgainBusy = false;
   let requestGeneration = 0;
@@ -86,19 +100,22 @@
     const formData = new FormData(dom.form);
     const areaKey = formData.get("area");
     const genreKey = formData.get("genre");
+    const soloPreference = formData.get("soloPreference");
     if (typeof areaKey !== "string" || typeof genreKey !== "string" ||
-        !AREA_KEYS.has(areaKey) || !GENRE_KEYS.has(genreKey)) {
+        !AREA_KEYS.has(areaKey) || !GENRE_KEYS.has(genreKey) ||
+        (soloPreference !== null && soloPreference !== "counter")) {
       showStatus("エリアとジャンルを選んでください。");
       return;
     }
 
+    const prefersSolo = soloPreference === "counter";
     selectedGenreKey = genreKey;
     const generation = ++requestGeneration;
     const controller = new AbortController();
     activeController = controller;
     setLoading(true);
     hideResult();
-    const loadingStatus = getLoadingStatus(genreKey);
+    const loadingStatus = getLoadingStatus(genreKey, prefersSolo);
     showStatus(loadingStatus);
     scheduleStatusScroll(controller, generation, loadingStatus, true);
     candidates = [];
@@ -107,7 +124,11 @@
 
     try {
       const url = new URL(GAS_ENDPOINT);
-      url.search = new URLSearchParams({ areaKey, genreKey }).toString();
+      const requestParameters = new URLSearchParams({ areaKey, genreKey });
+      if (prefersSolo) {
+        requestParameters.set("soloPreference", "counter");
+      }
+      url.search = requestParameters.toString();
       const response = await fetch(url.toString(), {
         method: "GET",
         credentials: "omit",
@@ -118,11 +139,14 @@
       }
 
       const payload = await response.json();
-      candidates = validateResponse(payload, areaKey, genreKey);
+      const validated = validateResponse(payload, areaKey, genreKey, prefersSolo);
+      candidates = validated.candidates;
+      searchPreference = validated.preference;
       displayRandomCandidate();
       scheduleResultScroll();
     } catch (error) {
       candidates = [];
+      searchPreference = Object.freeze({ requested: false, expanded: false, known: false });
       hideResult();
       showStatus(FRIENDLY_ERROR);
       scheduleStatusScroll(controller, generation, FRIENDLY_ERROR);
@@ -136,7 +160,7 @@
     }
   }
 
-  function validateResponse(payload, requestedArea, requestedGenre) {
+  function validateResponse(payload, requestedArea, requestedGenre, requestedSolo) {
     if (!isPlainObject(payload) || payload.ok !== true ||
         !matchesSelection(payload.area, requestedArea) ||
         !matchesSelection(payload.genre, requestedGenre) ||
@@ -144,7 +168,34 @@
       throw new Error("Invalid response");
     }
 
-    return payload.candidates.map(validateCandidate);
+    return Object.freeze({
+      candidates: payload.candidates.map(validateCandidate),
+      preference: validateSearchPreference(
+        payload.preference,
+        payload.capabilities,
+        requestedSolo
+      )
+    });
+  }
+
+  function validateSearchPreference(preference, capabilities, requestedSolo) {
+    if ((preference === undefined || preference === null) &&
+        (capabilities === undefined || capabilities === null)) {
+      return Object.freeze({ requested: requestedSolo, expanded: false, known: false });
+    }
+    if (!isPlainObject(capabilities) || capabilities.counterPriority !== true ||
+        !isPlainObject(preference) ||
+        typeof preference.requested !== "boolean" ||
+        typeof preference.expanded !== "boolean" ||
+        preference.requested !== requestedSolo ||
+        (!preference.requested && preference.expanded)) {
+      throw new Error("Invalid preference response");
+    }
+    return Object.freeze({
+      requested: preference.requested,
+      expanded: preference.expanded,
+      known: true
+    });
   }
 
   function matchesSelection(value, requestedKey) {
@@ -168,6 +219,10 @@
     const budgetName = optionalText(candidate.budget.name);
     const budgetAverage = optionalText(candidate.budget.average);
     const budget = budgetName || budgetAverage || "予算情報なし";
+    const openingHours = meaningfulOptionalText(candidate.openingHours);
+    const closed = meaningfulOptionalText(candidate.closed);
+    const access = meaningfulOptionalText(candidate.access);
+    const facilityTags = validateFacilityTags(candidate.featureTags);
     if (typeof candidate.distanceMeters !== "number" ||
         !Number.isFinite(candidate.distanceMeters) || candidate.distanceMeters < 0) {
       throw new Error("Invalid distance");
@@ -181,10 +236,34 @@
       budget,
       hasBudget: budgetName !== "" || budgetAverage !== "",
       address: requiredText(candidate.address),
+      openingHours,
+      closed,
+      access,
+      facilityTags,
       url: requiredText(candidate.url)
     };
     if (!isAllowedShopUrl(normalized.url)) {
       throw new Error("Invalid shop URL");
+    }
+    return Object.freeze(normalized);
+  }
+
+  function validateFacilityTags(tags) {
+    if (tags === undefined || tags === null) {
+      return Object.freeze([]);
+    }
+    if (!Array.isArray(tags) || tags.length > 2) {
+      throw new Error("Invalid candidate feature tags");
+    }
+    const normalized = tags.map((tag) => {
+      const text = meaningfulOptionalText(tag);
+      if (!text || text.length > 40) {
+        throw new Error("Invalid candidate feature tag");
+      }
+      return text;
+    });
+    if (new Set(normalized).size !== normalized.length) {
+      throw new Error("Duplicate candidate feature tag");
     }
     return Object.freeze(normalized);
   }
@@ -324,6 +403,11 @@
     return requiredText(value);
   }
 
+  function meaningfulOptionalText(value) {
+    const text = optionalText(value);
+    return ["未確認", "不明", "情報なし"].includes(text) ? "" : text;
+  }
+
   function isAllowedShopUrl(value) {
     try {
       const url = new URL(value);
@@ -391,7 +475,7 @@
   }
 
   function scrollSelectionEndIfNeeded() {
-    const buttonRect = dom.consultButton.getBoundingClientRect();
+    const preferenceRect = dom.seatPreference.getBoundingClientRect();
     const statusRect = dom.status.getBoundingClientRect();
     const viewport = getViewportBounds();
     if (!viewport) {
@@ -399,9 +483,9 @@
     }
 
     scrollRectIfNeeded({
-      top: buttonRect.top,
+      top: preferenceRect.top,
       bottom: statusRect.bottom,
-      height: statusRect.bottom - buttonRect.top
+      height: statusRect.bottom - preferenceRect.top
     }, viewport);
   }
 
@@ -531,7 +615,10 @@
     }
   }
 
-  function getLoadingStatus(genreKey) {
+  function getLoadingStatus(genreKey, prefersSolo) {
+    if (prefersSolo) {
+      return SOLO_LOADING_STATUS;
+    }
     return LOADING_STATUS_BY_GENRE.get(genreKey) || LOADING_STATUS;
   }
 
@@ -552,6 +639,9 @@
     dom.distance.textContent = `${candidate.distanceMeters}m`;
     dom.budget.textContent = candidate.budget;
     dom.address.textContent = candidate.address;
+    setOptionalDetail(dom.hoursLabel, dom.hours, candidate.openingHours);
+    setOptionalDetail(dom.closedLabel, dom.closed, candidate.closed);
+    setOptionalDetail(dom.accessLabel, dom.access, candidate.access);
     dom.link.href = candidate.url;
     dom.commentEmoji.textContent = buildCatCommentEmoji(candidate, selectedGenreKey);
     dom.commentText.textContent = buildCatComment(candidate, selectedGenreKey);
@@ -566,10 +656,38 @@
     });
     dom.tags.appendChild(fragment);
     dom.tags.hidden = dom.tags.childElementCount === 0;
+    dom.preferenceNote.textContent = getPreferenceNote(searchPreference);
+    dom.preferenceNote.hidden = dom.preferenceNote.textContent === "";
+    dom.facilityTags.replaceChildren();
+    const facilityFragment = document.createDocumentFragment();
+    candidate.facilityTags.forEach((tag) => {
+      const item = document.createElement("li");
+      item.className = "feature-tag";
+      item.textContent = tag;
+      facilityFragment.appendChild(item);
+    });
+    dom.facilityTags.appendChild(facilityFragment);
+    dom.facilityTags.hidden = dom.facilityTags.childElementCount === 0;
     dom.result.hidden = false;
     lastShopId = candidate.id;
     writeLastShopId(lastShopId);
     showStatus("このお店はいかがでしょうか。");
+  }
+
+  function getPreferenceNote(preference) {
+    if (!preference.known || !preference.requested) {
+      return "";
+    }
+    return preference.expanded
+      ? "条件を少し広げて見つけました。"
+      : "カウンターの記載を手がかりに選びました。";
+  }
+
+  function setOptionalDetail(label, valueElement, value) {
+    valueElement.textContent = value;
+    const hidden = value === "";
+    label.hidden = hidden;
+    valueElement.hidden = hidden;
   }
 
   function hideResult() {
@@ -580,10 +698,17 @@
     dom.comment.hidden = true;
     dom.tags.replaceChildren();
     dom.tags.hidden = true;
+    dom.preferenceNote.textContent = "";
+    dom.preferenceNote.hidden = true;
+    dom.facilityTags.replaceChildren();
+    dom.facilityTags.hidden = true;
     dom.genre.textContent = "";
     dom.distance.textContent = "";
     dom.budget.textContent = "";
     dom.address.textContent = "";
+    setOptionalDetail(dom.hoursLabel, dom.hours, "");
+    setOptionalDetail(dom.closedLabel, dom.closed, "");
+    setOptionalDetail(dom.accessLabel, dom.access, "");
     dom.link.removeAttribute("href");
   }
 
