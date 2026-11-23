@@ -67,11 +67,28 @@
     .genre-choice-text { white-space: nowrap; }
     .choice input:checked + label { border-color: var(--accent); background: #f8e8dc; font-weight: 700; }
     .choice input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 3px; }
-    .seat-preference { margin-top: 24px; }
-    .preference-choice { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 10px; align-items: start; }
-    .preference-choice input { width: 1.15em; height: 1.15em; margin: 0.3em 0 0; accent-color: var(--accent); }
-    .preference-choice label { font-weight: 700; }
-    .preference-help { grid-column: 2; margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .today-preference { margin-top: 24px; }
+    .preference-help { margin: 0 0 10px; color: var(--muted); font-size: 0.9rem; }
+    .preference-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .preference-button {
+      display: flex;
+      width: 100%;
+      min-width: 0;
+      align-items: center;
+      justify-content: flex-start;
+      border-width: 1px;
+      border-color: var(--border);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--accent-dark);
+      -webkit-text-fill-color: var(--accent-dark);
+      font-weight: 400;
+      text-align: left;
+    }
+    .preference-button[aria-pressed="true"] { border-width: 2px; border-color: var(--accent); background: #f8e8dc; font-weight: 700; }
+    .preference-button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .preference-icon { flex: 0 0 auto; margin-right: 0.35em; font-size: 1.05em; }
+    .preference-text { min-width: 0; overflow-wrap: anywhere; }
     button {
       min-height: 48px;
       padding: 10px 18px;
@@ -109,7 +126,7 @@
     .credit { margin: 22px 0 0; color: var(--muted); font-size: 0.9rem; text-align: center; }
     .noscript { color: var(--muted); text-align: center; }
     @media (max-width: 560px) {
-      .choices, .result-actions { grid-template-columns: 1fr; }
+      .choices, .preference-options, .result-actions { grid-template-columns: 1fr; }
       .panel { border-radius: 14px; }
     }
     @media (hover: hover) and (pointer: fine) {
@@ -153,12 +170,15 @@
           </div>
         </fieldset>
 
-        <fieldset class="seat-preference" id="seat-preference">
-          <legend>席の希望</legend>
-          <div class="preference-choice">
-            <input id="solo-preference" type="checkbox" name="soloPreference" value="counter" aria-describedby="solo-preference-help" autocomplete="off">
-            <label for="solo-preference">ひとりで寄りやすそう</label>
-            <p class="preference-help" id="solo-preference-help">カウンター席の記載があるお店を優先します。</p>
+        <fieldset class="today-preference" id="today-preference" aria-describedby="preference-help">
+          <legend>今日の希望</legend>
+          <p class="preference-help" id="preference-help">任意でひとつ選べます。もう一度押すと解除できます。</p>
+          <div class="preference-options">
+            <button class="preference-button" type="button" data-preference-key="counter" aria-pressed="false"><span class="preference-icon" aria-hidden="true">🪑</span><span class="preference-text">ひとりで寄りやすそう</span></button>
+            <button class="preference-button" type="button" data-preference-key="wine" aria-pressed="false"><span class="preference-icon" aria-hidden="true">🍷</span><span class="preference-text">ワインが飲みたい</span></button>
+            <button class="preference-button" type="button" data-preference-key="shochu" aria-pressed="false"><span class="preference-icon" aria-hidden="true">🥃</span><span class="preference-text">焼酎が飲みたい</span></button>
+            <button class="preference-button" type="button" data-preference-key="cocktail" aria-pressed="false"><span class="preference-icon" aria-hidden="true">🍸</span><span class="preference-text">カクテルが飲みたい</span></button>
+            <button class="preference-button" type="button" data-preference-key="sake" aria-pressed="false"><span class="preference-icon" aria-hidden="true">🍶</span><span class="preference-text">日本酒が飲みたい</span></button>
           </div>
         </fieldset>
 
@@ -196,6 +216,6 @@
       <noscript><p class="noscript">寄り道会議を利用するにはJavaScriptが必要です。</p></noscript>
     </section>
   </main>
-  <script src="./detour-meeting.js?v=16" defer></script>
+  <script src="./detour-meeting.js?v=17" defer></script>
 </body>
 </html>

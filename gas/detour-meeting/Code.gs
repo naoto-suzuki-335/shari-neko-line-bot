@@ -27,8 +27,8 @@ function handleDetourRequest_(e) {
     let candidates;
     let expanded = false;
 
-    if (request.soloPreference) {
-      datasetResult = detourGetDataset_(area, sourceType, true);
+    if (request.preferenceKey) {
+      datasetResult = detourGetDataset_(area, sourceType, request.preferenceKey);
       if (!datasetResult.ok) {
         return detourErrorResponse_(datasetResult.code);
       }
@@ -41,7 +41,7 @@ function handleDetourRequest_(e) {
       candidates = priorityCandidates.slice(0, candidateTarget);
 
       if (candidates.length < candidateTarget) {
-        const supplementResult = detourGetDataset_(area, sourceType, false);
+        const supplementResult = detourGetDataset_(area, sourceType, "");
         if (supplementResult.ok) {
           expanded = true;
           candidates = detourMergeCandidates_(
@@ -66,7 +66,7 @@ function handleDetourRequest_(e) {
         }
       }
     } else {
-      datasetResult = detourGetDataset_(area, sourceType, false);
+      datasetResult = detourGetDataset_(area, sourceType, "");
       if (!datasetResult.ok) {
         return detourErrorResponse_(datasetResult.code);
       }
@@ -76,7 +76,7 @@ function handleDetourRequest_(e) {
       );
     }
 
-    const minimumCandidates = request.soloPreference ? 1 : 2;
+    const minimumCandidates = request.preferenceKey ? 1 : 2;
     if (candidates.length < minimumCandidates) {
       return detourErrorResponse_("insufficient_candidates");
     }
@@ -96,10 +96,13 @@ function handleDetourRequest_(e) {
       },
       capabilities: {
         counterPriority: true,
-        counterPrioritySupplement: true
+        counterPrioritySupplement: true,
+        todayPreference: true,
+        preferencePrioritySupplement: true
       },
       preference: {
-        requested: request.soloPreference,
+        requested: request.preferenceKey !== "",
+        key: request.preferenceKey,
         expanded: expanded
       },
       apiVersion: datasetResult.dataset.apiVersion,
@@ -125,21 +128,30 @@ function detourParseRequest_(e) {
   const keys = Object.keys(e.parameters).sort();
   const isExistingRequest =
     keys.length === 2 && keys[0] === "areaKey" && keys[1] === "genreKey";
-  const isPreferenceRequest =
+  const isLegacyPreferenceRequest =
     keys.length === 3 && keys[0] === "areaKey" &&
     keys[1] === "genreKey" && keys[2] === "soloPreference";
-  if (!isExistingRequest && !isPreferenceRequest) {
+  const isPreferenceRequest =
+    keys.length === 3 && keys[0] === "areaKey" &&
+    keys[1] === "genreKey" && keys[2] === "preferenceKey";
+  if (!isExistingRequest && !isLegacyPreferenceRequest && !isPreferenceRequest) {
     return null;
   }
 
   const areaValues = e.parameters.areaKey;
   const genreValues = e.parameters.genreKey;
   const soloValues = e.parameters.soloPreference;
+  const preferenceValues = e.parameters.preferenceKey;
   if (!Array.isArray(areaValues) || areaValues.length !== 1 ||
       !Array.isArray(genreValues) || genreValues.length !== 1 ||
-      (isPreferenceRequest &&
+      (isLegacyPreferenceRequest &&
         (!Array.isArray(soloValues) || soloValues.length !== 1 ||
-          soloValues[0] !== "counter"))) {
+          soloValues[0] !== "counter")) ||
+      (isPreferenceRequest &&
+        (!Array.isArray(preferenceValues) || preferenceValues.length !== 1 ||
+          !Object.prototype.hasOwnProperty.call(
+            detourPreferenceSearchParams_(), preferenceValues[0]
+          )))) {
     return null;
   }
 
@@ -156,7 +168,19 @@ function detourParseRequest_(e) {
   return {
     areaKey: areaKey,
     genreKey: genreKey,
-    soloPreference: isPreferenceRequest && soloValues[0] === "counter"
+    preferenceKey: isLegacyPreferenceRequest
+      ? "counter"
+      : isPreferenceRequest ? preferenceValues[0] : ""
+  };
+}
+
+function detourPreferenceSearchParams_() {
+  return {
+    "counter": { keyword: "カウンター" },
+    "wine": { wine: "1" },
+    "shochu": { shochu: "1" },
+    "cocktail": { cocktail: "1" },
+    "sake": { sake: "1" }
   };
 }
 
@@ -241,9 +265,9 @@ function detourMergeCandidates_(priorityCandidates, normalCandidates, target) {
   return merged;
 }
 
-function detourGetDataset_(area, sourceType, counterPriority) {
+function detourGetDataset_(area, sourceType, preferenceKey) {
   const cache = CacheService.getScriptCache();
-  const cacheKey = detourCacheKey_(area, sourceType, counterPriority);
+  const cacheKey = detourCacheKey_(area, sourceType, preferenceKey);
   const cached = detourReadCache_(cache, cacheKey);
   if (cached) {
     return { ok: true, cacheHit: true, dataset: cached };
@@ -266,7 +290,7 @@ function detourGetDataset_(area, sourceType, counterPriority) {
       return { ok: true, cacheHit: true, dataset: cachedAfterLock };
     }
 
-    const fetched = detourFetchDataset_(area, sourceType, counterPriority);
+    const fetched = detourFetchDataset_(area, sourceType, preferenceKey);
     if (!fetched.ok) {
       return fetched;
     }
@@ -281,9 +305,9 @@ function detourGetDataset_(area, sourceType, counterPriority) {
   }
 }
 
-function detourCacheKey_(area, sourceType, counterPriority) {
+function detourCacheKey_(area, sourceType, preferenceKey) {
   return [
-    "detour", "v2", sourceType, counterPriority ? "counter" : "normal",
+    "detour", "v3", sourceType, preferenceKey || "normal",
     area.lat.toFixed(6), area.lng.toFixed(6)
   ].join(":");
 }
@@ -318,7 +342,7 @@ function detourReadCache_(cache, cacheKey) {
   }
 }
 
-function detourFetchDataset_(area, sourceType, counterPriority) {
+function detourFetchDataset_(area, sourceType, preferenceKey) {
   const apiKey = PropertiesService.getScriptProperties()
     .getProperty("HOTPEPPER_API_KEY");
   if (!apiKey) {
@@ -337,9 +361,15 @@ function detourFetchDataset_(area, sourceType, counterPriority) {
   if (sourceType === "cafe") {
     params.genre = "G014";
   }
-  if (counterPriority) {
-    params.keyword = "カウンター";
+  const preferenceParams = preferenceKey
+    ? detourPreferenceSearchParams_()[preferenceKey]
+    : null;
+  if (preferenceKey && !preferenceParams) {
+    return { ok: false, code: "invalid_request" };
   }
+  Object.keys(preferenceParams || {}).forEach(function (name) {
+    params[name] = preferenceParams[name];
+  });
 
   const query = Object.keys(params).map(function (name) {
     return encodeURIComponent(name) + "=" + encodeURIComponent(params[name]);

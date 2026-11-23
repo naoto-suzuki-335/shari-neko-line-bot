@@ -8,6 +8,14 @@
   const AGAIN_BUTTON_LABEL = "もう一度相談する";
   const LOADING_STATUS = "しゃりねこが寄り道先を探しています…";
   const SOLO_LOADING_STATUS = "ひとりで寄りやすそうな候補を見ています…";
+  const PREFERENCE_KEYS = new Set(["counter", "wine", "shochu", "cocktail", "sake"]);
+  const PREFERENCE_NOTES = new Map([
+    ["counter", "カウンターの記載を手がかりに選びました。"],
+    ["wine", "ワイン充実の記載を手がかりに選びました。"],
+    ["shochu", "焼酎充実の記載を手がかりに選びました。"],
+    ["cocktail", "カクテル充実の記載を手がかりに選びました。"],
+    ["sake", "日本酒充実の記載を手がかりに選びました。"]
+  ]);
   const LOADING_STATUS_BY_GENRE = new Map([
     ["meal", "ごはんの候補を見ています…"],
     ["cafe", "ひと休みの候補を見ています…"],
@@ -26,8 +34,8 @@
   const dom = {
     form: document.getElementById("detour-form"),
     genreSelection: document.getElementById("genre-selection"),
-    seatPreference: document.getElementById("seat-preference"),
-    soloPreference: document.getElementById("solo-preference"),
+    todayPreference: document.getElementById("today-preference"),
+    preferenceButtons: Array.from(document.querySelectorAll("[data-preference-key]")),
     consultButton: document.getElementById("consult-button"),
     status: document.getElementById("detour-status"),
     result: document.getElementById("detour-result"),
@@ -53,16 +61,18 @@
     againButton: document.getElementById("again-button")
   };
 
-  if (Object.values(dom).some((element) => !element)) {
+  if (Object.values(dom).some((element) => !element) || dom.preferenceButtons.length !== 5) {
     return;
   }
-
-  dom.soloPreference.checked = false;
+  dom.preferenceButtons.forEach((button) => {
+    button.setAttribute("aria-pressed", "false");
+  });
 
   let candidates = [];
   let lastShopId = readLastShopId();
   let selectedGenreKey = "";
-  let searchPreference = Object.freeze({ requested: false, expanded: false, known: false });
+  let selectedPreferenceKey = "";
+  let searchPreference = emptySearchPreference();
   let activeController = null;
   let isAgainBusy = false;
   let requestGeneration = 0;
@@ -71,12 +81,14 @@
 
   dom.form.addEventListener("submit", handleSubmit);
   dom.form.addEventListener("change", handleFormChange);
+  dom.preferenceButtons.forEach((button) => {
+    button.addEventListener("click", handlePreferenceClick);
+  });
   dom.againButton.addEventListener("click", handleAgain);
 
   function handleFormChange(event) {
     const input = event.target;
-    if (input instanceof HTMLInputElement &&
-        ["area", "genre", "soloPreference"].includes(input.name)) {
+    if (input instanceof HTMLInputElement && ["area", "genre"].includes(input.name)) {
       resetSeenCandidates();
     }
     if (input instanceof HTMLInputElement && input.name === "area" && input.checked) {
@@ -84,6 +96,23 @@
     } else if (input instanceof HTMLInputElement && input.name === "genre" && input.checked) {
       scheduleSelectionEndScroll();
     }
+  }
+
+  function handlePreferenceClick(event) {
+    const button = event.currentTarget;
+    const preferenceKey = button.dataset.preferenceKey;
+    if (!PREFERENCE_KEYS.has(preferenceKey)) {
+      return;
+    }
+
+    selectedPreferenceKey = selectedPreferenceKey === preferenceKey ? "" : preferenceKey;
+    dom.preferenceButtons.forEach((preferenceButton) => {
+      preferenceButton.setAttribute(
+        "aria-pressed",
+        preferenceButton.dataset.preferenceKey === selectedPreferenceKey ? "true" : "false"
+      );
+    });
+    resetSeenCandidates();
   }
 
   function handleAgain() {
@@ -111,15 +140,14 @@
     const formData = new FormData(dom.form);
     const areaKey = formData.get("area");
     const genreKey = formData.get("genre");
-    const soloPreference = formData.get("soloPreference");
     if (typeof areaKey !== "string" || typeof genreKey !== "string" ||
         !AREA_KEYS.has(areaKey) || !GENRE_KEYS.has(genreKey) ||
-        (soloPreference !== null && soloPreference !== "counter")) {
+        (selectedPreferenceKey !== "" && !PREFERENCE_KEYS.has(selectedPreferenceKey))) {
       showStatus("エリアとジャンルを選んでください。");
       return;
     }
 
-    const prefersSolo = soloPreference === "counter";
+    const preferenceKey = selectedPreferenceKey;
     selectedGenreKey = genreKey;
     resetSeenCandidates();
     rerollGeneration += 1;
@@ -128,7 +156,7 @@
     activeController = controller;
     setLoading(true);
     hideResult();
-    const loadingStatus = getLoadingStatus(genreKey, prefersSolo);
+    const loadingStatus = getLoadingStatus(genreKey, preferenceKey);
     showStatus(loadingStatus);
     scheduleStatusScroll(controller, generation, loadingStatus, true);
     candidates = [];
@@ -138,8 +166,8 @@
     try {
       const url = new URL(GAS_ENDPOINT);
       const requestParameters = new URLSearchParams({ areaKey, genreKey });
-      if (prefersSolo) {
-        requestParameters.set("soloPreference", "counter");
+      if (preferenceKey !== "") {
+        requestParameters.set("preferenceKey", preferenceKey);
       }
       url.search = requestParameters.toString();
       const response = await fetch(url.toString(), {
@@ -152,14 +180,14 @@
       }
 
       const payload = await response.json();
-      const validated = validateResponse(payload, areaKey, genreKey, prefersSolo);
+      const validated = validateResponse(payload, areaKey, genreKey, preferenceKey);
       candidates = validated.candidates;
       searchPreference = validated.preference;
       displayRandomCandidate();
       scheduleResultScroll();
     } catch (error) {
       candidates = [];
-      searchPreference = Object.freeze({ requested: false, expanded: false, known: false });
+      searchPreference = emptySearchPreference();
       hideResult();
       showStatus(FRIENDLY_ERROR);
       scheduleStatusScroll(controller, generation, FRIENDLY_ERROR);
@@ -173,7 +201,7 @@
     }
   }
 
-  function validateResponse(payload, requestedArea, requestedGenre, requestedSolo) {
+  function validateResponse(payload, requestedArea, requestedGenre, requestedPreferenceKey) {
     if (!isPlainObject(payload) || payload.ok !== true ||
         !matchesSelection(payload.area, requestedArea) ||
         !matchesSelection(payload.genre, requestedGenre) ||
@@ -186,34 +214,59 @@
       preference: validateSearchPreference(
         payload.preference,
         payload.capabilities,
-        requestedSolo
+        requestedPreferenceKey
       )
     });
   }
 
-  function validateSearchPreference(preference, capabilities, requestedSolo) {
+  function validateSearchPreference(preference, capabilities, requestedPreferenceKey) {
+    const requested = requestedPreferenceKey !== "";
     if ((preference === undefined || preference === null) &&
         (capabilities === undefined || capabilities === null)) {
       return Object.freeze({
-        requested: requestedSolo,
+        requested,
+        key: "",
         expanded: false,
         known: false,
-        supplementSupported: false
+        supplementSupported: false,
+        noteSupported: false
       });
     }
     if (!isPlainObject(capabilities) || capabilities.counterPriority !== true ||
         !isPlainObject(preference) ||
         typeof preference.requested !== "boolean" ||
         typeof preference.expanded !== "boolean" ||
-        preference.requested !== requestedSolo ||
+        preference.requested !== requested ||
         (!preference.requested && preference.expanded)) {
       throw new Error("Invalid preference response");
     }
+
+    const todayPreferenceSupported = capabilities.todayPreference === true &&
+      capabilities.preferencePrioritySupplement === true;
+    if (todayPreferenceSupported &&
+        (typeof preference.key !== "string" || preference.key !== requestedPreferenceKey ||
+          (preference.key !== "" && !PREFERENCE_KEYS.has(preference.key)))) {
+      throw new Error("Invalid preference key response");
+    }
     return Object.freeze({
       requested: preference.requested,
+      key: todayPreferenceSupported ? preference.key : "",
       expanded: preference.expanded,
       known: true,
-      supplementSupported: capabilities.counterPrioritySupplement === true
+      supplementSupported: todayPreferenceSupported ||
+        capabilities.counterPrioritySupplement === true,
+      noteSupported: todayPreferenceSupported
+    });
+  }
+
+  function emptySearchPreference() {
+    return Object.freeze({
+      requested: false,
+      key: "",
+      expanded: false,
+      known: false,
+      supplementSupported: false,
+      noteSupported: false
     });
   }
 
@@ -516,7 +569,7 @@
   }
 
   function scrollSelectionEndIfNeeded() {
-    const preferenceRect = dom.seatPreference.getBoundingClientRect();
+    const preferenceRect = dom.todayPreference.getBoundingClientRect();
     const statusRect = dom.status.getBoundingClientRect();
     const viewport = getViewportBounds();
     if (!viewport) {
@@ -674,8 +727,8 @@
     }
   }
 
-  function getLoadingStatus(genreKey, prefersSolo) {
-    if (prefersSolo) {
+  function getLoadingStatus(genreKey, preferenceKey) {
+    if (preferenceKey === "counter") {
       return SOLO_LOADING_STATUS;
     }
     return LOADING_STATUS_BY_GENRE.get(genreKey) || LOADING_STATUS;
@@ -764,17 +817,16 @@
   }
 
   function getPreferenceNote(preference, candidate) {
-    if (!preference.known || !preference.requested) {
+    if (!preference.known || !preference.requested || !candidate.candidateSource) {
       return "";
     }
-    if (preference.supplementSupported && candidate.candidateSource) {
-      return candidate.candidateSource === "priority"
-        ? "カウンターの記載を手がかりに選びました。"
-        : "候補を少し広げて選びました。";
+    if (candidate.candidateSource === "supplement") {
+      return preference.supplementSupported ? "候補を少し広げて選びました。" : "";
     }
-    return preference.expanded
-      ? "条件を少し広げて見つけました。"
-      : "カウンターの記載を手がかりに選びました。";
+    if (candidate.candidateSource !== "priority" || !preference.noteSupported) {
+      return "";
+    }
+    return PREFERENCE_NOTES.get(preference.key) || "";
   }
 
   function resetSeenCandidates() {
@@ -814,6 +866,9 @@
     dom.consultButton.disabled = isLoading;
     dom.form.querySelectorAll("input").forEach((input) => {
       input.disabled = isLoading;
+    });
+    dom.preferenceButtons.forEach((button) => {
+      button.disabled = isLoading;
     });
   }
 
