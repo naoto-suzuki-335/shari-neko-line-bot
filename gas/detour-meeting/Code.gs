@@ -22,6 +22,7 @@ function handleDetourRequest_(e) {
     const area = detourAreas_()[request.areaKey];
     const genre = detourGenres_()[request.genreKey];
     const sourceType = request.genreKey === "cafe" ? "cafe" : "base";
+    const candidateTarget = detourCandidateTarget_(sourceType);
     let datasetResult;
     let candidates;
     let expanded = false;
@@ -31,21 +32,38 @@ function handleDetourRequest_(e) {
       if (!datasetResult.ok) {
         return detourErrorResponse_(datasetResult.code);
       }
-      candidates = detourFilterCandidates_(
+      const priorityCandidates = detourFilterCandidates_(
         datasetResult.dataset.shops,
         request.genreKey
-      );
+      ).map(function (candidate) {
+        return detourCandidateWithSource_(candidate, "priority");
+      });
+      candidates = priorityCandidates.slice(0, candidateTarget);
 
-      if (candidates.length === 0) {
-        expanded = true;
-        datasetResult = detourGetDataset_(area, sourceType, false);
-        if (!datasetResult.ok) {
-          return detourErrorResponse_(datasetResult.code);
+      if (candidates.length < candidateTarget) {
+        const supplementResult = detourGetDataset_(area, sourceType, false);
+        if (supplementResult.ok) {
+          expanded = true;
+          candidates = detourMergeCandidates_(
+            candidates,
+            detourFilterCandidates_(
+              supplementResult.dataset.shops,
+              request.genreKey
+            ),
+            candidateTarget
+          );
+          datasetResult = {
+            ok: true,
+            cacheHit: datasetResult.cacheHit && supplementResult.cacheHit,
+            dataset: {
+              apiVersion: datasetResult.dataset.apiVersion,
+              fetchedAt: supplementResult.dataset.fetchedAt,
+              shops: candidates
+            }
+          };
+        } else if (candidates.length === 0) {
+          return detourErrorResponse_(supplementResult.code);
         }
-        candidates = detourFilterCandidates_(
-          datasetResult.dataset.shops,
-          request.genreKey
-        );
       }
     } else {
       datasetResult = detourGetDataset_(area, sourceType, false);
@@ -58,7 +76,7 @@ function handleDetourRequest_(e) {
       );
     }
 
-    const minimumCandidates = request.soloPreference && !expanded ? 1 : 2;
+    const minimumCandidates = request.soloPreference ? 1 : 2;
     if (candidates.length < minimumCandidates) {
       return detourErrorResponse_("insufficient_candidates");
     }
@@ -77,7 +95,8 @@ function handleDetourRequest_(e) {
         label: genre.label
       },
       capabilities: {
-        counterPriority: true
+        counterPriority: true,
+        counterPrioritySupplement: true
       },
       preference: {
         requested: request.soloPreference,
@@ -194,6 +213,34 @@ function detourFilterCandidates_(shops, genreKey) {
   });
 }
 
+function detourCandidateTarget_(sourceType) {
+  return sourceType === "cafe" ? 20 : 100;
+}
+
+function detourCandidateWithSource_(candidate, source) {
+  const copy = {};
+  Object.keys(candidate).forEach(function (key) {
+    copy[key] = candidate[key];
+  });
+  copy.candidateSource = source;
+  return copy;
+}
+
+function detourMergeCandidates_(priorityCandidates, normalCandidates, target) {
+  const merged = priorityCandidates.slice(0, target);
+  const seenIds = new Set(merged.map(function (candidate) {
+    return candidate.id;
+  }));
+  normalCandidates.some(function (candidate) {
+    if (!seenIds.has(candidate.id)) {
+      merged.push(detourCandidateWithSource_(candidate, "supplement"));
+      seenIds.add(candidate.id);
+    }
+    return merged.length >= target;
+  });
+  return merged;
+}
+
 function detourGetDataset_(area, sourceType, counterPriority) {
   const cache = CacheService.getScriptCache();
   const cacheKey = detourCacheKey_(area, sourceType, counterPriority);
@@ -284,7 +331,7 @@ function detourFetchDataset_(area, sourceType, counterPriority) {
     lat: area.lat.toFixed(6),
     lng: area.lng.toFixed(6),
     range: "3",
-    count: sourceType === "cafe" ? "20" : "100",
+    count: String(detourCandidateTarget_(sourceType)),
     format: "json"
   };
   if (sourceType === "cafe") {

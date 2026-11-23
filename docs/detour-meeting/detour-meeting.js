@@ -67,6 +67,7 @@
   let isAgainBusy = false;
   let requestGeneration = 0;
   let rerollGeneration = 0;
+  const seenCandidateIds = new Set();
 
   dom.form.addEventListener("submit", handleSubmit);
   dom.form.addEventListener("change", handleFormChange);
@@ -74,6 +75,10 @@
 
   function handleFormChange(event) {
     const input = event.target;
+    if (input instanceof HTMLInputElement &&
+        ["area", "genre", "soloPreference"].includes(input.name)) {
+      resetSeenCandidates();
+    }
     if (input instanceof HTMLInputElement && input.name === "area" && input.checked) {
       scheduleAreaSelectionScroll();
     } else if (input instanceof HTMLInputElement && input.name === "genre" && input.checked) {
@@ -116,6 +121,7 @@
 
     const prefersSolo = soloPreference === "counter";
     selectedGenreKey = genreKey;
+    resetSeenCandidates();
     rerollGeneration += 1;
     const generation = ++requestGeneration;
     const controller = new AbortController();
@@ -188,7 +194,12 @@
   function validateSearchPreference(preference, capabilities, requestedSolo) {
     if ((preference === undefined || preference === null) &&
         (capabilities === undefined || capabilities === null)) {
-      return Object.freeze({ requested: requestedSolo, expanded: false, known: false });
+      return Object.freeze({
+        requested: requestedSolo,
+        expanded: false,
+        known: false,
+        supplementSupported: false
+      });
     }
     if (!isPlainObject(capabilities) || capabilities.counterPriority !== true ||
         !isPlainObject(preference) ||
@@ -201,7 +212,8 @@
     return Object.freeze({
       requested: preference.requested,
       expanded: preference.expanded,
-      known: true
+      known: true,
+      supplementSupported: capabilities.counterPrioritySupplement === true
     });
   }
 
@@ -230,6 +242,7 @@
     const closed = meaningfulOptionalText(candidate.closed);
     const access = meaningfulOptionalText(candidate.access);
     const facilityTags = validateFacilityTags(candidate.featureTags);
+    const candidateSource = validateCandidateSource(candidate.candidateSource);
     if (typeof candidate.distanceMeters !== "number" ||
         !Number.isFinite(candidate.distanceMeters) || candidate.distanceMeters < 0) {
       throw new Error("Invalid distance");
@@ -247,12 +260,23 @@
       closed,
       access,
       facilityTags,
+      candidateSource,
       url: requiredText(candidate.url)
     };
     if (!isAllowedShopUrl(normalized.url)) {
       throw new Error("Invalid shop URL");
     }
     return Object.freeze(normalized);
+  }
+
+  function validateCandidateSource(source) {
+    if (source === undefined || source === null) {
+      return "";
+    }
+    if (source !== "priority" && source !== "supplement") {
+      throw new Error("Invalid candidate source");
+    }
+    return source;
   }
 
   function validateFacilityTags(tags) {
@@ -658,10 +682,7 @@
   }
 
   function displayRandomCandidate() {
-    const pool = candidates.length > 1
-      ? candidates.filter((candidate) => candidate.id !== lastShopId)
-      : candidates;
-    const available = pool.length > 0 ? pool : candidates;
+    const available = getAvailableCandidates();
     const candidate = available[Math.floor(Math.random() * available.length)];
     if (!candidate) {
       hideResult();
@@ -691,7 +712,7 @@
     });
     dom.tags.appendChild(fragment);
     dom.tags.hidden = dom.tags.childElementCount === 0;
-    dom.preferenceNote.textContent = getPreferenceNote(searchPreference);
+    dom.preferenceNote.textContent = getPreferenceNote(searchPreference, candidate);
     dom.preferenceNote.hidden = dom.preferenceNote.textContent === "";
     dom.facilityTags.replaceChildren();
     const facilityFragment = document.createDocumentFragment();
@@ -704,19 +725,60 @@
     dom.facilityTags.appendChild(facilityFragment);
     dom.facilityTags.hidden = dom.facilityTags.childElementCount === 0;
     dom.result.hidden = false;
+    seenCandidateIds.add(candidate.id);
     lastShopId = candidate.id;
     writeLastShopId(lastShopId);
     showStatus("このお店はいかがでしょうか。");
     return candidate.id;
   }
 
-  function getPreferenceNote(preference) {
+  function getAvailableCandidates() {
+    const isSelectable = (candidate) =>
+      !seenCandidateIds.has(candidate.id) &&
+      (candidates.length === 1 || candidate.id !== lastShopId);
+    const priorityCandidates = candidates.filter((candidate) =>
+      candidate.candidateSource === "priority" && isSelectable(candidate)
+    );
+    if (priorityCandidates.length > 0) {
+      return priorityCandidates;
+    }
+
+    const otherCandidates = candidates.filter((candidate) =>
+      candidate.candidateSource !== "priority" && isSelectable(candidate)
+    );
+    if (otherCandidates.length > 0) {
+      return otherCandidates;
+    }
+
+    resetSeenCandidates();
+    const resetPriorityCandidates = candidates.filter((candidate) =>
+      candidate.candidateSource === "priority" &&
+      (candidates.length === 1 || candidate.id !== lastShopId)
+    );
+    if (resetPriorityCandidates.length > 0) {
+      return resetPriorityCandidates;
+    }
+    return candidates.length > 1
+      ? candidates.filter((candidate) => candidate.id !== lastShopId)
+      : candidates;
+  }
+
+  function getPreferenceNote(preference, candidate) {
     if (!preference.known || !preference.requested) {
       return "";
+    }
+    if (preference.supplementSupported && candidate.candidateSource) {
+      return candidate.candidateSource === "priority"
+        ? "カウンターの記載を手がかりに選びました。"
+        : "候補を少し広げて選びました。";
     }
     return preference.expanded
       ? "条件を少し広げて見つけました。"
       : "カウンターの記載を手がかりに選びました。";
+  }
+
+  function resetSeenCandidates() {
+    seenCandidateIds.clear();
   }
 
   function setOptionalDetail(label, valueElement, value) {
